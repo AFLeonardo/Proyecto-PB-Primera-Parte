@@ -1,0 +1,23 @@
+# Archivos de compilaciĆ³n
+*.o
+*.exe
+*.out
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Archivos de configuraciĆ³n del editor
+*.swp
+*.swo
+*.DS_Store
+*.vscode/
+*.idea/
+
+# Archivos de dependencias y configuraciones
+/build/
+/bin/
+/obj/
+
+# Ignorar todo el contenido del directorio output
+output/
