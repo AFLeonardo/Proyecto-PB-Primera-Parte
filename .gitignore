@@ -20,4 +20,4 @@
 /obj/
 
 # Ignorar todo el contenido del directorio output
-output/*.exe
+output/main.exe
