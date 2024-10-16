@@ -4,6 +4,7 @@
 
 // FUNCIONES
 int menu();
+int menu_articulos();
 
 // ESTRUCTURAS
 struct Articulos
@@ -30,7 +31,7 @@ main()
 
         do
         {
-            opcion = menu();
+            opcion = menu_principal();
             if (opcion < 0 || opcion > 10)
                 printf("Opcion no valida. Intenta de nuevo\n");
             
@@ -83,7 +84,7 @@ main()
     }
 }
 
-int menu()
+int menu_principal()
 {
     int opcion;
     printf("\n\%20s", "Menu principal\n");
@@ -97,6 +98,23 @@ int menu()
     printf("8) Control de Inventario\n");
     printf("9) Reportes\n");
     printf("10) Salir\n");
+    
+    printf("Ingrese una opcion: ");
+    scanf("%d", &opcion);
+    return opcion;
+}
+
+int menu_articulos()
+{
+    int opcion;
+    bool agregar = true;
+    
+    while (agregar)
+    {
+        printf("\n\%20s", "ARTICULOS\n");
+    }
+    
+    
     
     printf("Ingrese una opcion: ");
     scanf("%d", &opcion);
