@@ -5,7 +5,7 @@
 // FUNCIONES
 int menu();
 int menu_articulos();
-
+//Ejemplo para una rama
 // ESTRUCTURAS
 struct Articulos
 {
