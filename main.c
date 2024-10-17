@@ -80,8 +80,8 @@ int main()
                 printf("\n\%20s", "HA SALIDO DEL SISTEMA.\n");
                 ciclo = false;
                 break;
-
         }
+        
     }
     return 0;
 }
