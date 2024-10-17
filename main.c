@@ -124,7 +124,7 @@ void menu_articulos()
             
         } while (x_articulo.Clave_articulo > 1000 || x_articulo.Clave_articulo < 1);
 
-        //Validacion Descripcion Mimino 10 caracteres.
+        /* //Validacion Descripcion Mimino 10 caracteres.
         do
         {
             printf("2) Descripcion: ");
@@ -181,7 +181,7 @@ void menu_articulos()
 
             if(x_articulo.Clave_mercados < 0)
                 printf("Valor invalido.\nMinimo 0.");
-        } while (x_articulo.Clave_mercados < 0);
+        } while (x_articulo.Clave_mercados < 0); */
 
         // GUARDAR LOS DATOS EN UN ARCHIVO DIRECTO.
 
@@ -191,10 +191,10 @@ void menu_articulos()
             printf("Agregar otro articulo (S/N): ");
             fflush(stdin);
             scanf("%c", &agregar);
-            if ((agregar != 'S' && agregar != 's') && (agregar != 'N' && agregar != 'n'))
+            if (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n')
                 printf("Valor no valido.\nSolo se permite S o N.\n");
             
-        } while ((agregar != 'S' && agregar != 's') && (agregar != 'N' && agregar != 'n'));
+        } while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
         
     }
     
