@@ -44,7 +44,7 @@ struct Proveedor
     char RFC[14];
     char correo[100];
     float descuento;
-    int año_nacimiento;
+    int anio_nacimiento;
     int mes_nacimiento;
     int dia_nacimiento;
     char direccion[200];  // Calle, número, colonia, municipio y estado
@@ -57,7 +57,7 @@ struct Empleado
     char RFC[14];
     char correo[100];
     float comision;
-    int año_contratacion;
+    int anio_contratacion;
     int mes_contratacion;
     int dia_contratacion;
     char direccion[200];
@@ -69,7 +69,7 @@ struct Mercado
     char RFC[14];
     char correo[100];
     float descuento;
-    int año_nacimiento;
+    int anio_nacimiento;
     int mes_nacimiento;
     int dia_nacimiento;
     char direccion[200];
