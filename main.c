@@ -4,25 +4,25 @@
 #include <string.h>
 
 // FUNCIONES
-int menu();
-int menu_articulos();
+int menu_principal();
+void menu_articulos();
 
 // ESTRUCTURAS
 struct Articulos
 {
     int Clave_articulo;
     char Descripcion[150];
-    int Temp_siembra; // VALIDAR SI SE PUEDE USAR COMO VALOR DE 1 a 12. CORRESPONDIENDO AL MES DEL ANIO
-    int Temp_cosecha; // VALIDAR SI SE PUEDE USAR COMO VALOR DE 1 a 12. CORRESPONDIENDO AL MES DEL ANIO
+    int Temp_siembra; 
+    int Temp_cosecha;
     int Clave_mercados;
-    int Insumos_requeridos;|
+    int Insumos_requeridos;
     float Costo_produccion;
     int Inventario;
     float Precio_venta;
 };
 
 
-main()
+int main()
 {
     int opcion;
     bool ciclo = true;
@@ -41,7 +41,7 @@ main()
         switch (opcion)
         {
             case 1:
-                printf("\n\%20s", "ARTICULOS\n");
+                menu_articulos();
                 break;
             
             case 2:
@@ -83,6 +83,7 @@ main()
 
         }
     }
+    return 0;
 }
 
 int menu_principal()
@@ -105,28 +106,18 @@ int menu_principal()
     return opcion;
 }
 
-int menu_articulos()
+void menu_articulos()
 {
-    int opcion;
-    bool agregar = true;
+    char agregar = 'S';
     struct Articulos x_articulo;
-    
-    /* 1)	Clave del artículo:
-    2)	Descripción:
-    3)	Temporada de siembra:
-    4)	Temporada de cosecha: 
-    5)	Inventario: 
-    6)	Precio de venta:
-    7)	Clave del Insumo: Validar que  */
 
-
-    while (agregar)
+    while (agregar != 'N' || agregar != 'n')
     {
         printf("\n\%20s", "ARTICULOS\n");
         //Validacion clave entre 1-1000
         do
         {
-            printf("1)	Clave del artículo: ");
+            printf("1) Clave del articulo: ");
             scanf("%d", &x_articulo.Clave_articulo);
             if (x_articulo.Clave_articulo > 1000 || x_articulo.Clave_articulo < 1)
                 printf("Clave invalida.\nValores admitidos 1 a 1000\n");
@@ -136,8 +127,9 @@ int menu_articulos()
         //Validacion Descripcion Mimino 10 caracteres.
         do
         {
-            printf("2) Descripción: ");
-            scanf("%d", &x_articulo.Descripcion);
+            printf("2) Descripcion: ");
+            fflush(stdin);
+            gets(x_articulo.Descripcion);
             if (strlen(x_articulo.Descripcion) < 10)
                 printf("Los caracteres minimos son 10.\n");
             
@@ -154,14 +146,57 @@ int menu_articulos()
                 printf("Temporada no valida.\nValores admitidos: 1 a 12");
         } while (x_articulo.Temp_siembra < 1 || x_articulo.Temp_siembra > 12);
         
+        do
+        {
+            printf("3) Temporada de cosecha: ");
+            scanf("%d", &x_articulo.Temp_cosecha);
+
+            if(x_articulo.Temp_cosecha < 1 || x_articulo.Temp_cosecha > 12)
+                printf("Temporada no valida.\nValores admitidos: 1 a 12");
+        } while (x_articulo.Temp_cosecha < 1 || x_articulo.Temp_cosecha > 12);
         
+        do
+        {
+            printf("5) Inventario: ");
+            scanf("%d", &x_articulo.Inventario);
+
+            if(x_articulo.Inventario < 0)
+                printf("Valor invalido.\nMinimo 0.");
+        } while (x_articulo.Inventario < 0);
+
+        do
+        {
+            printf("6) Precio de venta:");
+            scanf("%f", &x_articulo.Precio_venta);
+
+            if(x_articulo.Precio_venta < 0)
+                printf("Valor invalido.\nMinimo 0.");
+        } while (x_articulo.Precio_venta < 0);
         
+        // Validar que la clave del insumo este en el catalogo. CATALOGOS SON ARCHIVOS DIRECTOS.
+        do
+        {
+            printf("7) Clave del insumo:");
+            scanf("%d", &x_articulo.Clave_mercados);
+
+            if(x_articulo.Clave_mercados < 0)
+                printf("Valor invalido.\nMinimo 0.");
+        } while (x_articulo.Clave_mercados < 0);
+
+        // GUARDAR LOS DATOS EN UN ARCHIVO DIRECTO.
+
+        //Preguntas si quiere agregar mas
+        do
+        {
+            printf("Agregar otro articulo (S/N): ");
+            fflush(stdin);
+            scanf("%c", &agregar);
+            if ((agregar != 'S' && agregar != 's') && (agregar != 'N' && agregar != 'n'))
+                printf("Valor no valido.\nSolo se permite S o N.\n");
+            
+        } while ((agregar != 'S' && agregar != 's') && (agregar != 'N' && agregar != 'n'));
         
     }
     
-    
-    
-    printf("Ingrese una opcion: ");
-    scanf("%d", &opcion);
-    return opcion;
+    printf("%d %s %d %d %d %d %f %d %f",x_articulo.Clave_articulo, x_articulo.Descripcion, x_articulo.Temp_siembra, x_articulo.Temp_cosecha, x_articulo.Inventario, x_articulo.Precio_venta, x_articulo.Clave_mercados);
 }
