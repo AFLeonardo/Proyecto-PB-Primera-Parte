@@ -21,3 +21,7 @@
 
 # Ignorar todo el contenido del directorio output
 output/main.exe
+
+# Archivos
+*.dat
+*.exe

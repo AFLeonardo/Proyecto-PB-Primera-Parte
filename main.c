@@ -5,7 +5,7 @@
 
 // MENUS
 int menu_principal();
-void menu_articulos();
+void menu_articulos(FILE *);
 void menu_insumos();
 void menu_mercados();
 void menu_empleados();
@@ -95,6 +95,7 @@ int main()
 {
     int opcion;
     bool ciclo = true;
+    FILE *archivo;
 
     while (ciclo)
     {
@@ -110,7 +111,13 @@ int main()
         switch (opcion)
         {
             case 1:
-                menu_articulos();
+                if ( (archivo = fopen("Archivo.dat", "a") == NULL))
+                    archivo = fopen("Archivo.dat", "w");
+                else
+                {
+                    menu_articulos(archivo);
+                    fclose(archivo);
+                }
                 break;
             
             case 2:
@@ -175,7 +182,7 @@ int menu_principal()
     return opcion;
 }
 
-void menu_articulos()
+void menu_articulos(FILE *articulosf)
 {
     char agregar = 'S';
     struct Articulos x_articulo;
@@ -252,6 +259,8 @@ void menu_articulos()
         } while (x_articulo.Clave_mercados < 0);
 
         // GUARDAR LOS DATOS EN UN ARCHIVO DIRECTO.
+        fseek(articulosf, x_articulo.Clave_articulo * sizeof(struct Articulos), SEEK_SET);
+        fwrite(&x_articulo, sizeof(struct Articulos), 1, articulosf);
 
         //Preguntas si quiere agregar mas
         do
@@ -263,6 +272,5 @@ void menu_articulos()
                 printf("Valor no valido.\nSolo se permite S o N.\n");
             
         } while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
-        
     }
 }
