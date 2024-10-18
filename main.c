@@ -111,7 +111,7 @@ int main()
         switch (opcion)
         {
             case 1:
-                if ( (archivo = fopen("Archivo.dat", "a") == NULL))
+                if ((archivo = fopen("Archivo.dat", "a")) == NULL)
                     archivo = fopen("Archivo.dat", "w");
                 else
                 {
