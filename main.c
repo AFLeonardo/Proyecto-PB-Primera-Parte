@@ -121,7 +121,10 @@ int main()
                 break;
             
             case 2:
-                printf("\n\%20s", "INSUMOS\n");
+                if ((archivo = fopen("Insumos.dat", "a")) == NULL)
+                    archivo = fopen("Insumos.dat", "w");
+                else
+                    printf("\n\%20s", "INSUMOS\n");
                 break;
 
             case 3:
