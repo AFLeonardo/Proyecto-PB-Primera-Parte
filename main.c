@@ -20,15 +20,15 @@ struct Articulos
 {
     int Clave_articulo;
     char Descripcion[150];
-    int Temp_siembra; 
-    int Temp_cosecha;
+    char Temp_siembra;
+    char Temp_cosecha;
     int Clave_mercados;
     int Insumos_requeridos;
     float Costo_produccion;
     int Inventario;
     float Precio_venta;
 };
-struct Insumo 
+struct Insumo
 {
     int clave_insumo;
     char descripcion[100];
@@ -37,7 +37,7 @@ struct Insumo
     int clave_proveedor[10]; // Hasta 10 claves de proveedores
     float precio_compra;
 };
-struct Proveedor 
+struct Proveedor
 {
     int numero_proveedor;
     char nombre_completo[100];
@@ -50,7 +50,7 @@ struct Proveedor
     char direccion[200];  // Calle, número, colonia, municipio y estado
     int articulos_produce[10]; // Claves de los artículos que produce
 };
-struct Empleado 
+struct Empleado
 {
     int numero_empleado;
     char nombre_completo[100];
@@ -62,7 +62,7 @@ struct Empleado
     int dia_contratacion;
     char direccion[200];
 };
-struct Mercado 
+struct Mercado
 {
     int clave_mercado;
     char nombre_completo[100];
@@ -74,7 +74,7 @@ struct Mercado
     int dia_nacimiento;
     char direccion[200];
 };
-struct Venta 
+struct Venta
 {
     int numero_mercado;
     int numero_articulo;
@@ -83,7 +83,7 @@ struct Venta
     int numero_empleado;
     int factura;
 };
-struct Compra 
+struct Compra
 {
     int numero_proveedor;
     int numero_insumo;
@@ -105,21 +105,21 @@ int main()
             opcion = menu_principal();
             if (opcion < 0 || opcion > 10)
                 printf("Opcion no valida. Intenta de nuevo\n");
-            
+
         } while (opcion < 0 || opcion > 10);
-        
+
         switch (opcion)
         {
             case 1:
                 if ((archivo = fopen("Archivo.dat", "a")) == NULL)
-                    archivo = fopen("Archivo.dat", "w");
+                    printf("Error al abrir el archivo");
                 else
                 {
                     menu_articulos(archivo);
                     fclose(archivo);
                 }
                 break;
-            
+
             case 2:
                 printf("\n\%20s", "INSUMOS\n");
                 break;
@@ -131,7 +131,7 @@ int main()
             case 4:
                 printf("\n\%20s", "EMPLEADOS\n");
                 break;
-            
+
             case 5:
                 printf("\n\%20s", "PROVEEDORES\n");
                 break;
@@ -143,7 +143,7 @@ int main()
             case 7:
                 printf("\n\%20s", "COMPRAS\n");
                 break;
-            
+
             case 8:
                 printf("\n\%20s", "CONTROL DE INVENTARIO\n");
                 break;
@@ -157,7 +157,7 @@ int main()
                 ciclo = false;
                 break;
         }
-        
+
     }
     return 0;
 }
@@ -176,7 +176,7 @@ int menu_principal()
     printf("8) Control de Inventario\n");
     printf("9) Reportes\n");
     printf("10) Salir\n");
-    
+
     printf("Ingrese una opcion: ");
     scanf("%d", &opcion);
     return opcion;
@@ -186,6 +186,9 @@ void menu_articulos(FILE *articulosf)
 {
     char agregar = 'S';
     struct Articulos x_articulo;
+    char estaciones = {"Primavera", "Verano", "Otoño", "Invierno"};
+    bool checar = false;
+    int i;
 
     while (agregar != 'N' && agregar != 'n')
     {
@@ -197,7 +200,7 @@ void menu_articulos(FILE *articulosf)
             scanf("%d", &x_articulo.Clave_articulo);
             if (x_articulo.Clave_articulo > 1000 || x_articulo.Clave_articulo < 1)
                 printf("Clave invalida.\nValores admitidos 1 a 1000\n");
-            
+
         } while (x_articulo.Clave_articulo > 1000 || x_articulo.Clave_articulo < 1);
 
         //Validacion Descripcion Mimino 10 caracteres.
@@ -208,28 +211,37 @@ void menu_articulos(FILE *articulosf)
             gets(x_articulo.Descripcion);
             if (strlen(x_articulo.Descripcion) < 10)
                 printf("Los caracteres minimos son 10.\n");
-            
+
         } while (strlen(x_articulo.Descripcion) < 10);
-        
+
         // Las temporadas se manejan de acuerdo a los meses. 1-12
         do
         {
             printf("3) Temporada de siembra: ");
-            scanf("%d", &x_articulo.Temp_siembra);
+            gets(x_articulo.Temp_siembra);
 
-            if(x_articulo.Temp_siembra < 1 || x_articulo.Temp_siembra > 12)
-                printf("Temporada no valida.\nValores admitidos: 1 a 12\n");
-        } while (x_articulo.Temp_siembra < 1 || x_articulo.Temp_siembra > 12);
-        
+            for(i = 0; i < 4; i++)
+            {
+                if(strcmp(x_articulo.Temp_siembra, "Primavera") != 0)
+                    checar = true;
+            }
+            if(!checar)
+                printf("Estacion invalida");
+        } while (!checar);
+
         do
         {
             printf("3) Temporada de cosecha: ");
-            scanf("%d", &x_articulo.Temp_cosecha);
+            gets(x_articulo.Temp_cosecha);
 
-            if(x_articulo.Temp_cosecha < 1 || x_articulo.Temp_cosecha > 12)
-                printf("Temporada no valida.\nValores admitidos: 1 a 12\n");
-        } while (x_articulo.Temp_cosecha < 1 || x_articulo.Temp_cosecha > 12);
-        
+            for(i = 0; i < 4; i++)
+            {
+                if(strcmp(x_articulo.Temp_siembra, "Primavera") != 0)
+                    checar = true;
+            }
+            if(!checar)
+                printf("Estacion invalida");
+        } while (!checar);
         do
         {
             printf("5) Inventario: ");
@@ -247,7 +259,7 @@ void menu_articulos(FILE *articulosf)
             if(x_articulo.Precio_venta < 0)
                 printf("Valor invalido.\nMinimo 0.");
         } while (x_articulo.Precio_venta < 0);
-        
+
         // Validar que la clave del insumo este en el catalogo. CATALOGOS SON ARCHIVOS DIRECTOS.
         do
         {
@@ -270,7 +282,7 @@ void menu_articulos(FILE *articulosf)
             scanf(" %c", &agregar);
             if (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n')
                 printf("Valor no valido.\nSolo se permite S o N.\n");
-            
+
         } while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
     }
 }
