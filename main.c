@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
 
 // MENUS
 int menu_principal();
@@ -344,7 +345,7 @@ void mostrar_articulo(struct Articulos articulo) {
     printf("Temporada de siembra: %s\n", articulo.Temp_siembra);
     printf("Temporada de cosecha: %s\n", articulo.Temp_cosecha);
     printf("Clave de mercados: %d\n", articulo.Clave_mercados);
-    printf("Insumos requeridos: %d\n", articulo.Insumos);
+    printf("Insumos requeridos: %i\n", articulo.Insumos);
     printf("Costo de produccion: %.2f\n", articulo.Costo_produccion);
     printf("Inventario: %d\n", articulo.Inventario);
     printf("Precio de venta: %.2f\n", articulo.Precio_venta);
