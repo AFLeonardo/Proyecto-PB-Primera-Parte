@@ -350,3 +350,5 @@ void mostrar_articulo(struct Articulos articulo) {
     printf("Inventario: %d\n", articulo.Inventario);
     printf("Precio de venta: %.2f\n", articulo.Precio_venta);
 }
+
+// CONTENIDO DE RELLENO PARA VER COMO FUCNIONA GITHUB DESKTOP 
