@@ -14,16 +14,17 @@ void menu_control_ventas();
 void menu_control_compras();
 void menu_control_inventario();
 void menu_reportes();
+char *convertir_a_minusculas(char *);
 
 // ESTRUCTURAS
 struct Articulos
 {
     int Clave_articulo;
     char Descripcion[150];
-    char Temp_siembra;
-    char Temp_cosecha;
+    char Temp_siembra[20];
+    char Temp_cosecha[20];
     int Clave_mercados;
-    int Insumos_requeridos;
+    int Insumos[10];
     float Costo_produccion;
     int Inventario;
     float Precio_venta;
@@ -184,16 +185,16 @@ int menu_principal()
 
 void menu_articulos(FILE *articulosf)
 {
-    char agregar = 'S';
+    char agregar_articulo = 'S', agregar_insumo = 'S';
     struct Articulos x_articulo;
-    char estaciones = {"Primavera", "Verano", "Otoño", "Invierno"};
-    bool checar = false;
-    int i;
+    char estaciones[4][15] = {"primavera", "verano", "otoño", "invierno"};
+    bool checar, insumo = true;
+    int i, n_insumo = 0;
 
-    while (agregar != 'N' && agregar != 'n')
+    while (agregar_articulo != 'N' && agregar_articulo != 'n')
     {
         printf("\n\%20s", "ARTICULOS\n");
-        //Validacion clave entre 1-1000
+        // VALIDAR QUE SOLO SE PUEDAN INGRESAR NUMEROS
         do
         {
             printf("1) Clave del articulo: ");
@@ -203,7 +204,6 @@ void menu_articulos(FILE *articulosf)
 
         } while (x_articulo.Clave_articulo > 1000 || x_articulo.Clave_articulo < 1);
 
-        //Validacion Descripcion Mimino 10 caracteres.
         do
         {
             printf("2) Descripcion: ");
@@ -214,34 +214,45 @@ void menu_articulos(FILE *articulosf)
 
         } while (strlen(x_articulo.Descripcion) < 10);
 
-        // Las temporadas se manejan de acuerdo a los meses. 1-12
         do
         {
+            
             printf("3) Temporada de siembra: ");
+            fflush(stdin);
             gets(x_articulo.Temp_siembra);
 
+            //CONVERTIR LA CADENA DADA A MINUSCULAS PARA COMPRAR CON EL ARREGLO DE ESTACIONES
+            strcpy(x_articulo.Temp_siembra, convertir_a_minusculas(x_articulo.Temp_siembra));
+            checar = false;
+
             for(i = 0; i < 4; i++)
             {
-                if(strcmp(x_articulo.Temp_siembra, "Primavera") != 0)
+                if(strcmp(x_articulo.Temp_siembra, estaciones[i]) == 0)
                     checar = true;
             }
+
             if(!checar)
-                printf("Estacion invalida");
+                printf("Estacion invalida.\nSolo se permite primavera, verano, otoño, invierno.\n");
         } while (!checar);
 
         do
         {
-            printf("3) Temporada de cosecha: ");
+            printf("4) Temporada de cosecha: ");
+            fflush(stdin);
             gets(x_articulo.Temp_cosecha);
 
+            //CONVERTIR LA CADENA DADA A MINUSCULAS PARA COMPRAR CON EL ARREGLO DE ESTACIONES
+            strcpy(x_articulo.Temp_siembra, convertir_a_minusculas(x_articulo.Temp_cosecha));
+            checar = false;
             for(i = 0; i < 4; i++)
             {
-                if(strcmp(x_articulo.Temp_siembra, "Primavera") != 0)
+                if(strcmp(x_articulo.Temp_siembra, estaciones[i]) == 0)
                     checar = true;
             }
             if(!checar)
-                printf("Estacion invalida");
+                printf("Estacion invalida.\nSolo se permite primavera, verano, otoño, invierno.\n");
         } while (!checar);
+
         do
         {
             printf("5) Inventario: ");
@@ -260,29 +271,81 @@ void menu_articulos(FILE *articulosf)
                 printf("Valor invalido.\nMinimo 0.");
         } while (x_articulo.Precio_venta < 0);
 
-        // Validar que la clave del insumo este en el catalogo. CATALOGOS SON ARCHIVOS DIRECTOS.
-        do
+        while (insumo && n_insumo < 10)
         {
-            printf("7) Clave del insumo:");
-            scanf("%d", &x_articulo.Clave_mercados);
+            do
+            {
+                printf("7) Clave del insumo (VALIDAR QUE EXISTE LA CLAVE DE INSUMO): ");
+                scanf("%d", &x_articulo.Insumos[i]);
 
-            if(x_articulo.Clave_mercados < 0)
-                printf("Valor invalido.\nMinimo 0.");
-        } while (x_articulo.Clave_mercados < 0);
+                if (x_articulo.Insumos[i] < 0)
+                    printf("Valor invalido.\nMinimo 0.\n");
+            } while (x_articulo.Insumos[i] < 0);
+
+
+            // Validar que la clave del insumo este en el catalogo. CATALOGOS SON ARCHIVOS DIRECTOS.
+            //
+            //
+            //
+            //
+
+            do
+            {
+                printf("Quieres agregar otro insumo (S/N): ");
+                fflush(stdin);
+                scanf("%c", &agregar_insumo);
+                if (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n')
+                    printf("Valor no valido.\nSolo se permite S o N.\n");
+
+            } while (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n');
+
+            if (agregar_insumo == 'S' || agregar_insumo == 's')
+                n_insumo++;
+            else
+                insumo = false;
+            
+        }
+        
+        if (n_insumo == 10)
+            printf("SOLO PERMITEN 10 INSUMOS COMO MAXIMO.");
 
         // GUARDAR LOS DATOS EN UN ARCHIVO DIRECTO.
         fseek(articulosf, x_articulo.Clave_articulo * sizeof(struct Articulos), SEEK_SET);
         fwrite(&x_articulo, sizeof(struct Articulos), 1, articulosf);
+        mostrar_articulo(x_articulo);
 
         //Preguntas si quiere agregar mas
         do
         {
             printf("Agregar otro articulo (S/N): ");
             fflush(stdin);
-            scanf(" %c", &agregar);
-            if (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n')
+            scanf("%c", &agregar_articulo);
+            if (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n')
                 printf("Valor no valido.\nSolo se permite S o N.\n");
 
-        } while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
+        } while (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n');
     }
+}
+
+char * convertir_a_minusculas(char *cadena)
+{
+    int i;
+    for (i = 0; cadena[i]; i++) {
+        cadena[i] = tolower(cadena[i]);
+    }
+    return cadena;
+}
+
+// FUNCION TEMPORAL
+void mostrar_articulo(struct Articulos articulo) {
+    printf("\nDATOS DEL ARTICULO:\n\n\n");
+    printf("Clave del articulo: %d\n", articulo.Clave_articulo);
+    printf("Descripcion: %s\n", articulo.Descripcion);
+    printf("Temporada de siembra: %s\n", articulo.Temp_siembra);
+    printf("Temporada de cosecha: %s\n", articulo.Temp_cosecha);
+    printf("Clave de mercados: %d\n", articulo.Clave_mercados);
+    printf("Insumos requeridos: %d\n", articulo.Insumos);
+    printf("Costo de produccion: %.2f\n", articulo.Costo_produccion);
+    printf("Inventario: %d\n", articulo.Inventario);
+    printf("Precio de venta: %.2f\n", articulo.Precio_venta);
 }
