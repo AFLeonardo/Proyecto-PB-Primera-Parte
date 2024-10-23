@@ -17,6 +17,7 @@ void menu_control_inventario();
 void menu_reportes();
 char *convertir_a_minusculas(char *);
 
+
 // ESTRUCTURAS
 struct Articulos
 {
@@ -211,7 +212,7 @@ void menu_articulos(FILE *articulosf)
             fflush(stdin);
             gets(x_articulo.Descripcion);
             if (strlen(x_articulo.Descripcion) < 10)
-                printf("Los caracteres minimos son 10.\n");
+                printf("Los caracteres minimos son 10.\n\n");
 
         } while (strlen(x_articulo.Descripcion) < 10);
 
@@ -243,11 +244,11 @@ void menu_articulos(FILE *articulosf)
             gets(x_articulo.Temp_cosecha);
 
             //CONVERTIR LA CADENA DADA A MINUSCULAS PARA COMPRAR CON EL ARREGLO DE ESTACIONES
-            strcpy(x_articulo.Temp_siembra, convertir_a_minusculas(x_articulo.Temp_cosecha));
+            strcpy(x_articulo.Temp_cosecha, convertir_a_minusculas(x_articulo.Temp_cosecha));
             checar = false;
             for(i = 0; i < 4; i++)
             {
-                if(strcmp(x_articulo.Temp_siembra, estaciones[i]) == 0)
+                if(strcmp(x_articulo.Temp_cosecha, estaciones[i]) == 0)
                     checar = true;
             }
             if(!checar)
@@ -265,7 +266,7 @@ void menu_articulos(FILE *articulosf)
 
         do
         {
-            printf("6) Precio de venta:");
+            printf("6) Precio de venta: ");
             scanf("%f", &x_articulo.Precio_venta);
 
             if(x_articulo.Precio_venta < 0)
@@ -292,7 +293,7 @@ void menu_articulos(FILE *articulosf)
 
             do
             {
-                printf("Quieres agregar otro insumo (S/N): ");
+                printf("Quieres agregar otro insumo al articulo(S/N): ");
                 fflush(stdin);
                 scanf("%c", &agregar_insumo);
                 if (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n')
@@ -338,7 +339,8 @@ char * convertir_a_minusculas(char *cadena)
 }
 
 // FUNCION TEMPORAL
-void mostrar_articulo(struct Articulos articulo) {
+void mostrar_articulo(struct Articulos articulo) 
+{
     printf("\nDATOS DEL ARTICULO:\n\n\n");
     printf("Clave del articulo: %d\n", articulo.Clave_articulo);
     printf("Descripcion: %s\n", articulo.Descripcion);
