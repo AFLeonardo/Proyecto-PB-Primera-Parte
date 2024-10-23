@@ -293,7 +293,7 @@ void menu_articulos(FILE *articulosf)
 
             do
             {
-                printf("Quieres agregar otro insumo al articulo(S/N): ");
+                printf("%15s","Quieres agregar otro insumo al articulo(S/N): ");
                 fflush(stdin);
                 scanf("%c", &agregar_insumo);
                 if (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n')
