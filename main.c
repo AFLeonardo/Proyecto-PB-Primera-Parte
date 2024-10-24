@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-
+fjdjjfjd
 // MENUS
 int menu_principal();
 void menu_articulos(FILE *);
