@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-fjdjjfjd
+
 // MENUS
 int menu_principal();
 void menu_articulos(FILE *);
@@ -14,6 +14,7 @@ void menu_control_ventas();
 void menu_control_compras();
 void menu_control_inventario();
 void menu_reportes();
+char *convertir_a_minusculas(char *);
 
 // ESTRUCTURAS
 struct Articulos
@@ -121,7 +122,7 @@ int main()
                 break;
 
             case 2:
-                if ((archivo = fopen("Archivo.dat", "a")) == NULL)
+                if ((archivo = fopen("Insumos.dat", "a")) == NULL)
                     printf("Error al abrir el archivo");
                 else
                 {
@@ -192,7 +193,7 @@ void menu_articulos(FILE *articulosf)
 {
     char agregar = 'S';
     struct Articulos x_articulo;
-    char estaciones = {"Primavera", "Verano", "Otoño", "Invierno"};
+    char estaciones[4] = {"Primavera", "Verano", "Otoño", "Invierno"};
     bool checar = false;
     int i;
 
@@ -220,7 +221,6 @@ void menu_articulos(FILE *articulosf)
 
         } while (strlen(x_articulo.descripcion) < 10);
 
-        // Las temporadas se manejan de acuerdo a los meses. 1-12
         do
         {
             printf("3) Temporada de siembra: ");
@@ -228,7 +228,7 @@ void menu_articulos(FILE *articulosf)
 
             for(i = 0; i < 4; i++)
             {
-                if(strcmp(x_articulo.temp_siembra, "Primavera") != 0) //checar como podemos hacerlo con todas las estaciones!!!
+                if(strcpy(x_articulo.temp_siembra, estaciones[i]) != 0)
                     checar = true;
             }
             if(!checar)
@@ -376,4 +376,13 @@ void menu_insumos(FILE *articulosf)
         } while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
 
     }
+}
+
+char * convertir_a_minusculas(char *cadena)
+{
+    int i;
+    for (i = 0; cadena[i]; i++) {
+        cadena[i] = tolower(cadena[i]);
+    }
+    return cadena;
 }
