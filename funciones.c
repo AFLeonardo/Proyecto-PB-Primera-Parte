@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
 #include "estructuras.c"
 
 int menu_principal();
@@ -14,12 +15,15 @@ void menu_control_ventas();
 void menu_control_compras();
 void menu_control_inventario();
 void menu_reportes();
+
+// FUNCIONES
 char *convertir_a_minusculas(char *);
+bool cadena_minimo10(char *);
 
 int menu_principal()
 {
     int opcion;
-    printf("\n\%20s", "Menu principal\n");
+    printf("\n%20s", "Menu principal\n");
     printf("1) Articulos\n");
     printf("2) Insumos\n");
     printf("3) Mercados\n");
@@ -41,13 +45,13 @@ void menu_articulos(FILE *articulosf)
     char agregar = 'S';
     struct Articulos x_articulo;
     char *estaciones[4] = {"Primavera", "Verano", "Otoño", "Invierno"};
-    bool checar;
+    bool checar, cadena_valida;
     int i;
 
     while (agregar != 'N' && agregar != 'n')
     {
         printf("\n\%20s", "ARTICULOS\n");
-        //Validacion clave entre 1-1000
+
         do
         {
             printf("1) Clave del articulo: ");
@@ -57,44 +61,45 @@ void menu_articulos(FILE *articulosf)
 
         } while (x_articulo.clave_articulo > 1000 || x_articulo.clave_articulo < 1);
 
-        //Validacion Descripcion Mimino 10 caracteres.
         do
         {
             printf("2) Descripcion: ");
             fflush(stdin);
             gets(x_articulo.descripcion);
-            if (strlen(x_articulo.descripcion) < 10)
-                printf("Los caracteres minimos son 10.\n");
+            cadena_valida = cadena_minimo10(x_articulo.descripcion);
 
-        } while (strlen(x_articulo.descripcion) < 10);
+        } while (!cadena_valida);
 
         do
         {
             checar = false;
             printf("3) Temporada de siembra: ");
+            fflush(stdin);
             gets(x_articulo.temp_siembra);
 
-            for(i = 0; i < 4; i++)
+            for (i = 0; i < 4; i++)
             {
-                if(strcmp(x_articulo.temp_siembra, estaciones[i]) == 0)
+                if (strcmp(x_articulo.temp_siembra, estaciones[i]) == 0)
                     checar = true;
             }
-            if(!checar)
-                printf("Estacion invalida");
+
+            if (!checar)
+                printf("Estacion invalida.\n");
         } while (!checar);
 
         do
         {
             checar = false;
             printf("4) Temporada de cosecha: ");
+            fflush(stdin);
             gets(x_articulo.temp_cosecha);
 
-            for(i = 0; i < 4; i++)
+            for (i = 0; i < 4; i++)
             {
-                if(strcmp(x_articulo.temp_cosecha, estaciones[i]) == 0) //checar como podemos hacerlo con todas las estaciones!!!
+                if (strcmp(x_articulo.temp_cosecha, estaciones[i]) == 0)
                     checar = true;
             }
-            if(!checar)
+            if (!checar)
                 printf("Estacion invalida");
         } while (!checar);
 
@@ -103,7 +108,7 @@ void menu_articulos(FILE *articulosf)
             printf("5) Inventario: ");
             scanf("%d", &x_articulo.inventario);
 
-            if(x_articulo.inventario < 0)
+            if (x_articulo.inventario < 0)
                 printf("Valor invalido.\nMinimo 0.");
         } while (x_articulo.inventario < 0);
 
@@ -112,7 +117,7 @@ void menu_articulos(FILE *articulosf)
             printf("6) Precio de venta:");
             scanf("%f", &x_articulo.precio_venta);
 
-            if(x_articulo.precio_venta < 0)
+            if (x_articulo.precio_venta < 0)
                 printf("Valor invalido.\nMinimo 0.");
         } while (x_articulo.precio_venta < 0);
 
@@ -122,15 +127,15 @@ void menu_articulos(FILE *articulosf)
             printf("7) Clave del insumo:");
             scanf("%d", &x_articulo.clave_mercados);
 
-            if(x_articulo.clave_mercados < 0)
+            if (x_articulo.clave_mercados < 0)
                 printf("Valor invalido.\nMinimo 0.");
         } while (x_articulo.clave_mercados < 0);
 
         // GUARDAR LOS DATOS EN UN ARCHIVO DIRECTO.
-        fseek(articulosf, x_articulo.clave_articulo * sizeof(struct Articulos), SEEK_SET); //me perdi aqui
+        fseek(articulosf, x_articulo.clave_articulo * sizeof(struct Articulos), SEEK_SET);
         fwrite(&x_articulo, sizeof(struct Articulos), 1, articulosf);
 
-        //Preguntas si quiere agregar mas
+        // Preguntar si quiere agregar más
         do
         {
             printf("Agregar otro articulo (S/N): ");
@@ -148,7 +153,7 @@ void menu_insumos(FILE *articulosf)
     char agregar;
     struct Insumo insumos;
     int proveedores = 0;
-    //bool checar;  ESTA CHINGADERA LA VA A HACER ALEXIS
+    // bool checar;  ESTA CHINGADERA LA VA A HACER ALEXIS
 
     printf("\n\%20s", "INSUMOS\n");
 
@@ -172,7 +177,7 @@ void menu_insumos(FILE *articulosf)
                 printf("Los caracteres minimos son 10.\n");
 
         } while (strlen(insumos.descripcion) < 10);
-    
+
         do
         {
             printf("3) Punto de reorden: ");
@@ -181,37 +186,36 @@ void menu_insumos(FILE *articulosf)
                 printf("Clave invalida.\nValores admitidos mayores que 0\n");
 
         } while (insumos.punto_reorden < 0);
-    
+
         do
         {
             printf("4) Inventario: ");
             scanf("%d", &insumos.inventario);
 
-            if(insumos.inventario < 0)
+            if (insumos.inventario < 0)
                 printf("Valor invalido.\nMinimo 0.");
         } while (insumos.inventario < 0);
-    
+
         do
         {
             printf("5) Clave del proveedor: ");
             scanf("%d", &insumos.clave_proveedor);
 
-            if(proveedores > 10)
-                printf("Cantidad de proveedores maxima alcanzada"); //me falta todavia ver qpd con lo de validar que la clave del proveedor exista tmb y q se repita 10 veces
+            if (proveedores > 10)
+                printf("Cantidad de proveedores maxima alcanzada");
         } while (proveedores > 10);
-    
+
         proveedores++;
 
         do
         {
             printf("6) Precio: ");
-            scanf("%d", &insumos.precio_compra); //q se repita 10 veces
+            scanf("%d", &insumos.precio_compra);
             if (insumos.precio_compra < 0)
                 printf("Precio invalido\n");
 
-        } while (insumos.precio_compra < 0);    
+        } while (insumos.precio_compra < 0);
 
-    
         fwrite(&insumos, sizeof(struct Insumo), 1, articulosf);
 
         do
@@ -223,15 +227,25 @@ void menu_insumos(FILE *articulosf)
                 printf("Valor no valido.\nSolo se permite S o N.\n");
 
         } while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
-
     }
 }
 
-char * convertir_a_minusculas(char *cadena)
+char *convertir_a_minusculas(char *cadena)
 {
     int i;
-    for (i = 0; cadena[i]; i++) {
+    for (i = 0; cadena[i]; i++)
+    {
         cadena[i] = tolower(cadena[i]);
     }
     return cadena;
+}
+
+bool cadena_minimo10(char *descripcion)
+{
+    if (strlen(descripcion) < 10)
+    {
+        printf("Los caracteres minimos son de 10.\n");
+        return false;
+    }
+    return true;
 }
