@@ -6,7 +6,7 @@ struct Articulos
     char temp_siembra;
     char temp_cosecha;
     int clave_mercados;
-    int insumos_requeridos;
+    int insumos_requeridos[10]; //POR QUE SON MAXIMO 10 INSUMOS POR ARTICULO
     float costo_produccion;
     int inventario;
     float precio_venta;

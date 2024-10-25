@@ -41,7 +41,7 @@ void menu_articulos(FILE *articulosf)
     char agregar = 'S';
     struct Articulos x_articulo;
     char *estaciones[4] = {"Primavera", "Verano", "Otoño", "Invierno"};
-    bool checar = false;
+    bool checar;
     int i;
 
     while (agregar != 'N' && agregar != 'n')
@@ -70,12 +70,13 @@ void menu_articulos(FILE *articulosf)
 
         do
         {
+            checar = false;
             printf("3) Temporada de siembra: ");
             gets(x_articulo.temp_siembra);
 
             for(i = 0; i < 4; i++)
             {
-                if(strcpy(x_articulo.temp_siembra, estaciones[i]) != 0)
+                if(strcmp(x_articulo.temp_siembra, estaciones[i]) == 0)
                     checar = true;
             }
             if(!checar)
@@ -84,12 +85,13 @@ void menu_articulos(FILE *articulosf)
 
         do
         {
-            printf("3) Temporada de cosecha: ");
+            checar = false;
+            printf("4) Temporada de cosecha: ");
             gets(x_articulo.temp_cosecha);
 
             for(i = 0; i < 4; i++)
             {
-                if(strcmp(x_articulo.temp_siembra, "Primavera") != 0) //checar como podemos hacerlo con todas las estaciones!!!
+                if(strcmp(x_articulo.temp_cosecha, estaciones[i]) == 0) //checar como podemos hacerlo con todas las estaciones!!!
                     checar = true;
             }
             if(!checar)
@@ -207,10 +209,10 @@ void menu_insumos(FILE *articulosf)
             if (insumos.precio_compra < 0)
                 printf("Precio invalido\n");
 
-        } while (insumos.precio_compra < 0);
+        } while (insumos.precio_compra < 0);    
 
     
-        fwrite(&insumos, sizeof(struct Articulos), 1, articulosf);
+        fwrite(&insumos, sizeof(struct Insumo), 1, articulosf);
 
         do
         {
