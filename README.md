@@ -16,11 +16,11 @@ Para cada artículo se cuenta con la siguiente información:
 - Precio de venta
 
 ### Validaciones:
-- Clave de artículo, número entre 1 y 1,000, el usuario podrá capturar cualquier número.
-- Descripción, al menos 10 caracteres.
+- ✅ Clave de artículo, número entre 1 y 1,000, el usuario podrá capturar cualquier número.
+- ✅ Descripción, al menos 10 caracteres.
 - Clave de mercados, a lo más son 10 y debe existir en el catálogo de mercados.
 - Insumos requeridos, debe incluir la clave de los insumos.
-- Costo y precio, mayor que cero.
+- ✅ Costo y precio, mayor que cero.
 - Inventario, igual o mayor a cero.
 
 ## Insumo
