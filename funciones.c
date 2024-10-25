@@ -42,11 +42,11 @@ int menu_principal()
 
 void menu_articulos(FILE *articulosf)
 {
-    char agregar = 'S';
+    char agregar = 'S', agregar_articulo = 'S', agregar_insumo = 'S';
     struct Articulos x_articulo;
     char *estaciones[4] = {"primavera", "verano", "otoño", "invierno"};
-    bool checar, cadena_valida;
-    int i;
+    bool checar, cadena_valida, insumo= true;
+    int i, n_insumo = 0;
 
     while (agregar != 'N' && agregar != 'n')
     {
@@ -122,29 +122,57 @@ void menu_articulos(FILE *articulosf)
         } while (x_articulo.precio_venta < 0);
 
         // Validar que la clave del insumo este en el catalogo. CATALOGOS SON ARCHIVOS DIRECTOS.
-        do
+        while (insumo && n_insumo < 10)
         {
-            printf("7) Clave del insumo:");
-            scanf("%d", &x_articulo.clave_mercados);
+            do
+            {
+                printf("7) Clave del insumo (VALIDAR QUE EXISTE LA CLAVE DE INSUMO): ");
+                scanf("%d", &x_articulo.Insumos[i]);
 
-            if (x_articulo.clave_mercados < 0)
-                printf("Valor invalido.\nMinimo 0.");
-        } while (x_articulo.clave_mercados < 0);
+                if (x_articulo.Insumos[i] < 0)
+                    printf("Valor invalido.\nMinimo 0.\n");
+            } while (x_articulo.Insumos[i] < 0);
+
+
+            // Validar que la clave del insumo este en el catalogo. CATALOGOS SON ARCHIVOS DIRECTOS.
+            //
+            //
+            //
+            //
+            do
+            {
+                printf("Quieres agregar otro insumo al articulo(S/N): ");
+                fflush(stdin);
+                scanf("%c", &agregar_insumo);
+                if (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n')
+                    printf("Valor no valido.\nSolo se permite S o N.\n");
+
+            } while (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n');
+
+            if (agregar_insumo == 'S' || agregar_insumo == 's')
+                n_insumo++;
+            else
+                insumo = false;
+
+        }
+
+        if (n_insumo == 10)
+            printf("SOLO PERMITEN 10 INSUMOS COMO MAXIMO.");
 
         // GUARDAR LOS DATOS EN UN ARCHIVO DIRECTO.
         fseek(articulosf, x_articulo.clave_articulo * sizeof(struct Articulos), SEEK_SET);
         fwrite(&x_articulo, sizeof(struct Articulos), 1, articulosf);
 
-        // Preguntar si quiere agregar más
+        //Preguntas si quiere agregar mas
         do
         {
             printf("Agregar otro articulo (S/N): ");
             fflush(stdin);
-            scanf(" %c", &agregar);
-            if (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n')
+            scanf("%c", &agregar_articulo);
+            if (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n')
                 printf("Valor no valido.\nSolo se permite S o N.\n");
 
-        } while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
+        } while (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n');
     }
 }
 
