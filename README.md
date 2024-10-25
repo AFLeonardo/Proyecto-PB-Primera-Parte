@@ -1,89 +1,217 @@
-# ESTO ES EL PIA DE EDNA ALCH ESTA BIEN LARGOTE Y PURAS MAMADAS QUE SE INVENTA LA SEÑORA
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIA de Edna Alch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        h2 {
+            color: #2980b9;
+        }
+        h3 {
+            color: #27ae60;
+        }
+        ul {
+            margin: 10px 0;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        .section {
+            background: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>PIA de Edna Alch</h1>
+    <div class="section">
+        <h2>Descripción General</h2>
+        <p>En una granja de la localidad, se dedican a cultivar una gran variedad de frutas y verduras, las cuales, en su tiempo, son vendidas en los mercados locales. Últimamente han aumentado sus ventas, por lo que requieren un sistema automático que los ayude a: llevar el control de sus ventas, empleados, artículos, clientes, proveedores e inventario tanto del producto terminado, así como los insumos para producirlos (semillas, fertilizante, etc.), para lo cual, se ha iniciado un análisis de los datos para poder automatizar dicha información.</p>
+    </div>
 
-En una granja de la localidad, se dedican a cultivar una gran variedad de frutas y verduras, las cuales, en su tiempo, son vendidas en los mercados locales. Últimamente han aumentado sus ventas, por lo que requieren un sistema automático que los ayude a: llevar el control de sus ventas, empleados, artículos, clientes, proveedores e inventario tanto del producto terminado, así como los insumos para producirlos (semillas, fertilizante, etc.), para lo cual, se ha iniciado un análisis de los datos para poder automatizar dicha información. 
+    <div class="section">
+        <h2>Artículo</h2>
+        <p>Para cada artículo se cuenta con la siguiente información:</p>
+        <ul>
+            <li>Clave del artículo</li>
+            <li>Descripción</li>
+            <li>Temporada de siembra</li>
+            <li>Temporada de cosecha</li>
+            <li>Claves de los mercados al que los surten</li>
+            <li>Insumos (Material Prima) requeridos</li>
+            <li>Costo de producción</li>
+            <li>Inventario</li>
+            <li>Precio de venta</li>
+        </ul>
+        <h3>Validaciones:</h3>
+        <ul>
+            <li>Clave de artículo, número entre 1 y 1,000, el usuario podrá capturar cualquier número.</li>
+            <li>Descripción, al menos 10 caracteres.</li>
+            <li>Clave de mercados, a lo más son 10 y debe existir en el catálogo de mercados.</li>
+            <li>Insumos requeridos, debe incluir la clave de los insumos.</li>
+            <li>Costo y precio, mayor que cero.</li>
+            <li>Inventario, igual o mayor a cero.</li>
+        </ul>
+    </div>
 
-Una vez llevado a cabo el análisis, se encontró lo siguiente:
+    <div class="section">
+        <h2>Insumo</h2>
+        <p>Para cada insumo se cuenta con la siguiente información:</p>
+        <ul>
+            <li>Clave del insumo</li>
+            <li>Descripción</li>
+            <li>Punto de reorden</li>
+            <li>Inventario</li>
+            <li>Número de cada proveedor</li>
+            <li>Precio al que los surten</li>
+        </ul>
+        <h3>Validaciones:</h3>
+        <ul>
+            <li>Clave del insumo, número entre 1 y 100.</li>
+            <li>Descripción, al menos 10 caracteres.</li>
+            <li>Punto de reorden, mayor que cero.</li>
+            <li>Inventario, igual o mayor a cero.</li>
+            <li>Número de proveedor, debe existir en el catálogo de proveedores.</li>
+            <li>Precio mayor a 0.</li>
+        </ul>
+    </div>
 
-# ARTICULO
-Para cada artículo se cuenta con la siguiente información: clave del artículo, descripción, temporada de siembra, temporada de cosecha, claves de los mercados al que los surten, insumos (Material Prima) requeridos, costo de producción (Se calcula de acuerdo a los insumos), inventario y precio de venta. Se detectó que se tiene que validar:
-•	clave de artículo, número entre 1 y 1,000, el usuario podrá capturar cualquier número, es decir, no llevan una secuencia.
-•	Descripción, al menos 10 caracteres. Puede contener letras, números y espacios.
-•	clave de mercados, A lo mas son 10 y debe existir en el catálogo de mercados.
-•	Insumos requeridos, debe incluir la clave de los insumos (debe existir). A lo más son 10
-•	Costo y precio, mayor que cero.
-•	Inventario, igual o mayor a cero.
-Crear una estructura para los datos del artículo
+    <div class="section">
+        <h2>Proveedor</h2>
+        <p>Para cada proveedor:</p>
+        <ul>
+            <li>Número de proveedor</li>
+            <li>Nombre completo</li>
+            <li>RFC</li>
+            <li>Correo electrónico</li>
+            <li>Descuento</li>
+            <li>Año, mes y día de nacimiento</li>
+            <li>Dirección</li>
+        </ul>
+        <h3>Validaciones:</h3>
+        <ul>
+            <li>Número de proveedor, número entre 1 y 100.</li>
+            <li>Nombre, al menos tenga 10 caracteres.</li>
+            <li>RFC, validar que sean 13 caracteres.</li>
+            <li>Correo electrónico, validar que contenga la @ y un punto después de ella.</li>
+            <li>Descuento, este entre 0 y 1.</li>
+            <li>Año, que se encuentre entre 1950 y 2006.</li>
+            <li>Mes, que se encuentre entre 1 y 12.</li>
+            <li>Día, que corresponda a los días del mes.</li>
+            <li>Dirección, que incluya calle, número, colonia, municipio y Estado.</li>
+        </ul>
+    </div>
 
-# INSUMO
-Para cada insumo se cuenta con la siguiente información: clave del insumo (Se maneja el mismo número que tiene el proveedor), descripción, punto de reorden (es la cantidad mínima de existencia de un artículo, de modo que cuando el inventario llegue a esa cantidad, el artículo debe reordenarse), inventario, número de cada proveedor y precio al que los surten. Se detectó que se tiene que validar:
-•	Clave del insumo, número entre 1 y 100, el usuario podrá capturar cualquier número, es decir, no llevan una secuencia.
-•	Descripción, al menos 10 caracteres. Puede contener letras, números y espacios.
-•	Punto de reorden, mayor que cero.
-•	Inventario, igual o mayor a cero.
-•	Número de proveedor, debe existir en el catálogo de proveedores.  A lo más pueden ser 10 (también validarlo).
-•	Precio mayor a 0
-Crear una estructura para los datos del insumo
+    <div class="section">
+        <h2>Mercado</h2>
+        <p>Para cada mercado:</p>
+        <ul>
+            <li>Clave del mercado</li>
+            <li>Nombre completo</li>
+            <li>RFC</li>
+            <li>Correo electrónico</li>
+            <li>Descuento</li>
+            <li>Año, mes y día de nacimiento</li>
+            <li>Dirección</li>
+        </ul>
+        <h3>Validaciones:</h3>
+        <ul>
+            <li>Clave del mercado, mayor que cero.</li>
+            <li>Nombre, al menos tenga 10 caracteres.</li>
+            <li>RFC, validar que sean 13 caracteres.</li>
+            <li>Correo electrónico, validar que contenga la @ y un punto después de ella.</li>
+            <li>Descuento, este entre 0 y 1.</li>
+            <li>Año, que se encuentre entre 1950 y 2006.</li>
+            <li>Mes, que se encuentre entre 1 y 12.</li>
+            <li>Día, que corresponda a los días del mes.</li>
+            <li>Dirección, que incluya calle, número, colonia, municipio y Estado.</li>
+        </ul>
+    </div>
 
-# PROVEDOR
-Para cada proveedor: número de proveedor, nombre completo, RFC, correo electrónico, descuento, año, mes y día de nacimiento, dirección. Cada proveedor tiene un listado de los artículos que produce, así como su precio de venta. Validar para estos datos lo siguiente:
-•	Número de proveedor, número entre 1 y 100.
-•	Nombre, al menos tenga 10 caracteres. Puede contener letras y espacios.
-•	RFC, validar que sean 13 caracteres y que sigan la estructura de un RFC
-•	Correo electrónico, validar que contenga la @ y un punto después de ella entre letras.
-•	Descuento, este entre 0 y 1 
-•	Año, que se encuentre entre 1950 y 2006 
-•	Mes, que se encuentre entre 1 y 12 
-•	Día, que corresponda a los días del mes.
-•	Dirección, que incluya calle, número, colonia, municipio y Estado. Validar que solo sean letras, espacios y números, en cada dato
-Crear una estructura para los datos del proveedor
+    <div class="section">
+        <h2>Empleado</h2>
+        <p>Para cada empleado:</p>
+        <ul>
+            <li>Número de empleado</li>
+            <li>Nombre completo</li>
+            <li>RFC</li>
+            <li>Correo electrónico</li>
+            <li>Porcentaje de comisión recibida</li>
+            <li>Año, mes y día de contratación</li>
+            <li>Dirección</li>
+        </ul>
+        <h3>Validaciones:</h3>
+        <ul>
+            <li>Número de empleado, valor entre 1 y 1,000.</li>
+            <li>Nombre completo, al menos tenga 20 caracteres.</li>
+            <li>RFC, validar que sean 13 caracteres.</li>
+            <li>Correo electrónico, validar que contenga la @ y un punto con letras antes y después de él.</li>
+            <li>Año, que se encuentre entre 1990 y año actual.</li>
+            <li>Mes, que se encuentre entre 1 y 12.</li>
+            <li>Día, que corresponda a los días del mes.</li>
+            <li>Dirección, que incluya calle, número, colonia, municipio y Estado.</li>
+        </ul>
+    </div>
 
-# MERCADO
-Para cada mercado: clave del mercado, nombre completo, RFC, correo electrónico, descuento, año, mes y día de nacimiento, dirección. Validar para estos datos lo siguiente:
-•	Clave del mercado, mayor que cero.
-•	Nombre, al menos tenga 10 caracteres. Puede contener letras y espacios.
-•	RFC, validar que sean 13 caracteres y lo correspondiente.
-•	Correo electrónico, validar que contenga la @ y un punto después de ella.
-•	Descuento, este entre 0 y 1
-•	Año, que se encuentre entre 1950 y 2006 
-•	Mes, que se encuentre entre 1 y 12 
-•	Día, que corresponda a los días del mes.
-•	Dirección, que incluya calle, número, colonia, municipio y Estado. Validar que solo sean letras, espacios y números, en cada dato
-Crear una estructura para los datos del mercado
- 
-# EMPLEADO
-Para cada empleado: número de empleado, nombre completo, RFC, correo electrónico, porcentaje de comisión recibida, año, mes y día de contratación, dirección. Validar para estos datos lo siguiente:
-•	Número de empleado, valor entre 1 y 1,000.
-•	Nombre completo, al menos tenga 20 caracteres. Puede contener letras y espacios.
-•	RFC, validar que sean 13 caracteres.
-•	Correo electrónico, validar que contenga la @ y un punto con letras antes y después de él.
-•	Comisión. 
-•	Año, que se encuentre entre 1990 y año actual
-•	Mes, que se encuentre entre 1 y 12
-•	Día, que corresponda a los días del mes.
-•	Dirección, que incluya calle, número, colonia, municipio y Estado. Validar que solo sean letras, espacios y números, en cada dato
-Crear una estructura para los datos del empleado
+    <div class="section">
+        <h2>Venta</h2>
+        <p>Para cada venta que se realice a los mercados, se tendrá lo siguiente:</p>
+        <ul>
+            <li>Número de mercado (cliente)</li>
+            <li>Número de artículo</li>
+            <li>Cantidad</li>
+            <li>Precio</li>
+            <li>Factura</li>
+        </ul>
+        <h3>Validaciones:</h3>
+        <ul>
+            <li>Número de mercado, validar que existe en el catálogo de mercados.</li>
+            <li>Número de artículo, validar que existe en el catálogo de artículos.</li>
+            <li>Cantidad, validar que sea mayor a cero y que tenga el inventario suficiente para la venta.</li>
+            <li>Precio, traerlo del catálogo de artículos.</li>
+            <li>Número de empleado, validar que exista en el catálogo de empleados.</li>
+            <li>Factura, se le preguntará al usuario si desea factura.</li>
+        </ul>
+    </div>
 
+    <div class="section">
+        <h2>Compra</h2>
+        <p>Para cada compra que se realice a los proveedores, se tendrá lo siguiente:</p>
+        <ul>
+            <li>Número de proveedor</li>
+            <li>Número de insumo</li>
+            <li>Cantidad</li>
+            <li>Precio</li>
+        </ul>
+        <h3>Validaciones:</h3>
+        <ul>
+            <li>Número de proveedor, validar que existe en el catálogo de proveedores.</li>
+            <li>Número de insumo, validar que existe en el catálogo de insumos.</li>
+            <li>Cantidad, validar que sea mayor a cero.</li>
+            <li>Precio, traerlo del catálogo de insumos.</li>
+        </ul>
+    </div>
 
-
-Utiliza estructuras anidadas en donde se requiere.
- 
-
-# VENTA
-Para cada venta que se realice a los mercados, se tendrá lo siguiente: Número de mercado (cliente), número de artículo, cantidad, precio y factura. Validar para estos datos lo siguiente:
-•	Número de mercado, validar que existe en el catálogo de mercados. (utilizar una función que regrese V o F, utilizando datos booleanos)
-•	Número de artículo, validar que existe en el catálogo de artículos. (utilizar una función que regrese V o F, utilizando datos booleanos).
-•	Cantidad, validar que sea mayor a cero y que tenga el inventario suficiente para la venta. (utilizar una función que regrese V o F, utilizando datos booleanos).
-•	Precio, traerlo del catálogo de artículos para el cálculo de lo que pagará el cliente.
-•	Número de empleado. (Validar que exista en el catálogo de empleados).
-•	Factura. Se le preguntará al usuario si desea factura, y en caso afirmativo, se mandará a pantalla.
-
-# COMPRA
-Para cada compra que se realice a los proveedores, se tendrá lo siguiente: Número de proveedor, número de insumo, cantidad y precio. Validar para estos datos lo siguiente:
-•	Número de proveedor, validar que existe en el catálogo de proveedores. (utilizar una función que regrese V o F, utilizando datos booleanos)
-•	Número de insumo, validar que existe en el catálogo de insumos y que el proveedor corresponda al indicado previamente. (utilizar una función que regrese V o F, utilizando datos booleanos).
-•	Cantidad, validar que sea mayor a cero
-•	Precio, traerlo del catálogo de insumos de tal forma que corresponda con el artículo indicado.
-
-# CONTROL DE INVETARIO
-Para el control de inventarios, se utiliza para llevar un registro de las compras de insumos que se hicieron y que ya las recibimos en nuestra granja.
-•	Número de proveedor, validar que exista en el catálogo
+    <div class="section">
+        <h2>Control de Inventario</h2>
+        <p>Para el control de inventarios, se utiliza para llevar un registro de las compras de insumos que se hicieron y que ya se recibieron en nuestra granja.</p>
+        <ul>
+            <li>Número de proveedor, validar que exista en el catálogo.</li>
+        </ul>
+    </div>
+</body>
+</html>
