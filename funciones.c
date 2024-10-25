@@ -44,7 +44,7 @@ void menu_articulos(FILE *articulosf)
 {
     char agregar = 'S';
     struct Articulos x_articulo;
-    char *estaciones[4] = {"Primavera", "Verano", "Otoño", "Invierno"};
+    char *estaciones[4] = {"primavera", "verano", "otoño", "invierno"};
     bool checar, cadena_valida;
     int i;
 
@@ -79,7 +79,7 @@ void menu_articulos(FILE *articulosf)
 
             for (i = 0; i < 4; i++)
             {
-                if (strcmp(x_articulo.temp_siembra, estaciones[i]) == 0)
+                if (strcmp(convertir_a_minusculas(x_articulo.temp_siembra), estaciones[i]) == 0)
                     checar = true;
             }
 
@@ -96,11 +96,11 @@ void menu_articulos(FILE *articulosf)
 
             for (i = 0; i < 4; i++)
             {
-                if (strcmp(x_articulo.temp_cosecha, estaciones[i]) == 0)
+                if (strcmp(convertir_a_minusculas(x_articulo.temp_cosecha), estaciones[i]) == 0)
                     checar = true;
             }
             if (!checar)
-                printf("Estacion invalida");
+                printf("Estacion invalida\n");
         } while (!checar);
 
         do
@@ -234,9 +234,7 @@ char *convertir_a_minusculas(char *cadena)
 {
     int i;
     for (i = 0; cadena[i]; i++)
-    {
         cadena[i] = tolower(cadena[i]);
-    }
     return cadena;
 }
 
