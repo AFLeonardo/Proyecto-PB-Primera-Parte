@@ -3,8 +3,8 @@ struct Articulos
 {
     int clave_articulo;
     char descripcion[150];
-    char temp_siembra;
-    char temp_cosecha;
+    char temp_siembra[50];
+    char temp_cosecha[50];
     int clave_mercados;
     int insumos_requeridos[10]; //POR QUE SON MAXIMO 10 INSUMOS POR ARTICULO
     float costo_produccion;
