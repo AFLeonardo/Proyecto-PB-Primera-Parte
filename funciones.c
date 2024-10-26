@@ -42,7 +42,7 @@ int menu_principal()
 
 void menu_articulos(FILE *articulosf)
 {
-    char agregar = 'S', agregar_articulo = 'S', agregar_insumo = 'S';
+    char agregar = 'S', agregar_insumo = 'S';
     struct Articulos x_articulo;
     char *estaciones[4] = {"primavera", "verano", "otoño", "invierno"};
     bool checar, cadena_valida, insumo= true;
@@ -127,11 +127,11 @@ void menu_articulos(FILE *articulosf)
             do
             {
                 printf("7) Clave del insumo (VALIDAR QUE EXISTE LA CLAVE DE INSUMO): ");
-                scanf("%d", &x_articulo.Insumos[i]);
+                scanf("%d", &x_articulo.insumos_requeridos[i]);
 
-                if (x_articulo.Insumos[i] < 0)
+                if (x_articulo.insumos_requeridos[i] < 0)
                     printf("Valor invalido.\nMinimo 0.\n");
-            } while (x_articulo.Insumos[i] < 0);
+            } while (x_articulo.insumos_requeridos[i] < 0);
 
 
             // Validar que la clave del insumo este en el catalogo. CATALOGOS SON ARCHIVOS DIRECTOS.
@@ -168,11 +168,11 @@ void menu_articulos(FILE *articulosf)
         {
             printf("Agregar otro articulo (S/N): ");
             fflush(stdin);
-            scanf("%c", &agregar_articulo);
-            if (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n')
+            scanf("%c", &agregar);
+            if (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n')
                 printf("Valor no valido.\nSolo se permite S o N.\n");
 
-        } while (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n');
+        } while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
     }
 }
 
