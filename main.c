@@ -2,11 +2,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-
 // MENUS
 int menu_principal();
 void menu_articulos(FILE *);
-void menu_insumos();
+void menu_insumos(FILE *);
 void menu_mercados();
 void menu_empleados();
 void menu_proveedores();
@@ -14,7 +13,6 @@ void menu_control_ventas();
 void menu_control_compras();
 void menu_control_inventario();
 void menu_reportes();
-char *convertir_a_minusculas(char *);
 
 // ESTRUCTURAS
 struct Articulos
@@ -122,7 +120,7 @@ int main()
                 break;
 
             case 2:
-                if ((archivo = fopen("Insumos.dat", "a")) == NULL)
+                if ((archivo = fopen("Archivo.dat", "a")) == NULL)
                     printf("Error al abrir el archivo");
                 else
                 {
@@ -172,7 +170,7 @@ int main()
 int menu_principal()
 {
     int opcion;
-    printf("\n\%20s", "Menu principal\n");
+    printf("%s", "MENU PRINCIPAL\n\n");
     printf("1) Articulos\n");
     printf("2) Insumos\n");
     printf("3) Mercados\n");
@@ -193,9 +191,12 @@ void menu_articulos(FILE *articulosf)
 {
     char agregar = 'S';
     struct Articulos x_articulo;
-    char estaciones[4] = {"Primavera", "Verano", "Otoño", "Invierno"};
+    struct Insumo insumos;
+    
+    char estaciones = {"Primavera", "Verano", "Otoño", "Invierno"};
     bool checar = false;
     int i;
+    FILE *insumolocal;
 
     while (agregar != 'N' && agregar != 'n')
     {
@@ -221,6 +222,7 @@ void menu_articulos(FILE *articulosf)
 
         } while (strlen(x_articulo.descripcion) < 10);
 
+        // Las temporadas se manejan de acuerdo a los meses. 1-12
         do
         {
             printf("3) Temporada de siembra: ");
@@ -228,7 +230,7 @@ void menu_articulos(FILE *articulosf)
 
             for(i = 0; i < 4; i++)
             {
-                if(strcpy(x_articulo.temp_siembra, estaciones[i]) != 0)
+                if(strcmp(x_articulo.temp_siembra, "Primavera") != 0) //checar como podemos hacerlo con todas las estaciones!!!
                     checar = true;
             }
             if(!checar)
@@ -281,6 +283,14 @@ void menu_articulos(FILE *articulosf)
         fseek(articulosf, x_articulo.clave_articulo * sizeof(struct Articulos), SEEK_SET); //me perdi aqui
         fwrite(&x_articulo, sizeof(struct Articulos), 1, articulosf);
 
+        //CALCULAR COSTO DE PRODUCCION
+        if ((archivo = fopen("Archivo.dat", "a")) == NULL)
+            printf("Error al abrir el archivo");
+        else
+        {
+            fseek(articulosf)
+        }
+
         //Preguntas si quiere agregar mas
         do
         {
@@ -301,7 +311,7 @@ void menu_insumos(FILE *articulosf)
     int proveedores = 0;
     bool checar;
 
-    printf("\n\%20s", "INSUMOS\n");
+    printf("\n%20s", "INSUMOS\n");
 
     while (agregar != 'N' && agregar != 'n')
     {
@@ -323,7 +333,7 @@ void menu_insumos(FILE *articulosf)
                 printf("Los caracteres minimos son 10.\n");
 
         } while (strlen(insumos.descripcion) < 10);
-    
+
         do
         {
             printf("3) Punto de reorden: ");
@@ -332,7 +342,7 @@ void menu_insumos(FILE *articulosf)
                 printf("Clave invalida.\nValores admitidos mayores que 0\n");
 
         } while (insumos.punto_reorden < 0);
-    
+
         do
         {
             printf("4) Inventario: ");
@@ -341,7 +351,7 @@ void menu_insumos(FILE *articulosf)
             if(insumos.inventario < 0)
                 printf("Valor invalido.\nMinimo 0.");
         } while (insumos.inventario < 0);
-    
+
         do
         {
             printf("5) Clave del proveedor: ");
@@ -350,7 +360,7 @@ void menu_insumos(FILE *articulosf)
             if(proveedores > 10)
                 printf("Cantidad de proveedores maxima alcanzada"); //me falta todavia ver qpd con lo de validar que la clave del proveedor exista tmb y q se repita 10 veces
         } while (proveedores > 10);
-    
+
         proveedores++;
 
         do
@@ -362,8 +372,8 @@ void menu_insumos(FILE *articulosf)
 
         } while (insumos.precio_compra < 0);
 
-    
-        fwrite(&insumos, sizeof(struct Articulos), 1, articulosf);
+        fseek(articulosf, insumos.clave_insumo * sizeof(struct Insumo), SEEK_SET); //me perdi aqui
+        fwrite(&insumos, sizeof(struct Insumo), 1, articulosf);
 
         do
         {
@@ -376,13 +386,4 @@ void menu_insumos(FILE *articulosf)
         } while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
 
     }
-}
-
-char * convertir_a_minusculas(char *cadena)
-{
-    int i;
-    for (i = 0; cadena[i]; i++) {
-        cadena[i] = tolower(cadena[i]);
-    }
-    return cadena;
 }
