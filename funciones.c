@@ -5,9 +5,10 @@
 #include <ctype.h>
 #include "estructuras.c"
 
+// MENUS
 int menu_principal();
 void menu_articulos(FILE *);
-void menu_insumos();
+void menu_insumos(FILE *);
 void menu_mercados();
 void menu_empleados();
 void menu_proveedores();
@@ -159,11 +160,18 @@ void menu_articulos(FILE *articulosf)
         if (n_insumo == 10)
             printf("SOLO PERMITEN 10 INSUMOS COMO MAXIMO.");
 
+        //CALCULAR COSTO DE PRODUCCION
+        if ((archivo = fopen("Archivo.dat", "a")) == NULL)
+            printf("Error al abrir el archivo");
+        else
+        {
+            fseek(articulosf)
+        }
+
         // GUARDAR LOS DATOS EN UN ARCHIVO DIRECTO.
         fseek(articulosf, x_articulo.clave_articulo * sizeof(struct Articulos), SEEK_SET);
         fwrite(&x_articulo, sizeof(struct Articulos), 1, articulosf);
 
-        //Preguntas si quiere agregar mas
         do
         {
             printf("Agregar otro articulo (S/N): ");
@@ -183,7 +191,7 @@ void menu_insumos(FILE *articulosf)
     int proveedores = 0;
     // bool checar;  ESTA CHINGADERA LA VA A HACER ALEXIS
 
-    printf("\n\%20s", "INSUMOS\n");
+    printf("\n%20s", "INSUMOS\n");
 
     while (agregar != 'N' && agregar != 'n')
     {
