@@ -34,7 +34,7 @@ int main()
                 break;
 
             case 2:
-                if ((archivo = fopen("Archivo.dat", "a")) == NULL)
+                if ((archivo = fopen("Insumos.dat", "a")) == NULL)
                     printf("Error al abrir el archivo");
                 else
                 {
