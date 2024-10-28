@@ -45,9 +45,11 @@ void menu_articulos(FILE *articulosf)
 {
     char agregar = 'S', agregar_insumo = 'S';
     struct Articulos x_articulo;
+    struct Insumo insumos;
     char *estaciones[4] = {"primavera", "verano", "otoño", "invierno"};
-    bool checar, cadena_valida, insumo= true;
-    int i, n_insumo = 0;
+    bool checar, cadena_valida, clave_valida = false;
+    int i, cant_proovedores = 0;
+    FILE *insumolocal;
 
     while (agregar != 'N' && agregar != 'n')
     {
@@ -123,51 +125,57 @@ void menu_articulos(FILE *articulosf)
         } while (x_articulo.precio_venta < 0);
 
         // Validar que la clave del insumo este en el catalogo. CATALOGOS SON ARCHIVOS DIRECTOS.
-        while (insumo && n_insumo < 10)
-        {
-            do
-            {
-                printf("7) Clave del insumo (VALIDAR QUE EXISTE LA CLAVE DE INSUMO): ");
-                scanf("%d", &x_articulo.insumos_requeridos[i]);
 
-                if (x_articulo.insumos_requeridos[i] < 0)
-                    printf("Valor invalido.\nMinimo 0.\n");
-            } while (x_articulo.insumos_requeridos[i] < 0);
-
-
-            // Validar que la clave del insumo este en el catalogo. CATALOGOS SON ARCHIVOS DIRECTOS.
-            //
-            //
-            //
-            //
-            do
-            {
-                printf("Quieres agregar otro insumo al articulo(S/N): ");
-                fflush(stdin);
-                scanf("%c", &agregar_insumo);
-                if (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n')
-                    printf("Valor no valido.\nSolo se permite S o N.\n");
-
-            } while (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n');
-
-            if (agregar_insumo == 'S' || agregar_insumo == 's')
-                n_insumo++;
-            else
-                insumo = false;
-
-        }
-
-        if (n_insumo == 10)
-            printf("SOLO PERMITEN 10 INSUMOS COMO MAXIMO.");
-
-        //CALCULAR COSTO DE PRODUCCION
-        if ((archivo = fopen("Archivo.dat", "a")) == NULL)
-            printf("Error al abrir el archivo");
+        if((insumolocal = fopen("Insumos.dat", "r")) == NULL)
+                printf("No se pudo abrir el archivo\n");
+    
         else
         {
-            fseek(articulosf)
+            while (clave_valida == false  && cant_proovedores < 10)
+            {
+                printf("7) Clave del insumo:");
+                scanf("%d", &x_articulo.clave_mercados);
+
+                while(!EOF)
+                {
+                    fseek(insumolocal, (x_articulo.clave_mercados - 1) * sizeof(struct Insumo), SEEK_SET);
+                    fread(&insumos, sizeof(struct Insumo), 1, insumolocal);
+
+                    if (insumos.clave_insumo == x_articulo.clave_mercados)
+                    {
+                        clave_valida = true;
+                        cant_proovedores++;
+                    }
+
+                    if (clave_valida == false)
+                        printf("Clave del insumo no encontrada\n");
+                
+                    else if(cant_proovedores > 10)
+                    {
+                        printf("El maximo son 10 proveedores\n");
+                        clave_valida = false;
+                    }
+
+
+                    do
+                    {
+                        printf("Quieres agregar otro insumo al articulo(S/N): \n");
+                        fflush(stdin);
+                        scanf("%c", &agregar_insumo);
+
+                        if (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n')
+                            printf("Valor no valido.\nSolo se permite S o N.\n");
+
+                    } while (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n');
+
+                }
+            }
         }
 
+        //CALCULAR COSTO DE PRODUCCION
+        //fseek(articulosf);
+        
+        fclose(insumolocal);
         // GUARDAR LOS DATOS EN UN ARCHIVO DIRECTO.
         fseek(articulosf, x_articulo.clave_articulo * sizeof(struct Articulos), SEEK_SET);
         fwrite(&x_articulo, sizeof(struct Articulos), 1, articulosf);
