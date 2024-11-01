@@ -3,12 +3,10 @@
 #include <stdbool.h>
 #include <string.h>
 #include "funciones.c"
-#include <locale.h>
 
 // ESTO SI FUNCIONA
 int main()
 {
-    setlocale(LC_ALL, "es_ES.UTF-8");
     int opcion;
     bool ciclo = true;
     FILE *archivo;
@@ -83,4 +81,3 @@ int main()
     }
     return 0;
 }
-
