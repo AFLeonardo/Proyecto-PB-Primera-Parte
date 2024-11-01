@@ -5,7 +5,7 @@
 #include "funciones.c"
 #include <locale.h>
 
-
+// ESTO SI FUNCIONA
 int main()
 {
     setlocale(LC_ALL, "es_ES.UTF-8");
