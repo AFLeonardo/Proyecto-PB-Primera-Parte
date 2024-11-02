@@ -45,7 +45,13 @@ int main()
                 break;
 
             case 3:
-                printf("\n\%20s", "MERCADOS\n");
+                if ((archivo = fopen("Mercados.dat", "a")) == NULL)
+                    printf("Error al abrir el archivo");
+                else
+                {
+                    menu_mercados(archivo);
+                    fclose(archivo);
+                }
                 break;
 
             case 4:
