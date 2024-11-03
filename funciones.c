@@ -48,7 +48,7 @@ void menu_articulos(FILE *articulosf)
     struct Insumo insumos;
     struct Mercado mercado;
     char *estaciones[4] = {"p", "v", "o", "i"}, agregar_mercado = 's';
-    bool checar, cadena_valida, clave_valida;
+    bool checar, cadena_valida, clave_valida = false;
     int i, cant_insumos = 0, n_mercados = 0;
     FILE *insumolocal, *mercado_local;
     float costo_produccion = 0;
@@ -137,7 +137,6 @@ void menu_articulos(FILE *articulosf)
                 // Validar que la clave del insumo este en el catalogo
                 while (agregar_insumo == 's' && cant_insumos < 10)
 				{
-				    clave_valida = false;
                     printf("7) Clave del insumo:");
                     scanf("%d", &x_articulo.insumos_requeridos[cant_insumos]);
 
@@ -160,7 +159,7 @@ void menu_articulos(FILE *articulosf)
                         fflush(stdin);
                         scanf("%c", &agregar_insumo);
 
-                        if (agregar_insumo != 's' && agregar_insumo != 'n')
+                        if (agregar_insumo != 's' && agregar_insumo != 'n') //hay q ver como hacer para que acepte mayus
                             printf("Valor no valido, solo se permite (s/n) \n");
 
                     }while (agregar_insumo != 's' && agregar_insumo != 'n');
@@ -224,80 +223,225 @@ void menu_articulos(FILE *articulosf)
 }
 void menu_insumos(FILE *insumosf)
 {
-    char agregar;
+    char agregar, agregar_proveedor = 's';
     struct Insumo insumos;
-    int proveedores = 0;
+    struct Proveedor proveedores;
+    FILE *proveedorlocal;
+    int cant_proveedores = 0;
+    bool clave_valida = false;
 
     printf("\n%20s", "INSUMOS\n");
 
     while (agregar != 'N' && agregar != 'n')
     {
+        if((proveedorlocal = fopen("Proveedores.dat", "r")) == NULL)
+            printf("Error al abrir el archivo");
+        else
+        {
+            while (agregar != 'N' && agregar != 'n')
+            {
+                do
+                {
+                    printf("1) Clave del insumo: ");
+                    scanf("%d", &insumos.clave_insumo);
+                    if (insumos.clave_insumo > 100 || insumos.clave_insumo < 1)
+                        printf("Clave invalida. Valores admitidos 1 a 100. \n");
+
+                }while (insumos.clave_insumo > 100 || insumos.clave_insumo < 1);
+
+                do
+                {
+                    printf("2) Descripcion: ");
+                    fflush(stdin);
+                    gets(insumos.descripcion);
+                    if (strlen(insumos.descripcion) < 10)
+                        printf("Los caracteres minimos son 10.\n");
+
+                }while(strlen(insumos.descripcion) < 10);
+
+                do
+                {
+                    printf("3) Punto de reorden: ");
+                    scanf("%d", &insumos.punto_reorden);
+                    if (insumos.punto_reorden <= 0)
+                        printf("Clave invalida. Valores admitidos mayores que 0. \n");
+
+                }while (insumos.punto_reorden <= 0);
+
+                do
+                {
+                    printf("4) Inventario: ");
+                    scanf("%d", &insumos.inventario);
+
+                    if (insumos.inventario < 0)
+                        printf("Valor invalido, minimo 0. \n");
+
+                }while(insumos.inventario < 0 && cant_proveedores < 10);
+
+                //hay q validar q exista en proveedores y maximo 10 checarlo pq esta mal
+                while(agregar_proveedor == 's' && cant_proveedores < 10)
+                {
+                    printf("5) Clave del proveedor: ");
+                    scanf("%d", &insumos.clave_proveedor[cant_proveedores]);
+
+                    fseek(proveedorlocal, (insumos.clave_proveedor[cant_proveedores] - 1) * sizeof(struct Proveedor), SEEK_SET);
+                    fread(&proveedores, sizeof(struct Proveedor), 1, proveedorlocal);
+
+                    if(proveedores.numero_proveedor == insumos.clave_proveedor[cant_proveedores])
+                    {
+                        clave_valida = true;
+                        cant_proveedores++;
+
+                    }
+
+                    if(!clave_valida)
+                        printf("Clave del proveedor invalida no coincide con la del insumo \n");
+
+                    do
+                    {
+                        printf("Quieres agregar otro proveedor al insumo?(s/n): \n");
+                        fflush(stdin);
+                        scanf("%c", &agregar_proveedor);
+
+                        if (agregar_proveedor != 's' && agregar_proveedor != 'n') //hay q ver como hacer para que acepte mayus
+                            printf("Valor no valido, solo se permite (s/n) \n");
+
+                    }while (agregar_proveedor != 's' && agregar_proveedor != 'n');
+                }
+
+                if(cant_proveedores > 10)
+                    printf("El maximo son 10 proveedores \n");
+                do
+                {
+                    printf("6) Precio: ");
+                    scanf("%f", &insumos.precio_compra);
+                    if (insumos.precio_compra <= 0)
+                        printf("Precio invalido\n");
+
+                }while(insumos.precio_compra <= 0);
+
+                fseek(insumosf, (insumos.clave_insumo - 1) * sizeof(struct Insumo), SEEK_SET);
+                fwrite(&insumos, sizeof(struct Insumo), 1, insumosf);
+
+                do
+                {
+                    printf("Agregar otro insumo (S/N): ");
+                    fflush(stdin);
+                    scanf("%c", &agregar);
+                    if (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n')
+                        printf("Valor no valido.\nSolo se permite S o N.\n");
+
+                }while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
+
+            }
+            fclose(proveedorlocal);
+        }
+    }
+}
+
+void menu_proveedores(FILE *fproveedores)
+{
+    struct Proveedor proveedores;
+    char agregar = 's';
+
+    printf("\n%20s", "PROVEEDORES\n");
+
+    while(agregar != 'n' && agregar != 'N')
+    {
         do
         {
-            printf("1) Clave del insumo: ");
-            scanf("%d", &insumos.clave_insumo);
-            if (insumos.clave_insumo > 100 || insumos.clave_insumo < 1)
-                printf("Clave invalida. Valores admitidos 1 a 100. \n");
+            printf("1) Ingrese su numero de proveedor: \n");
+            scanf("%d", &proveedores.numero_proveedor);
 
-        }while (insumos.clave_insumo > 100 || insumos.clave_insumo < 1);
+            if(proveedores.numero_proveedor < 1 || proveedores.numero_proveedor > 100)
+                printf("Numero de proveedor invalido\n");
+
+        }while(proveedores.numero_proveedor < 1 || proveedores.numero_proveedor > 100);
 
         do
         {
-            printf("2) Descripcion: ");
+            printf("2) Nombre completo: \n");
             fflush(stdin);
-            gets(insumos.descripcion);
-            if (strlen(insumos.descripcion) < 10)
-                printf("Los caracteres minimos son 10.\n");
+            gets(proveedores.nombre_completo);
+            if (strlen(proveedores.nombre_completo) < 10)
+                printf("Los caracteres minimos son 10 \n");
 
-        }while(strlen(insumos.descripcion) < 10);
+        }while (strlen(proveedores.nombre_completo) < 10);
+
+        do //falta validar lo correspondiente
+        {
+            printf("3) RFC: ");
+            fflush(stdin);
+            gets(proveedores.RFC);
+            if (strlen(proveedores.RFC) != 13)
+                printf("Los caracteres deben ser 13.\n");
+
+        }while (strlen(proveedores.RFC) != 13); //preguntar a edna si para el RFC se pueden usar expresiones regulares
+
+        do //falta validar @ y punto
+        {
+            printf("4) Correo electronico: ");
+            fflush(stdin);
+            gets(proveedores.correo);
+            if (strlen(proveedores.correo) < 0)
+                printf("Falta validar.\n");
+
+        }while (strlen(proveedores.correo) < 0);
 
         do
         {
-            printf("3) Punto de reorden: ");
-            scanf("%d", &insumos.punto_reorden);
-            if (insumos.punto_reorden <= 0)
-                printf("Clave invalida. Valores admitidos mayores que 0. \n");
+            printf("5) Descuento: ");
+            scanf("%f", &proveedores.descuento);
 
-        }while (insumos.punto_reorden <= 0);
+            if (proveedores.descuento < 0 || proveedores.descuento > 1)
+                printf("Descuento invalido debe de estar entre 0 y 1.\n");
 
-        do
-        {
-            printf("4) Inventario: ");
-            scanf("%d", &insumos.inventario);
-
-            if (insumos.inventario < 0)
-                printf("Valor invalido, minimo 0. \n");
-
-        }while(insumos.inventario < 0);
-
-        //hay q validar q exista en proveedores y maximo 10
-        do
-        {
-            printf("5) Clave del proveedor: ");
-            scanf("%d", &insumos.clave_proveedor);
-
-            if (proveedores > 10)
-                printf("Cantidad de proveedores maxima alcanzada");
-
-        }while (proveedores > 10);
-
-        proveedores++;
+        }while (proveedores.descuento < 0 || proveedores.descuento > 1);
 
         do
         {
-            printf("6) Precio: ");
-            scanf("%f", &insumos.precio_compra);
-            if (insumos.precio_compra <= 0)
-                printf("Precio invalido\n");
+            printf("6) Año de nacimiento: ");
+            scanf("%d", &proveedores.anio_nacimiento);
+            if (proveedores.anio_nacimiento < 1950 || proveedores.anio_nacimiento > 2006)
+                printf("Año de nacimiento invalido, debe de estar entre 1950 y 2006\n");
 
-        }while(insumos.precio_compra <= 0);
-
-        fseek(insumosf, (insumos.clave_insumo - 1) * sizeof(struct Insumo), SEEK_SET);
-        fwrite(&insumos, sizeof(struct Insumo), 1, insumosf);
+        }while (proveedores.anio_nacimiento < 1950 || proveedores.anio_nacimiento > 2006);
 
         do
         {
-            printf("Agregar otro insumo (S/N): ");
+            printf("7) Mes de nacimiento: ");
+            scanf("%d", &proveedores.mes_nacimiento);
+            if (proveedores.mes_nacimiento < 1 || proveedores.mes_nacimiento > 12)
+                printf("Mes de nacimiento invalido, debe de estar entre 1 y 12\n");
+
+        }while (proveedores.mes_nacimiento < 1 || proveedores.mes_nacimiento > 12);
+
+        do
+        {
+            printf("8) Dia de nacimiento: ");//validar q dia corresponda a mes
+            scanf("%d", &proveedores.dia_nacimiento);
+            if (proveedores.dia_nacimiento < 0)
+                printf("Falta validar\n");
+
+        }while (proveedores.dia_nacimiento < 0);
+
+
+        do
+        {
+            printf("9) Direccion: ");//validar cositas esas
+            fflush(stdin);
+            gets(proveedores.direccion);
+            if (strlen(proveedores.direccion) < 0)
+                printf("Falta validar.\n");
+
+        }while (strlen(proveedores.direccion) < 0);
+
+        fseek(fproveedores, (proveedores.numero_proveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
+        fwrite(&proveedores, sizeof(struct Proveedor), 1, fproveedores);
+
+        do
+        {
+            printf("Agregar otro proveedor (S/N): ");
             fflush(stdin);
             scanf("%c", &agregar);
             if (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n')
@@ -306,6 +450,9 @@ void menu_insumos(FILE *insumosf)
         }while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
     }
 }
+
+
+
 
 char *convertir_a_minusculas(char *cadena)
 {

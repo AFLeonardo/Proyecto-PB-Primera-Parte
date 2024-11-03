@@ -59,8 +59,16 @@ int main()
                 break;
 
             case 5:
-                printf("\n\%20s", "PROVEEDORES\n");
+                if((archivo = fopen("Proveedores.dat", "w")) == NULL)
+                    printf("Error al abrir el archivo");
+
+                else
+                {
+                    menu_proveedores(archivo);
+                    fclose(archivo);
+                }
                 break;
+
 
             case 6:
                 printf("\n\%20s", "VENTAS\n");
