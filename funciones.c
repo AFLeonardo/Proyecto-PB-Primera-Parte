@@ -22,6 +22,10 @@ char *convertir_a_minusculas(char *);
 bool cadena_minimo10(char *);
 bool validar_rfc(char *);
 bool validar_correo(char *);
+bool validarDiaMes(int, int, int);
+
+
+
 int menu_principal()
 {
     int opcion;
@@ -357,7 +361,7 @@ void menu_insumos(FILE *insumosf)
 void menu_empleados(FILE *fempleados)
 {
     struct Empleado empleados;
-    bool rfc_valido = true, correo_correcto = true;
+    bool rfc_valido = true, correo_correcto = true, validardia = true;
     char agregar = 's';
 
     printf("\n%20s", "EMPLEADOS\n");
@@ -366,7 +370,7 @@ void menu_empleados(FILE *fempleados)
     {
         do
         {
-            printf("1) Ingrese su numero de empleado: \n");
+            printf("1) Ingrese su numero de empleado: ");
             scanf("%d", &empleados.numero_empleado);
 
             if(empleados.numero_empleado < 1 || empleados.numero_empleado > 1000)
@@ -376,11 +380,11 @@ void menu_empleados(FILE *fempleados)
 
         do
         {
-            printf("2) Nombre completo: \n");
+            printf("2) Nombre completo: ");
             fflush(stdin);
             gets(empleados.nombre_completo);
             if (strlen(empleados.nombre_completo) < 20)
-                printf("Los caracteres minimos son 10 \n");
+                printf("Los caracteres minimos son 20 \n");
 
         }while (strlen(empleados.nombre_completo) < 20);
 
@@ -418,7 +422,7 @@ void menu_empleados(FILE *fempleados)
 
         do
         {
-            printf("Ingrese la comision recibida: \n");
+            printf("5) Comision recibida: ");
             scanf("%f", &empleados.comision);
 
             if(empleados.comision < 0)
@@ -449,10 +453,12 @@ void menu_empleados(FILE *fempleados)
         {
             printf("8) Dia de nacimiento: ");//validar q dia corresponda a mes***************************
             scanf("%d", &empleados.dia_contratacion);
-            if (empleados.dia_contratacion < 0)
-                printf("Falta validar\n");
+            validardia = validarDiaMes(empleados.dia_contratacion, empleados.mes_contratacion, empleados.anio_contratacion);
+            if (!validardia)
+                printf("Ingrese un dia valido correspondiente al mes\n");
 
-        }while (empleados.dia_contratacion < 0);//**********************************************************
+        }while (!validardia);//**********************************************************
+
 
         do
         {
@@ -483,7 +489,7 @@ void menu_proveedores(FILE *fproveedores)
 {
     struct Proveedor proveedores;
     char agregar = 's';
-    bool rfc_valido, correo_correcto = true;
+    bool rfc_valido = true, correo_correcto = true, validardia = true;
 
     printf("\n%20s", "PROVEEDORES\n");
 
@@ -491,7 +497,7 @@ void menu_proveedores(FILE *fproveedores)
     {
         do
         {
-            printf("1) Ingrese su numero de proveedor: \n");
+            printf("1) Ingrese su numero de proveedor: ");
             scanf("%d", &proveedores.numero_proveedor);
 
             if(proveedores.numero_proveedor < 1 || proveedores.numero_proveedor > 100)
@@ -501,7 +507,7 @@ void menu_proveedores(FILE *fproveedores)
 
         do
         {
-            printf("2) Nombre completo: \n");
+            printf("2) Nombre completo: ");
             fflush(stdin);
             gets(proveedores.nombre_completo);
             if (strlen(proveedores.nombre_completo) < 10)
@@ -576,10 +582,11 @@ void menu_proveedores(FILE *fproveedores)
         {
             printf("8) Dia de nacimiento: ");//validar q dia corresponda a mes
             scanf("%d", &proveedores.dia_nacimiento);
-            if (proveedores.dia_nacimiento < 0)
-                printf("Falta validar\n");
+            validardia = validarDiaMes(proveedores.dia_nacimiento, proveedores.mes_nacimiento, proveedores.anio_nacimiento);
+            if (!validardia)
+                printf("Ingrese un dia valido correspondiente al mes\n");
 
-        }while (proveedores.dia_nacimiento < 0);
+        }while (!validardia);
 
 
         do
@@ -662,7 +669,7 @@ void menu_mercados(FILE *mercadosf)
 {
     char agregar;
     struct Mercado mercados;
-    bool correo_correcto = true, rfc_valido; //checar si se puede inicializar o no
+    bool correo_correcto = true, rfc_valido=true, validardia=true; //checar si se puede inicializar o no
 
     printf("\n%20s", "MERCADOS\n");
 
@@ -754,10 +761,10 @@ void menu_mercados(FILE *mercadosf)
         {
             printf("8) Dia de nacimiento: ");//validar q dia corresponda a mes
             scanf("%d", &mercados.dia_nacimiento);
-            if (mercados.dia_nacimiento < 0)
-                printf("Falta validar\n");
-
-        }while (mercados.dia_nacimiento < 0);
+            validardia = validarDiaMes(mercados.dia_nacimiento, mercados.mes_nacimiento, mercados.anio_nacimiento);
+            if (!validardia)
+                printf("Ingrese un dia valido correspondiente al mes\n");
+        }while (!validardia);
 
 
         do
@@ -806,4 +813,26 @@ bool validar_correo(char * fcorreo)
 
     else
         return false;
+}
+
+bool validarDiaMes(int dia, int mes, int anio) 
+{
+    int diasEnMes;
+
+    switch (mes) 
+    {
+        case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+            diasEnMes = 31;
+            break;
+        case 4: case 6: case 9: case 11:
+            diasEnMes = 30;
+            break;
+        case 2:
+            if ((anio % 4 == 0 && anio % 100 != 0) || (anio % 400 == 0)) 
+                diasEnMes = 29; 
+            else
+                diasEnMes = 28; 
+            break;
+    }
+    return dia >= 1 && dia <= diasEnMes;
 }
