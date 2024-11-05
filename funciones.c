@@ -770,3 +770,43 @@ void menu_mercados(FILE *mercadosf)
 
 
 }
+
+bool validar_correo(char *);
+
+main()
+{
+    char correo[40];
+    bool correo_correcto = true;
+
+
+   printf("Ingrese correo \n");
+   gets(correo);
+
+   correo_correcto = validar_correo(correo);
+
+   if(correo_correcto == false)
+    printf("El correo no cumple con el formato");
+
+   else
+    printf("El correo es correcto");
+}
+
+bool validar_correo(char * fcorreo)
+{
+    int arroba = 0, punto = 0, i;
+
+    for(i = 0; fcorreo[i] != '\0'; i++)
+    {
+        if(fcorreo[i] == '@')
+            arroba = i;
+
+        else if(fcorreo[i] == '.')
+            punto = i;
+    }
+
+    if(arroba < punto)
+        return true;
+
+    else
+        return false;
+}
