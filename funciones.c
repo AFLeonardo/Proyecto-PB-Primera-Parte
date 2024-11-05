@@ -20,9 +20,8 @@ void menu_reportes();
 // FUNCIONES
 char *convertir_a_minusculas(char *);
 bool cadena_minimo10(char *);
-void validar_rfc(char *, bool *);
+bool validar_rfc(char *);
 bool validar_correo(char *);
-
 int menu_principal()
 {
     int opcion;
@@ -397,7 +396,7 @@ void menu_empleados(FILE *fempleados)
                 rfc_valido = false;
             }
             else
-                validar_rfc(empleados.RFC, &rfc_valido);
+                rfc_valido = validar_rfc(empleados.RFC);
 
             if (rfc_valido == false)
                 printf("RFC invalido. No cumple con la estructurada adecuada\n");
@@ -520,7 +519,7 @@ void menu_proveedores(FILE *fproveedores)
             }
 
             else
-                validar_rfc(proveedores.RFC, &rfc_valido);
+                rfc_valido = validar_rfc(proveedores.RFC);
 
             if (!rfc_valido)
                 printf("RFC invalido. No cumple con la estructurada adecuada\n");
@@ -605,7 +604,6 @@ void menu_proveedores(FILE *fproveedores)
     }
 }
 
-
 char *convertir_a_minusculas(char *cadena)
 {
     int i;
@@ -625,63 +623,36 @@ bool cadena_minimo10(char *descripcion)
     return true;
 }
 
-void validar_rfc(char *frfc, bool *fvalidar)// checar qpd con la validacion del rfc mañana
-{
+bool validar_rfc(char *frfc) {
     int i;
-    printf("Antes de asignar el true %s\n", fvalidar ? "True" : "False");
-    //ABCD123456XXX ABCD123456A1A
-    printf("Despues de asignar el true %s\n", fvalidar ? "True" : "False");
 
-    if (strlen(frfc) == 13)
-    {
-        for(i = 0; i < 4; i++)
-        {
-            if((frfc[i] < 'A' || frfc[i] > 'Z') && (frfc[i] < 'a' || frfc[i] > 'z'))
-            {
-                fvalidar = false; // VALIDA LAS PRIMERAS 4 LETRAS
-            }
-            printf("Primer for %s\n", fvalidar ? "True" : "False");
-
-        }
-
-        for(i = 4; i < 10; i++)
-        {
-            if (frfc[i] < '0' || frfc[i] > '9')
-            {
-                fvalidar = false; // VALIDA SI SON NUMEROS LOS SIGUEINTES 6 DIGITOS
-            }
-            printf("Segundo for %s\n", fvalidar ? "True" : "False");
-        }
-
-        for (i = 10; i < 13; i++)
-        {
-            if(((frfc[i] < 'A' || frfc[i] > 'Z') && (frfc[i] < 'a' || frfc[i] > 'z')) && (frfc[i] < '0' || frfc[i] > '9'))
-                *fvalidar = true;
-            printf("Tercer for %s\n", fvalidar ? "True" : "False");
-
-        }
-        *fvalidar = true;
-    }
-}
-
-bool validar_correo(char * fcorreo)
-{
-    int arroba = 0, punto = 0, i;
-
-    for(i = 0; fcorreo[i] != '\0'; i++)
-    {
-        if(fcorreo[i] == '@')
-            arroba = i;
-
-        else if(fcorreo[i] == '.')
-            punto = i;
-    }
-
-    if(arroba < punto)
-        return true;
-
-    else
+    // Verificar longitud
+    if (strlen(frfc) != 13) {
         return false;
+    }
+
+    // Validar las primeras 4 letras
+    for (i = 0; i < 4; i++) {
+        if (!((frfc[i] >= 'A' && frfc[i] <= 'Z') || (frfc[i] >= 'a' && frfc[i] <= 'z'))) {
+            return false; // Si uno no es letra, retorna falso
+        }
+    }
+
+    // Validar los siguientes 6 dígitos
+    for (i = 4; i < 10; i++) {
+        if (frfc[i] < '0' || frfc[i] > '9') {
+            return false; // Si uno no es dígito, retorna falso
+        }
+    }
+
+    // Validar los últimos 3 caracteres (alfanuméricos)
+    for (i = 10; i < 13; i++) {
+        if (!((frfc[i] >= 'A' && frfc[i] <= 'Z') || (frfc[i] >= 'a' && frfc[i] <= 'z') || (frfc[i] >= '0' && frfc[i] <= '9'))) {
+            return false; // Si uno no es alfanumérico, retorna falso
+        }
+    }
+
+    return true; // Si todos cumplen, retorna verdadero
 }
 
 void menu_mercados(FILE *mercadosf)
