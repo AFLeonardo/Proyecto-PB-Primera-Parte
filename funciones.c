@@ -175,7 +175,7 @@ void menu_articulos(FILE *articulosf)
                 printf("El costo de produccion fue de %.2f \n", x_articulo.costo_produccion);
                 //ya jala pero no se si tenga algo q ver con la cantidad de insumos q hay no se qpd
 
-                // Clave de mercados
+                // Clave de mercados *******************************************************************************************
                 while (n_mercados < 10 && agregar_mercado == 's')
                 {
                     do
@@ -197,7 +197,7 @@ void menu_articulos(FILE *articulosf)
                         if(!clave_valida)
                             printf("Clave del mercado no encontrada.\nIntenta con otra.\n");
 
-                    } while (!clave_valida);
+                    } while (!clave_valida);// me falta comprobar si si jala **********************************************************
 
                     do
                     {
@@ -287,7 +287,7 @@ void menu_insumos(FILE *insumosf)
 
                 }while(insumos.inventario < 0 && cant_proveedores < 10);
 
-                //hay q validar q exista en proveedores y maximo 10 checarlo pq esta mal
+                //hay q validar q exista en proveedores y maximo 10 checarlo pq esta mal**************************************************
                 while(agregar_proveedor == 's' && cant_proveedores < 10)
                 {
                     do
@@ -354,14 +354,13 @@ void menu_insumos(FILE *insumosf)
     }
 }
 
-void menu_empleados(FILE *fempleados);
+void menu_empleados(FILE *fempleados)
 {
     struct Empleado empleados;
-    bool rfc_valido;
-    char agregar = 's'
+    bool rfc_valido = true;
+    char agregar = 's';
 
-
-    printf("\n\%20s", "EMPLEADOS\n");
+    printf("\n%20s", "EMPLEADOS\n");
 
     while(agregar != 'n' && agregar != 'N')
     {
@@ -393,17 +392,16 @@ void menu_empleados(FILE *fempleados);
 
             if (strlen(empleados.RFC) != 13)
             {
-                printf("Los caracteres deben ser 13.\n");
+                printf("Los caracteres deben de ser 13.\n");
                 rfc_valido = false;
             }
-
             else
                 validar_rfc(empleados.RFC, &rfc_valido);
 
-            if (!rfc_valido)
+            if (rfc_valido == false)
                 printf("RFC invalido. No cumple con la estructurada adecuada\n");
 
-        }while(!rfc_valido);//*********************************************************************************
+        }while(rfc_valido == false);//*********************************************************************************
 
         do //falta validar @ y punto igual hay que checar cmo hacerlo
         {
@@ -428,30 +426,30 @@ void menu_empleados(FILE *fempleados);
         do
         {
             printf("6) Año de nacimiento: ");
-            scanf("%d", &empleados.anio_nacimiento);
+            scanf("%d", &empleados.anio_contratacion);
 
-            if (empleados.anio_nacimiento < 1990 || empleados.anio_nacimiento > 2024)
+            if (empleados.anio_contratacion < 1990 || empleados.anio_contratacion > 2024)
                 printf("Año de nacimiento invalido, debe de estar entre 1950 y 2006\n");
 
-        }while (empleados.anio_nacimiento < 1990 || empleados.anio_nacimiento > 2024);
+        }while (empleados.anio_contratacion < 1990 || empleados.anio_contratacion > 2024);
 
         do
         {
             printf("7) Mes de nacimiento: ");
-            scanf("%d", &empleados.mes_nacimiento);
-            if (empleados.mes_nacimiento < 1 || empleados.mes_nacimiento > 12)
+            scanf("%d", &empleados.mes_contratacion);
+            if (empleados.mes_contratacion < 1 || empleados.mes_contratacion > 12)
                 printf("Mes de nacimiento invalido, debe de estar entre 1 y 12\n");
 
-        }while (empleados.mes_nacimiento < 1 || empleados.mes_nacimiento > 12);
+        }while (empleados.mes_contratacion < 1 || empleados.mes_contratacion > 12);
 
         do
         {
             printf("8) Dia de nacimiento: ");//validar q dia corresponda a mes***************************
-            scanf("%d", &empleados.dia_nacimiento);
-            if (empleados.dia_nacimiento < 0)
+            scanf("%d", &empleados.dia_contratacion);
+            if (empleados.dia_contratacion < 0)
                 printf("Falta validar\n");
 
-        }while (empleados.dia_nacimiento < 0);//**********************************************************
+        }while (empleados.dia_contratacion < 0);//**********************************************************
 
         do
         {
@@ -477,7 +475,6 @@ void menu_empleados(FILE *fempleados);
         }while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
     }
 }
-
 
 void menu_proveedores(FILE *fproveedores)
 {
@@ -603,8 +600,6 @@ void menu_proveedores(FILE *fproveedores)
 }
 
 
-
-
 char *convertir_a_minusculas(char *cadena)
 {
     int i;
@@ -624,12 +619,12 @@ bool cadena_minimo10(char *descripcion)
     return true;
 }
 
-void validar_rfc(char * frfc, bool * fvalidar)// checar qpd con la validacion del rfc mañana
+void validar_rfc(char *frfc, bool *fvalidar)// checar qpd con la validacion del rfc mañana
 {
     int i;
-    printf("antes de asignar el true %s\n", fvalidar ? "True" : "False");
+    printf("Antes de asignar el true %s\n", fvalidar ? "True" : "False");
     //ABCD123456XXX ABCD123456A1A
-    printf("despues de asignar el true %s\n", fvalidar ? "True" : "False");
+    printf("Despues de asignar el true %s\n", fvalidar ? "True" : "False");
 
     if (strlen(frfc) == 13)
     {
@@ -637,9 +632,9 @@ void validar_rfc(char * frfc, bool * fvalidar)// checar qpd con la validacion de
         {
             if((frfc[i] < 'A' || frfc[i] > 'Z') && (frfc[i] < 'a' || frfc[i] > 'z'))
             {
-                *fvalidar = false;
+                fvalidar = false; // VALIDA LAS PRIMERAS 4 LETRAS
             }
-            printf("Primer for %s\n", *fvalidar ? "True" : "False");
+            printf("Primer for %s\n", fvalidar ? "True" : "False");
 
         }
 
@@ -647,21 +642,19 @@ void validar_rfc(char * frfc, bool * fvalidar)// checar qpd con la validacion de
         {
             if (frfc[i] < '0' || frfc[i] > '9')
             {
-                *fvalidar = false;
+                fvalidar = false; // VALIDA SI SON NUMEROS LOS SIGUEINTES 6 DIGITOS
             }
-            printf("segundo for %s\n", *fvalidar ? "True" : "False");
+            printf("Segundo for %s\n", fvalidar ? "True" : "False");
         }
 
         for (i = 10; i < 13; i++)
         {
             if(((frfc[i] < 'A' || frfc[i] > 'Z') && (frfc[i] < 'a' || frfc[i] > 'z')) && (frfc[i] < '0' || frfc[i] > '9'))
-            {
-                *fvalidar = false;
-
-            }
-            printf("tercer for %s\n", *fvalidar ? "True" : "False");
+                *fvalidar = true;
+            printf("Tercer for %s\n", fvalidar ? "True" : "False");
 
         }
+        *fvalidar = true;
     }
 }
 
@@ -726,7 +719,7 @@ void menu_mercados(FILE *mercadosf)
 
         do
         {
-            printf("6) Año de nacimiento: ");
+            printf("6) Anio de nacimiento: ");
             scanf("%d", &mercados.anio_nacimiento);
             if (mercados.anio_nacimiento < 1950 || mercados.anio_nacimiento > 2006)
                 printf("Año de nacimiento invalido, debe de estar entre 1950 y 2006\n");
