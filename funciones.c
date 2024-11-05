@@ -21,6 +21,7 @@ void menu_reportes();
 char *convertir_a_minusculas(char *);
 bool cadena_minimo10(char *);
 void validar_rfc(char *, bool *);
+bool validar_correo(char *);
 
 int menu_principal()
 {
@@ -480,7 +481,7 @@ void menu_proveedores(FILE *fproveedores)
 {
     struct Proveedor proveedores;
     char agregar = 's';
-    bool rfc_valido;
+    bool rfc_valido, correo_correcto = true;
 
     printf("\n%20s", "PROVEEDORES\n");
 
@@ -526,15 +527,20 @@ void menu_proveedores(FILE *fproveedores)
 
         }while(!rfc_valido);
 
+                
         do //falta validar @ y punto
         {
             printf("4) Correo electronico: ");
             fflush(stdin);
             gets(proveedores.correo);
-            if (strlen(proveedores.correo) < 0)
-                printf("Falta validar.\n");
+            
+            correo_correcto = validar_correo(proveedores.correo);
 
-        }while (strlen(proveedores.correo) < 0);
+            if (correo_correcto == false)
+                printf("El correo no cumple con el formato");
+            
+        }while(correo_correcto == false);
+
 
         do
         {
@@ -656,6 +662,26 @@ void validar_rfc(char *frfc, bool *fvalidar)// checar qpd con la validacion del 
         }
         *fvalidar = true;
     }
+}
+
+bool validar_correo(char * fcorreo)
+{
+    int arroba = 0, punto = 0, i;
+
+    for(i = 0; fcorreo[i] != '\0'; i++)
+    {
+        if(fcorreo[i] == '@')
+            arroba = i;
+
+        else if(fcorreo[i] == '.')
+            punto = i;
+    }
+
+    if(arroba < punto)
+        return true;
+
+    else
+        return false;
 }
 
 void menu_mercados(FILE *mercadosf)
