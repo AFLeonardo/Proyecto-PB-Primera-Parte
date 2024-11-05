@@ -5,7 +5,7 @@
 #include "funciones.c"
 
 // ESTO SI FUNCIONA
-int main()
+main()
 {
     int opcion;
     bool ciclo = true;
@@ -55,7 +55,14 @@ int main()
                 break;
 
             case 4:
-                printf("\n\%20s", "EMPLEADOS\n");
+                if ((archivo = fopen("Mercados.dat", "w")) == NULL)
+                    printf("Error al abrir el archivo");
+
+                else
+                {
+                    menu_empleados(archivo);
+                    fclose(archivo);
+                }
                 break;
 
             case 5:

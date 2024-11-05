@@ -16,11 +16,11 @@ void menu_control_ventas(FILE *);
 void menu_control_compras(FILE *);
 void menu_control_inventario();
 void menu_reportes();
-bool validar_rfc(char *);
 
 // FUNCIONES
 char *convertir_a_minusculas(char *);
 bool cadena_minimo10(char *);
+void validar_rfc(char *, bool *);
 
 int menu_principal()
 {
@@ -193,7 +193,7 @@ void menu_articulos(FILE *articulosf)
                             n_mercados++;
 
                         }
-                        
+
                         if(!clave_valida)
                             printf("Clave del mercado no encontrada.\nIntenta con otra.\n");
 
@@ -207,9 +207,9 @@ void menu_articulos(FILE *articulosf)
 
                         if (agregar_mercado != 's' && agregar_mercado != 'n')
                             printf("Valor no vlido, solo se permite (s/n) \n");
-                        
+
                     } while (agregar_mercado != 's' && agregar_mercado != 'n');
-                    
+
                 }
                 // Cerrar archivos y guardar datos
 
@@ -307,7 +307,7 @@ void menu_insumos(FILE *insumosf)
 
                         if(!clave_valida)
                             printf("Clave del proveedor invalida no coincide con la del insumo \n");
-                        
+
                     } while (!clave_valida);
 
                     do
@@ -318,7 +318,7 @@ void menu_insumos(FILE *insumosf)
                             printf("Precio invalido\n");
 
                     }while(insumos.precio_compra <= 0);
-                    
+
                     do
                     {
                         printf("Quieres agregar otro proveedor al insumo?(s/n): \n");
@@ -333,7 +333,7 @@ void menu_insumos(FILE *insumosf)
 
                 if(cant_proveedores > 10)
                     printf("El maximo son 10 proveedores \n");
-                
+
 
                 fseek(insumosf, (insumos.clave_insumo - 1) * sizeof(struct Insumo), SEEK_SET);
                 fwrite(&insumos, sizeof(struct Insumo), 1, insumosf);
@@ -354,10 +354,136 @@ void menu_insumos(FILE *insumosf)
     }
 }
 
+void menu_empleados(FILE *fempleados);
+{
+    struct Empleado empleados;
+    bool rfc_valido;
+    char agregar = 's'
+
+
+    printf("\n\%20s", "EMPLEADOS\n");
+
+    while(agregar != 'n' && agregar != 'N')
+    {
+        do
+        {
+            printf("1) Ingrese su numero de empleado: \n");
+            scanf("%d", &empleados.numero_empleado);
+
+            if(empleados.numero_empleado < 1 || empleados.numero_empleado > 1000)
+                printf("Numero de empleado invalido\n");
+
+        }while(empleados.numero_empleado < 1 || empleados.numero_empleado > 1000);
+
+        do
+        {
+            printf("2) Nombre completo: \n");
+            fflush(stdin);
+            gets(empleados.nombre_completo);
+            if (strlen(empleados.nombre_completo) < 20)
+                printf("Los caracteres minimos son 10 \n");
+
+        }while (strlen(empleados.nombre_completo) < 20);
+
+        do //falta validar lo correspondiente primero lo checamos y luego ya lo pegamos***********************************
+        {
+            printf("3) RFC: ");
+            fflush(stdin);
+            gets(empleados.RFC);
+
+            if (strlen(empleados.RFC) != 13)
+            {
+                printf("Los caracteres deben ser 13.\n");
+                rfc_valido = false;
+            }
+
+            else
+                validar_rfc(empleados.RFC, &rfc_valido);
+
+            if (!rfc_valido)
+                printf("RFC invalido. No cumple con la estructurada adecuada\n");
+
+        }while(!rfc_valido);//*********************************************************************************
+
+        do //falta validar @ y punto igual hay que checar cmo hacerlo
+        {
+            printf("4) Correo electronico: ");
+            fflush(stdin);
+            gets(empleados.correo);
+            if (strlen(empleados.correo) < 0)
+                printf("Falta validar.\n");
+
+        }while (strlen(empleados.correo) < 0);//******************************************************************
+
+        do
+        {
+            printf("Ingrese la comision recibida: \n");
+            scanf("%f", &empleados.comision);
+
+            if(empleados.comision < 0)
+                printf("Comision invalida");
+
+        }while(empleados.comision < 0);
+
+        do
+        {
+            printf("6) Año de nacimiento: ");
+            scanf("%d", &empleados.anio_nacimiento);
+
+            if (empleados.anio_nacimiento < 1990 || empleados.anio_nacimiento > 2024)
+                printf("Año de nacimiento invalido, debe de estar entre 1950 y 2006\n");
+
+        }while (empleados.anio_nacimiento < 1990 || empleados.anio_nacimiento > 2024);
+
+        do
+        {
+            printf("7) Mes de nacimiento: ");
+            scanf("%d", &empleados.mes_nacimiento);
+            if (empleados.mes_nacimiento < 1 || empleados.mes_nacimiento > 12)
+                printf("Mes de nacimiento invalido, debe de estar entre 1 y 12\n");
+
+        }while (empleados.mes_nacimiento < 1 || empleados.mes_nacimiento > 12);
+
+        do
+        {
+            printf("8) Dia de nacimiento: ");//validar q dia corresponda a mes***************************
+            scanf("%d", &empleados.dia_nacimiento);
+            if (empleados.dia_nacimiento < 0)
+                printf("Falta validar\n");
+
+        }while (empleados.dia_nacimiento < 0);//**********************************************************
+
+        do
+        {
+            printf("9) Direccion: ");//validar cositas esas************************************************
+            fflush(stdin);
+            gets(empleados.direccion);
+            if (strlen(empleados.direccion) < 0)
+                printf("Falta validar.\n");
+
+        }while (strlen(empleados.direccion) < 0);//*****************************************************************
+
+        fseek(fempleados, (empleados.numero_empleado - 1) * sizeof(struct Empleado), SEEK_SET);
+        fwrite(&empleados, sizeof(struct Empleado), 1, fempleados);
+
+        do
+        {
+            printf("Agregar otro empleado? (S/N): ");
+            fflush(stdin);
+            scanf("%c", &agregar);
+            if (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n')
+                printf("Valor no valido.\nSolo se permite S o N.\n");
+
+        }while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
+    }
+}
+
+
 void menu_proveedores(FILE *fproveedores)
 {
     struct Proveedor proveedores;
     char agregar = 's';
+    bool rfc_valido;
 
     printf("\n%20s", "PROVEEDORES\n");
 
@@ -388,13 +514,21 @@ void menu_proveedores(FILE *fproveedores)
             printf("3) RFC: ");
             fflush(stdin);
             gets(proveedores.RFC);
-            if (strlen(proveedores.RFC) != 13)
-                printf("Los caracteres deben ser 13.\n");
-            
-            else
-                validar_rfc(&proveedores.RFC); // aqui andooooooooooooooooooooooooooooooooooooo
 
-        }while (strlen(proveedores.RFC) != 13); 
+            if (strlen(proveedores.RFC) != 13)
+            {
+                printf("Los caracteres deben ser 13.\n");
+                rfc_valido = false;
+            }
+
+            else
+                validar_rfc(proveedores.RFC, &rfc_valido);
+
+            if (!rfc_valido)
+                printf("RFC invalido. No cumple con la estructurada adecuada\n");
+
+        }while(!rfc_valido);
+
         do //falta validar @ y punto
         {
             printf("4) Correo electronico: ");
@@ -490,33 +624,45 @@ bool cadena_minimo10(char *descripcion)
     return true;
 }
 
-bool validar_rfc(frfc*) // tengo q checar si ver si rgresar una variable o directamente el true o false
+void validar_rfc(char * frfc, bool * fvalidar)// checar qpd con la validacion del rfc mañana
 {
     int i;
-    bool rfc_valida = true;
+    printf("antes de asignar el true %s\n", fvalidar ? "True" : "False");
+    //ABCD123456XXX ABCD123456A1A
+    printf("despues de asignar el true %s\n", fvalidar ? "True" : "False");
 
-    if (frfc == 13)
+    if (strlen(frfc) == 13)
     {
         for(i = 0; i < 4; i++)
         {
             if((frfc[i] < 'A' || frfc[i] > 'Z') && (frfc[i] < 'a' || frfc[i] > 'z'))
-                rfc_valida = false;
+            {
+                *fvalidar = false;
+            }
+            printf("Primer for %s\n", *fvalidar ? "True" : "False");
+
         }
 
-        for(i = 3; i < 10; i++)
+        for(i = 4; i < 10; i++)
         {
             if (frfc[i] < '0' || frfc[i] > '9')
-                rfc_valida = false;        
+            {
+                *fvalidar = false;
+            }
+            printf("segundo for %s\n", *fvalidar ? "True" : "False");
         }
 
         for (i = 10; i < 13; i++)
         {
             if(((frfc[i] < 'A' || frfc[i] > 'Z') && (frfc[i] < 'a' || frfc[i] > 'z')) && (frfc[i] < '0' || frfc[i] > '9'))
-            rfc_valida = false;
-        }
+            {
+                *fvalidar = false;
 
+            }
+            printf("tercer for %s\n", *fvalidar ? "True" : "False");
+
+        }
     }
-    
 }
 
 void menu_mercados(FILE *mercadosf)
