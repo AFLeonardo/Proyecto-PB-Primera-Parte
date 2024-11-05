@@ -357,7 +357,7 @@ void menu_insumos(FILE *insumosf)
 void menu_empleados(FILE *fempleados)
 {
     struct Empleado empleados;
-    bool rfc_valido = true;
+    bool rfc_valido = true, correo_correcto = true;
     char agregar = 's';
 
     printf("\n%20s", "EMPLEADOS\n");
@@ -403,15 +403,18 @@ void menu_empleados(FILE *fempleados)
 
         }while(rfc_valido == false);//*********************************************************************************
 
-        do //falta validar @ y punto igual hay que checar cmo hacerlo
+        do
         {
             printf("4) Correo electronico: ");
             fflush(stdin);
             gets(empleados.correo);
-            if (strlen(empleados.correo) < 0)
-                printf("Falta validar.\n");
 
-        }while (strlen(empleados.correo) < 0);//******************************************************************
+            correo_correcto = validar_correo(empleados.correo);
+
+            if (correo_correcto == false)
+                printf("El correo no cumple con el formato\n");
+
+        }while(correo_correcto == false);//******************************************************************
 
         do
         {
@@ -506,7 +509,7 @@ void menu_proveedores(FILE *fproveedores)
 
         }while (strlen(proveedores.nombre_completo) < 10);
 
-        do //falta validar lo correspondiente
+        do
         {
             printf("3) RFC: ");
             fflush(stdin);
@@ -526,18 +529,18 @@ void menu_proveedores(FILE *fproveedores)
 
         }while(!rfc_valido);
 
-                
+
         do //falta validar @ y punto
         {
             printf("4) Correo electronico: ");
             fflush(stdin);
             gets(proveedores.correo);
-            
+
             correo_correcto = validar_correo(proveedores.correo);
 
             if (correo_correcto == false)
-                printf("El correo no cumple con el formato");
-            
+                printf("El correo no cumple con el formato\n");
+
         }while(correo_correcto == false);
 
 
@@ -553,7 +556,7 @@ void menu_proveedores(FILE *fproveedores)
 
         do
         {
-            printf("6) Año de nacimiento: ");
+            printf("6) Anio de nacimiento: ");
             scanf("%d", &proveedores.anio_nacimiento);
             if (proveedores.anio_nacimiento < 1950 || proveedores.anio_nacimiento > 2006)
                 printf("Año de nacimiento invalido, debe de estar entre 1950 y 2006\n");
@@ -659,6 +662,7 @@ void menu_mercados(FILE *mercadosf)
 {
     char agregar;
     struct Mercado mercados;
+    bool correo_correcto = true, rfc_valido; //checar si se puede inicializar o no
 
     printf("\n%20s", "MERCADOS\n");
 
@@ -688,20 +692,33 @@ void menu_mercados(FILE *mercadosf)
             printf("3) RFC: ");
             fflush(stdin);
             gets(mercados.RFC);
+
             if (strlen(mercados.RFC) != 13)
+            {
                 printf("Los caracteres deben ser 13.\n");
+                rfc_valido = false;
+            }
 
-        }while (strlen(mercados.RFC) != 13);
+            else
+                rfc_valido = validar_rfc(mercados.RFC);
 
-        do //falta validar @ y punto
+            if (!rfc_valido)
+                printf("RFC invalido. No cumple con la estructurada adecuada\n");
+
+        }while(!rfc_valido);
+
+        do
         {
             printf("4) Correo electronico: ");
             fflush(stdin);
             gets(mercados.correo);
-            if (strlen(mercados.correo) < 0)
-                printf("Falta validar.\n");
 
-        }while (strlen(mercados.correo) < 0);
+            correo_correcto = validar_correo(mercados.correo);
+
+            if (correo_correcto == false)
+                printf("El correo no cumple con el formato\n");
+
+        }while(correo_correcto == false);
 
         do
         {
@@ -769,26 +786,6 @@ void menu_mercados(FILE *mercadosf)
     }
 
 
-}
-
-bool validar_correo(char *);
-
-main()
-{
-    char correo[40];
-    bool correo_correcto = true;
-
-
-   printf("Ingrese correo \n");
-   gets(correo);
-
-   correo_correcto = validar_correo(correo);
-
-   if(correo_correcto == false)
-    printf("El correo no cumple con el formato");
-
-   else
-    printf("El correo es correcto");
 }
 
 bool validar_correo(char * fcorreo)
