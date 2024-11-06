@@ -26,7 +26,7 @@ main()
         {
             case 1:
                 if ((archivo = fopen("Articulos.dat", "w")) == NULL)// hay q checar si edna nos pide lo de que se tienen q guardar para ponrelo en "a"
-                    printf("Error al abrir el archivo");            //sino lo dejamos como "w" pq con el w si valida clave insumos
+                    printf("Error al abrir el archivo\n");            //sino lo dejamos como "w" pq con el w si valida clave insumos
                 else
                 {
                     menu_articulos(archivo);
@@ -36,7 +36,7 @@ main()
 
             case 2:
                 if ((archivo = fopen("Insumos.dat", "w")) == NULL)
-                    printf("Error al abrir el archivo");
+                    printf("Error al abrir el archivo\n");
                 else
                 {
                     menu_insumos(archivo);
@@ -46,7 +46,7 @@ main()
 
             case 3:
                 if ((archivo = fopen("Mercados.dat", "w")) == NULL)
-                    printf("Error al abrir el archivo");
+                    printf("Error al abrir el archivo\n");
                 else
                 {
                     menu_mercados(archivo);
@@ -56,7 +56,7 @@ main()
 
             case 4:
                 if ((archivo = fopen("Mercados.dat", "w")) == NULL)
-                    printf("Error al abrir el archivo");
+                    printf("Error al abrir el archivo\n");
 
                 else
                 {
@@ -67,7 +67,7 @@ main()
 
             case 5:
                 if((archivo = fopen("Proveedores.dat", "w")) == NULL)
-                    printf("Error al abrir el archivo");
+                    printf("Error al abrir el archivo\n");
 
                 else
                 {
@@ -76,25 +76,24 @@ main()
                 }
                 break;
 
-
             case 6:
-                printf("\n\%20s", "VENTAS\n");
+                printf("%s\n", "VENTAS\n");
                 break;
 
             case 7:
-                printf("\n\%20s", "COMPRAS\n");
+                printf("%s\n", "COMPRAS\n");
                 break;
 
             case 8:
-                printf("\n\%20s", "CONTROL DE INVENTARIO\n");
+                printf("%s\n", "CONTROL DE INVENTARIO\n");
                 break;
 
             case 9:
-                printf("\n\%20s", "REPORTES\n");
+                printf("%s\n", "REPORTES\n");
                 break;
 
             case 10:
-                printf("\n\%20s", "HA SALIDO DEL SISTEMA.\n");
+                printf("%s\n", "HA SALIDO DEL SISTEMA.\n");
                 ciclo = false;
                 break;
         }
