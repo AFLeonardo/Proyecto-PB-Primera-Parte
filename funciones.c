@@ -243,10 +243,10 @@ void menu_insumos(FILE *insumosf)
     int cant_proveedores = 0;
     bool clave_valida = false;
 
-    printf("%s\n", "INSUMOS\n");
+    printf("%s", "\nINSUMOS\n");
 
     if((proveedorlocal = fopen("Proveedores.dat", "r")) == NULL)
-        printf("Error.\nNo existen proveedores.\nAgrega en el menu correspondiente.\n");
+        printf("\nError.\nNo existen proveedores.\nAgrega en el menu correspondiente.\n");
     else
     {
         while (agregar != 'N' && agregar != 'n')
@@ -304,11 +304,10 @@ void menu_insumos(FILE *insumosf)
                     {
                         clave_valida = true;
                         cant_proveedores++;
-
                     }
 
                     if(!clave_valida)
-                        printf("Clave del proveedor invalida\n");
+                        printf("Clave del proveedor invalida.\nIngresa una clave valida.\n");
 
                 } while (!clave_valida);
 
@@ -597,7 +596,7 @@ void menu_proveedores(FILE *fproveedores)
 
         }while (strlen(proveedores.direccion) < 0);
 
-        fseek(fproveedores, (proveedores.numero_proveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
+        fseek(fproveedores, (proveedores.numero_proveedor) * sizeof(struct Proveedor), SEEK_SET);
         fwrite(&proveedores, sizeof(struct Proveedor), 1, fproveedores);
 
         do
