@@ -25,7 +25,7 @@ main()
         switch (opcion)
         {
             case 1:
-                if ((archivo = fopen("Articulos.dat", "w")) == NULL)// hay q checar si edna nos pide lo de que se tienen q guardar para ponrelo en "a"
+                if ((archivo = fopen("Articulos.dat", "a")) == NULL)// hay q checar si edna nos pide lo de que se tienen q guardar para ponrelo en "a"
                     printf("Error al abrir el archivo\n");            //sino lo dejamos como "w" pq con el w si valida clave insumos
                 else
                 {
@@ -35,7 +35,7 @@ main()
                 break;
 
             case 2:
-                if ((archivo = fopen("Insumos.dat", "w")) == NULL)
+                if ((archivo = fopen("Insumos.dat", "a")) == NULL)
                     printf("Error al abrir el archivo\n");
                 else
                 {
@@ -45,7 +45,7 @@ main()
                 break;
 
             case 3:
-                if ((archivo = fopen("Mercados.dat", "w")) == NULL)
+                if ((archivo = fopen("Mercados.dat", "a")) == NULL)
                     printf("Error al abrir el archivo\n");
                 else
                 {
@@ -55,7 +55,7 @@ main()
                 break;
 
             case 4:
-                if ((archivo = fopen("Mercados.dat", "w")) == NULL)
+                if ((archivo = fopen("Mercados.dat", "a")) == NULL)
                     printf("Error al abrir el archivo\n");
 
                 else
@@ -66,7 +66,7 @@ main()
                 break;
 
             case 5:
-                if((archivo = fopen("Proveedores.dat", "w")) == NULL)
+                if((archivo = fopen("Proveedores.dat", "a")) == NULL)
                     printf("Error al abrir el archivo\n");
 
                 else

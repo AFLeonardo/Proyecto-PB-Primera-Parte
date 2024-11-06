@@ -18,7 +18,7 @@ struct Insumo
     int punto_reorden;
     int inventario;
     int clave_proveedor[10]; // Hasta 10 claves de proveedores
-    float precio_compra;
+    float precio_compra[10];
 };
 struct Proveedor
 {
