@@ -158,7 +158,6 @@ void menu_articulos(FILE *articulosf)
                             costo_produccion += insumos.precio_compra[cant_insumos];
 =======
                             costo_produccion += LecturaInsumo.precio_compra[cant_insumos];
-
                             cant_insumos++;
 >>>>>>> Stashed changes
                         }
