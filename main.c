@@ -10,6 +10,10 @@ main()
     int opcion;
     bool ciclo = true;
     FILE *archivo;
+    struct Articulos articuloVacio = {0, "", "", "", {0,0,0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0,0,0}, 0.0, 0, 0.0};
+    struct Insumo insumoVacio = {0, "", 0, 0, {0,0,0,0,0,0,0,0,0,0}, {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
+    struct Proveedor proveedorVacio = {0, "", "", "", 0.0, 0, 0, 0, "", {0,0,0,0,0,0,0,0,0,0}};
+    struct Mercado mercadoVacio = {0, "", "", "", 0.0f, 0, 0, 0, ""};
 
     while (ciclo)
     {
@@ -25,8 +29,11 @@ main()
         switch (opcion)
         {
             case 1:
-                if ((archivo = fopen("Articulos.dat", "a")) == NULL)// hay q checar si edna nos pide lo de que se tienen q guardar para ponrelo en "a"
-                    printf("Error al abrir el archivo\n");            //sino lo dejamos como "w" pq con el w si valida clave insumos
+                if ((archivo = fopen("Articulos.dat", "rb+")) == NULL)// hay q checar si edna nos pide lo de que se tienen q guardar para ponrelo en "a"
+                    { //sino lo dejamos como "w" pq con el w si valida clave insumos
+                    printf("Error al abrir el archivo\n"); 
+                    crearRegistrosVacios("Articulos.dat", &articuloVacio, sizeof(struct Articulos), 100);
+                    }          
                 else
                 {
                     menu_articulos(archivo);
@@ -35,8 +42,11 @@ main()
                 break;
 
             case 2:
-                if ((archivo = fopen("Insumos.dat", "a")) == NULL)
-                    printf("Error al abrir el archivo\n");
+                if ((archivo = fopen("Insumos.dat", "rb+")) == NULL)
+                    {
+                    printf("Error al abrir el archivo\n"); 
+                    crearRegistrosVacios("Insumos.dat", &insumoVacio, sizeof(struct Articulos), 100);
+                    }
                 else
                 {
                     menu_insumos(archivo);
@@ -45,8 +55,11 @@ main()
                 break;
 
             case 3:
-                if ((archivo = fopen("Mercados.dat", "a")) == NULL)
+                if ((archivo = fopen("Mercados.dat", "rb+")) == NULL)
+                    {
                     printf("Error al abrir el archivo\n");
+                    crearRegistrosVacios("Mercados.dat", &mercadoVacio, sizeof(struct Mercado), 100);
+                    }
                 else
                 {
                     menu_mercados(archivo);
@@ -55,7 +68,7 @@ main()
                 break;
 
             case 4:
-                if ((archivo = fopen("Mercados.dat", "a")) == NULL)
+                if ((archivo = fopen("Empleados.dat", "rb+")) == NULL)
                     printf("Error al abrir el archivo\n");
 
                 else
@@ -66,9 +79,11 @@ main()
                 break;
 
             case 5:
-                if((archivo = fopen("Proveedores.dat", "a")) == NULL)
+                if((archivo = fopen("Proveedores.dat", "rb+")) == NULL)
+                {
+                    crearRegistrosVacios("Proveedores.dat", &proveedorVacio, sizeof(struct Proveedor), 100);
                     printf("Error al abrir el archivo\n");
-
+                }
                 else
                 {
                     menu_proveedores(archivo);
