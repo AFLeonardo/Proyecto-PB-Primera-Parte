@@ -37,6 +37,7 @@ struct Insumo
     int clave_proveedor[10]; // Hasta 10 claves de proveedores
     float precio_compra[10];
 };
+
 struct Proveedor
 {
     int numero_proveedor;
@@ -45,7 +46,7 @@ struct Proveedor
     char correo[100];
     float descuento;
     struct Fechas fecha;
-    struct Direcciones direccion; 
+    struct Direcciones direccion;
     int articulos_produce[10]; // Claves de los artículos que produce
 };
 struct Empleado
