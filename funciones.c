@@ -22,7 +22,7 @@ char *convertir_a_minusculas(char *);
 bool cadena_minimo10(char *);
 bool validar_rfc(char *);
 bool validar_correo(char *);
-bool validarDiaMes(int, int, int);
+bool validarDiaMes(struct Fechas);
 void crearRegistrosVacios(const char *, void *, size_t , int );
 
 int menu_principal()
@@ -432,42 +432,89 @@ void menu_empleados(FILE *fempleados)
         do
         {
             printf("6) Año de nacimiento: ");
-            scanf("%d", &empleados.anio_contratacion);
+            scanf("%d", &empleados.fecha.anio);
 
-            if (empleados.anio_contratacion < 1990 || empleados.anio_contratacion > 2024)
+            if (empleados.fecha.anio < 1990 || empleados.fecha.anio > 2024)
                 printf("Año de nacimiento invalido, debe de estar entre 1950 y 2006\n");
-
-        }while (empleados.anio_contratacion < 1990 || empleados.anio_contratacion > 2024);
+anio
+        }while (empleados.fecha.anio < 1990 || empleados.fecha.anio > 2024);
 
         do
         {
             printf("7) Mes de nacimiento: ");
-            scanf("%d", &empleados.mes_contratacion);
-            if (empleados.mes_contratacion < 1 || empleados.mes_contratacion > 12)
+            scanf("%d", &empleados.fecha.mes);
+            if (empleados.fecha.mes < 1 || empleados.fecha.mes > 12)
                 printf("Mes de nacimiento invalido, debe de estar entre 1 y 12\n");
 
-        }while (empleados.mes_contratacion < 1 || empleados.mes_contratacion > 12);
+        }while (empleados.fecha.mes < 1 || empleados.fecha.mes > 12);
 
         do
         {
             printf("8) Dia de nacimiento: ");//validar q dia corresponda a mes***************************
-            scanf("%d", &empleados.dia_contratacion);
-            validardia = validarDiaMes(empleados.dia_contratacion, empleados.mes_contratacion, empleados.anio_contratacion);
+            scanf("%d", &empleados.fecha.dia);
+            validardia = validarDiaMes(empleados.fecha);
             if (!validardia)
                 printf("Ingrese un dia valido correspondiente al mes\n");
 
         }while (!validardia);//**********************************************************
 
 
+        printf("9) Direccion:");
         do
         {
-            printf("9) Direccion: ");//validar cositas esas************************************************
+            //validar cositas esas************************************************
+            printf("Ingrese la calle: ");
             fflush(stdin);
-            gets(empleados.direccion);
-            if (strlen(empleados.direccion) < 0)
+            gets(empleados.direccion.calle);
+            if (strlen(empleados.direccion.calle) < 0)
                 printf("Falta validar.\n");
 
-        }while (strlen(empleados.direccion) < 0);//*****************************************************************
+        }while (strlen(empleados.direccion.calle) < 0);//*****************************************************************
+
+        do
+        {
+            //validar cositas esas************************************************
+            printf("Ingrese el numero: ");
+            scanf("%d", &empleados.direccion.numero);
+            if (strlen(empleados.direccion.numero) < 0)
+                printf("Falta validar.\n");
+
+        }while (strlen(empleados.direccion.numero) < 0);
+
+        do
+        {
+            //validar cositas esas************************************************
+            printf("Ingrese la colonia: ");
+            fflush(stdin);
+            gets(empleados.direccion.colonia);
+            if (strlen(empleados.direccion.colonia) < 0)
+                printf("Falta validar.\n");
+
+        }while (strlen(empleados.direccion.colonia) < 0);
+
+        do
+        {
+            //validar cositas esas************************************************
+            printf("Ingrese el municipio: ");
+            fflush(stdin);
+            gets(empleados.direccion.municipio);
+            if (strlen(empleados.direccion.municipio) < 0)
+                printf("Falta validar.\n");
+
+        }while (strlen(empleados.direccion.municipio) < 0);
+
+        do
+        {
+            //validar cositas esas************************************************
+            printf("Ingrese el estado: ");
+            fflush(stdin);
+            gets(empleados.direccion.estado);
+            if (strlen(empleados.direccion.estado) < 0)
+                printf("Falta validar.\n");
+
+        }while (strlen(empleados.direccion.estado) < 0);
+
+
 
         fseek(fempleados, (empleados.numero_empleado - 1) * sizeof(struct Empleado), SEEK_SET);
         fwrite(&empleados, sizeof(struct Empleado), 1, fempleados);
@@ -562,26 +609,26 @@ void menu_proveedores(FILE *fproveedores)
         do
         {
             printf("6) Anio de nacimiento: ");
-            scanf("%d", &proveedores.anio_nacimiento);
-            if (proveedores.anio_nacimiento < 1950 || proveedores.anio_nacimiento > 2006)
+            scanf("%d", &proveedores.fecha.anio);
+            if (proveedores.fecha.anio < 1950 || proveedores.fecha.anio > 2006)
                 printf("Año de nacimiento invalido, debe de estar entre 1950 y 2006\n");
 
-        }while (proveedores.anio_nacimiento < 1950 || proveedores.anio_nacimiento > 2006);
+        }while (proveedores.fecha.anio < 1950 || proveedores.fecha.anio> 2006);
 
         do
         {
             printf("7) Mes de nacimiento: ");
-            scanf("%d", &proveedores.mes_nacimiento);
-            if (proveedores.mes_nacimiento < 1 || proveedores.mes_nacimiento > 12)
+            scanf("%d", &proveedores.fecha.mes);
+            if (proveedores.fecha.mes < 1 || proveedores.fecha.mes > 12)
                 printf("Mes de nacimiento invalido, debe de estar entre 1 y 12\n");
 
-        }while (proveedores.mes_nacimiento < 1 || proveedores.mes_nacimiento > 12);
+        }while (proveedores.fecha.mes < 1 || proveedores.fecha.mes > 12);
 
         do
         {
             printf("8) Dia de nacimiento: ");//validar q dia corresponda a mes
-            scanf("%d", &proveedores.dia_nacimiento);
-            validardia = validarDiaMes(proveedores.dia_nacimiento, proveedores.mes_nacimiento, proveedores.anio_nacimiento);
+            scanf("%d", &proveedores.fecha.dia);
+            validardia = validarDiaMes(proveedores.fecha);
             if (!validardia)
                 printf("Ingrese un dia valido correspondiente al mes\n");
 
@@ -740,27 +787,27 @@ void menu_mercados(FILE *mercadosf)
         do
         {
             printf("6) Anio de nacimiento: ");
-            scanf("%d", &mercados.anio_nacimiento);
-            if (mercados.anio_nacimiento < 1950 || mercados.anio_nacimiento > 2006)
+            scanf("%d", &mercados.fecha.anio);
+            if (mercados.fecha.anio < 1950 || mercados.fecha.anio > 2006)
                 printf("Año de nacimiento invalido, debe de estar entre 1950 y 2006\n");
 
-        }while (mercados.anio_nacimiento < 1950 || mercados.anio_nacimiento > 2006);
+        }while (mercados.fecha.anio < 1950 || mercados.fecha.anio > 2006);
 
 
         do
         {
             printf("7) Mes de nacimiento: ");
-            scanf("%d", &mercados.mes_nacimiento);
-            if (mercados.mes_nacimiento < 1 || mercados.mes_nacimiento > 12)
+            scanf("%d", &mercados.fecha.mes);
+            if (mercados.fecha.mes < 1 || mercados.fecha.mes > 12)
                 printf("Mes de nacimiento invalido, debe de estar entre 1 y 12\n");
 
-        }while (mercados.mes_nacimiento < 1 || mercados.mes_nacimiento > 12);
+        }while (mercados.fecha.mes < 1 || mercados.fecha.mes > 12);
 
         do
         {
             printf("8) Dia de nacimiento: ");//validar q dia corresponda a mes
-            scanf("%d", &mercados.dia_nacimiento);
-            validardia = validarDiaMes(mercados.dia_nacimiento, mercados.mes_nacimiento, mercados.anio_nacimiento);
+            scanf("%d", &mercados.fecha.dia);
+            validardia = validarDiaMes(mercados.fecha);
             if (!validardia)
                 printf("Ingrese un dia valido correspondiente al mes\n");
         }while (!validardia);
@@ -814,11 +861,11 @@ bool validar_correo(char * fcorreo)
         return false;
 }
 
-bool validarDiaMes(int dia, int mes, int anio)
+bool validarDiaMes(struct Fechas fecha)
 {
     int diasEnMes;
 
-    switch (mes)
+    switch (fecha.mes)
     {
         case 1: case 3: case 5: case 7: case 8: case 10: case 12:
             diasEnMes = 31;
@@ -827,13 +874,13 @@ bool validarDiaMes(int dia, int mes, int anio)
             diasEnMes = 30;
             break;
         case 2:
-            if ((anio % 4 == 0 && anio % 100 != 0) || (anio % 400 == 0))
+            if ((fecha.anio % 4 == 0 && fecha.anio % 100 != 0) || (fecha.anio % 400 == 0))
                 diasEnMes = 29;
             else
                 diasEnMes = 28;
             break;
     }
-    return dia >= 1 && dia <= diasEnMes;
+    return fecha.dia >= 1 && fecha.dia <= diasEnMes;
 }
 
 /*void menu_control_ventas() // archivos secuenciales
@@ -905,7 +952,8 @@ bool validarDiaMes(int dia, int mes, int anio)
 
 }*/
 
-void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t tamanoRegistro, int cantidad) {
+void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t tamanoRegistro, int cantidad) 
+{
     FILE *archivo = fopen(nombreArchivo, "wb");
     if (!archivo) {
         printf("Error al abrir el archivo");
