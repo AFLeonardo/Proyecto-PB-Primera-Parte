@@ -191,7 +191,10 @@ void menu_articulos(FILE *articulosf)
                 while (n_mercados < 10 && agregar_mercado == 's')
                 {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     fseek(mercado_local, (x_articulo.clave_mercados[n_mercados] - 1) * sizeof(struct Mercado), SEEK_SET);
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -864,7 +867,7 @@ bool validar_correo(char * fcorreo)
             punto = i;
     }
 
-    if(arroba < punto)
+    if(arroba != -1 && punto != -1 && punto > arroba + 1)
         return true;
 
     else
@@ -977,4 +980,7 @@ void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t
 
     fclose(archivo);
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
