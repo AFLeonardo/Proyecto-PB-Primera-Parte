@@ -23,8 +23,7 @@ bool cadena_minimo10(char *);
 bool validar_rfc(char *);
 bool validar_correo(char *);
 bool validarDiaMes(int, int, int);
-
-
+void crearRegistrosVacios(const char *, void *, size_t , int );
 
 int menu_principal()
 {
@@ -50,7 +49,7 @@ void menu_articulos(FILE *articulosf)
 {
     char agregar, agregar_insumo = 's';
     struct Articulos x_articulo;
-    struct Insumo insumos;
+    struct Insumo LecturaInsumo;
     struct Mercado mercado;
     char *estaciones[4] = {"p", "v", "o", "i"}, agregar_mercado = 's';
     bool checar, cadena_valida, clave_valida = false;
@@ -100,7 +99,7 @@ void menu_articulos(FILE *articulosf)
                     }
 
                     if (!checar)
-                        printf("Estacion invalida.\nSolo se permite:\nP - Primavera\nV - Verano\nO - Oto\xF1o\nI - Invierno.\n");
+                        printf("\n*** Estacion invalida ***\nSolo se permite:\nP - Primavera\nV - Verano\nO - Otoño\nI - Invierno.\n");
                 }while (!checar);
 
                 do
@@ -116,7 +115,7 @@ void menu_articulos(FILE *articulosf)
                             checar = true;
                     }
                     if (!checar)
-                        printf("Estacion invalida.\nSolo se permite:\nP - Primavera\nV - Verano\nO - Oto\xF1o\nI - Invierno.\n");
+                        printf("\n*** Estacion invalida ***\nSolo se permite:\nP - Primavera\nV - Verano\nO - Otoño\nI - Invierno.\n");
                 }while (!checar);
 
                 do
@@ -130,36 +129,39 @@ void menu_articulos(FILE *articulosf)
 
                 do
                 {
-                    printf("6) Precio de venta:");
+                    printf("6) Precio de venta: ");
                     scanf("%f", &x_articulo.precio_venta);
 
                     if (x_articulo.precio_venta < 0)
                         printf("Valor invalido.\nValor minimo 0.\n");
                 }while (x_articulo.precio_venta < 0);
 
-                x_articulo.costo_produccion = 0.0;
+                //x_articulo.costo_produccion = 0.0;
 
                 // Validar que la clave del insumo este en el catalogo
+                // SE VERIFICA SI LA CLAVE ESTA EN INSUMOS.DAT
                 while (cant_insumos < 10 && agregar_insumo == 's')
                 {
                     do
 				    {
-                        printf("7) Clave del insumo:");
+                        printf("7) Clave del insumo: ");
                         scanf("%d", &x_articulo.insumos_requeridos[cant_insumos]);
 
                         fseek(insumolocal, (x_articulo.insumos_requeridos[cant_insumos] - 1) * sizeof(struct Insumo), SEEK_SET);
-                        fread(&insumos, sizeof(struct Insumo), 1, insumolocal);
-                        if (insumos.clave_insumo == x_articulo.insumos_requeridos[cant_insumos])
+                        fread(&LecturaInsumo, sizeof(struct Insumo), 1, insumolocal);
+
+                        if (LecturaInsumo.clave_insumo == x_articulo.insumos_requeridos[cant_insumos])
                         {
                             clave_valida = true;
                             cant_insumos++;
-                            costo_produccion += insumos.precio_compra[cant_insumos];
+                            costo_produccion += LecturaInsumo.precio_compra[cant_insumos];
                         }
 
                         if (!clave_valida)
-                            printf("Clave del insumo no encontrada\n");
+                            printf("\nClave del insumo no encontrada\n");
 
-                    }while (clave_valida = false);
+                    } while (!clave_valida);
+
                     do
                     {
                         printf("Quieres agregar otro insumo al articulo(s/n): \n");
@@ -168,11 +170,11 @@ void menu_articulos(FILE *articulosf)
 
                         if (agregar_insumo != 's' && agregar_insumo != 'n') //hay q ver como hacer para que acepte mayus
                             printf("Valor no valido, solo se permite (s/n) \n");
-                    }while(agregar_insumo != 's' && agregar_insumo != 'n');
+                    } while(agregar_insumo != 's' && agregar_insumo != 'n');
                 }
 
             	if (cant_insumos > 10)
-               		printf("El maximo son 10 insumos.\n");
+               		printf("\nHa llegado al limite de insumos 10.\n");
 
                 //calcular el costo de produccion
                 x_articulo.costo_produccion = costo_produccion;
@@ -182,14 +184,14 @@ void menu_articulos(FILE *articulosf)
                 // Clave de mercados *******************************************************************************************
                 while (n_mercados < 10 && agregar_mercado == 's')
                 {
-                    fseek(mercado_local, (x_articulo.clave_mercados[n_mercados] - 1) * sizeof(struct Mercado), SEEK_SET);
-
+                    
                     do
                     {
                         printf("8) Ingresa la clave de mercado %d: ", n_mercados + 1);
                         scanf("%d", &x_articulo.clave_mercados[n_mercados]);
 
                         // Validar si esta en Mercados.dat
+                        fseek(mercado_local, (x_articulo.clave_mercados[n_mercados] - 1) * sizeof(struct Mercado), SEEK_SET);
                         fread(&mercado, sizeof(struct Mercado), 1, mercado_local);
 
                         if (mercado.clave_mercado == x_articulo.clave_mercados[n_mercados])
@@ -234,6 +236,7 @@ void menu_articulos(FILE *articulosf)
         }
     }
 }
+
 void menu_insumos(FILE *insumosf)
 {
     char agregar, agregar_proveedor = 's';
@@ -241,11 +244,11 @@ void menu_insumos(FILE *insumosf)
     struct Proveedor proveedores;
     FILE *proveedorlocal;
     int cant_proveedores = 0;
-    bool clave_valida = false;
+    bool clave_valida;
 
     printf("%s", "\nINSUMOS\n");
 
-    if((proveedorlocal = fopen("Proveedores.dat", "r")) == NULL)
+    if((proveedorlocal = fopen("Proveedores.dat", "rb")) == NULL)
         printf("\nError.\nNo existen proveedores.\nAgrega en el menu correspondiente.\n");
     else
     {
@@ -275,7 +278,7 @@ void menu_insumos(FILE *insumosf)
                 printf("3) Punto de reorden: ");
                 scanf("%d", &insumos.punto_reorden);
                 if (insumos.punto_reorden <= 0)
-                    printf("Clave invalida. Valores admitidos mayores que 0. \n");
+                    printf("\nClave invalida. Valores admitidos mayores que 0.\n");
 
             }while (insumos.punto_reorden <= 0);
 
@@ -285,7 +288,7 @@ void menu_insumos(FILE *insumosf)
                 scanf("%d", &insumos.inventario);
 
                 if (insumos.inventario < 0)
-                    printf("Valor invalido, minimo 0. \n");
+                    printf("\nValor invalido, minimo 0.\n");
 
             }while(insumos.inventario < 0 && cant_proveedores < 10);
 
@@ -294,6 +297,7 @@ void menu_insumos(FILE *insumosf)
             {
                 do
                 {
+                    clave_valida = false;
                     printf("5) Clave del proveedor: ");
                     scanf("%d", &insumos.clave_proveedor[cant_proveedores]);
 
@@ -305,10 +309,8 @@ void menu_insumos(FILE *insumosf)
                         clave_valida = true;
                         cant_proveedores++;
                     }
-
-                    if(!clave_valida)
+                    else
                         printf("Clave del proveedor invalida.\nIngresa una clave valida.\n");
-
                 } while (!clave_valida);
 
                 do
@@ -318,13 +320,14 @@ void menu_insumos(FILE *insumosf)
                     if (insumos.precio_compra <= 0)
                         printf("Precio invalido\n");
 
-                }while(insumos.precio_compra <= 0);
+                } while(insumos.precio_compra <= 0);
 
                 do
                 {
                     printf("Quieres agregar otro proveedor al insumo?(s/n): \n");
                     fflush(stdin);
                     scanf("%c", &agregar_proveedor);
+                    agregar = tolower(agregar);
 
                     if (agregar_proveedor != 's' && agregar_proveedor != 'n') //hay q ver como hacer para que acepte mayus
                         printf("Valor no valido, solo se permite (s/n) \n");
@@ -333,8 +336,7 @@ void menu_insumos(FILE *insumosf)
             }
 
             if(cant_proveedores > 10)
-                printf("El maximo son 10 proveedores \n");
-
+                printf("El maximo son 10 proveedores.\n");
 
             fseek(insumosf, (insumos.clave_insumo - 1) * sizeof(struct Insumo), SEEK_SET);
             fwrite(&insumos, sizeof(struct Insumo), 1, insumosf);
@@ -596,7 +598,7 @@ void menu_proveedores(FILE *fproveedores)
 
         }while (strlen(proveedores.direccion) < 0);
 
-        fseek(fproveedores, (proveedores.numero_proveedor) * sizeof(struct Proveedor), SEEK_SET);
+        fseek(fproveedores, (proveedores.numero_proveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
         fwrite(&proveedores, sizeof(struct Proveedor), 1, fproveedores);
 
         do
@@ -902,3 +904,17 @@ bool validarDiaMes(int dia, int mes, int anio)
 
 
 }*/
+
+void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t tamanoRegistro, int cantidad) {
+    FILE *archivo = fopen(nombreArchivo, "wb");
+    if (!archivo) {
+        printf("Error al abrir el archivo");
+        return;
+    }
+
+    for (int i = 0; i < cantidad; i++) {
+        fwrite(registroVacio, tamanoRegistro, 1, archivo);
+    }
+
+    fclose(archivo);
+}
