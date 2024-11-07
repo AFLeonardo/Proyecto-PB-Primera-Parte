@@ -12,7 +12,7 @@ struct Insumo {
 };
 
 void mostrar_datos_insumos(const char *nombre_archivo) {
-    FILE *archivo = fopen("Insumos.dat", "r"); // Abrir el archivo en modo binario
+    FILE *archivo = fopen("..\\Insumos.dat", "r"); // Abrir el archivo en modo binario
     if (archivo == NULL) {
         perror("Error al abrir el archivo");
         exit(1);

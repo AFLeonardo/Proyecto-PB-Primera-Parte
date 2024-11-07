@@ -142,6 +142,7 @@ void menu_articulos(FILE *articulosf)
                 // Validar que la clave del insumo este en el catalogo
                 while (cant_insumos < 10 && agregar_insumo == 's')
                 {
+                    clave_valida = false;
                     do
 				    {
                         printf("7) Clave del insumo:");
@@ -152,8 +153,14 @@ void menu_articulos(FILE *articulosf)
                         if (insumos.clave_insumo == x_articulo.insumos_requeridos[cant_insumos])
                         {
                             clave_valida = true;
+<<<<<<< Updated upstream
                             cant_insumos++;
                             costo_produccion += insumos.precio_compra[cant_insumos];
+=======
+                            costo_produccion += LecturaInsumo.precio_compra[cant_insumos];
+
+                            cant_insumos++;
+>>>>>>> Stashed changes
                         }
 
                         if (!clave_valida)
@@ -182,7 +189,10 @@ void menu_articulos(FILE *articulosf)
                 // Clave de mercados *******************************************************************************************
                 while (n_mercados < 10 && agregar_mercado == 's')
                 {
+<<<<<<< Updated upstream
                     fseek(mercado_local, (x_articulo.clave_mercados[n_mercados] - 1) * sizeof(struct Mercado), SEEK_SET);
+=======
+>>>>>>> Stashed changes
 
                     do
                     {
@@ -489,7 +499,7 @@ void menu_proveedores(FILE *fproveedores)
     char agregar = 's';
     bool rfc_valido = true, correo_correcto = true, validardia = true;
 
-    printf("%s\n", "\nPROVEEDORES\n");
+    printf("%s", "\nPROVEEDORES\n");
 
     while(agregar != 'n' && agregar != 'N')
     {
@@ -903,3 +913,20 @@ bool validarDiaMes(int dia, int mes, int anio)
 
 
 }*/
+<<<<<<< Updated upstream
+=======
+
+void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t tamanoRegistro, int cantidad) {
+    FILE *archivo = fopen(nombreArchivo, "wb");
+    if (!archivo) {
+        printf("Error al abrir el archivo");
+        return;
+    }
+
+    for (int i = 0; i < cantidad; i++) {
+        fwrite(registroVacio, tamanoRegistro, 1, archivo);
+    }
+
+    fclose(archivo);
+}
+>>>>>>> Stashed changes
