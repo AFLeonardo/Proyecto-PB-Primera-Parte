@@ -11,7 +11,7 @@ struct Insumo {
 };
 
 void mostrar_datos_insumos(const char *nombre_archivo) {
-    FILE *archivo = fopen("Insumos.dat", "rb"); // Abrir el archivo en modo binario
+    FILE *archivo = fopen("Insumos.dat", "r"); // Abrir el archivo en modo binario
     if (archivo == NULL) {
         perror("Error al abrir el archivo");
         exit(1);
@@ -22,13 +22,13 @@ void mostrar_datos_insumos(const char *nombre_archivo) {
     // Leer y mostrar cada registro
     while (fread(&insumo, sizeof(struct Insumo), 1, archivo) == 1) {
         printf("Clave de Insumo: %d\n", insumo.clave_insumo);
-        printf("DescripciÃ³n: %s\n", insumo.descripcion);
+        printf("Descripción: %s\n", insumo.descripcion);
         printf("Punto de Reorden: %d\n", insumo.punto_reorden);
         printf("Inventario: %d\n", insumo.inventario);
 
         printf("Claves de Proveedor: ");
         for (int i = 0; i < 10; i++) {
-            if (insumo.clave_proveedor[i] != 0) { // Muestra solo claves vÃ¡lidas
+            if (insumo.clave_proveedor[i] != 0) { // Muestra solo claves válidas
                 printf("%d", insumo.clave_proveedor[i]);
             }
         }
