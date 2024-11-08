@@ -24,6 +24,12 @@ bool validar_rfc(char *);
 bool validar_correo(char *);
 bool validarDiaMes(struct Fechas);
 void crearRegistrosVacios(const char *, void *, size_t , int );
+bool validarmercado(int);
+bool validararticulo(int);
+bool validarcantidad(int, int );
+float precio(int);
+bool validarempleado(int );
+void imprimir_factura(int, int, int, float, int, float);
 
 int menu_principal()
 {
@@ -935,57 +941,61 @@ bool validarDiaMes(struct Fechas fecha)
     return fecha.dia >= 1 && fecha.dia <= diasEnMes;
 }
 
-/*void menu_control_ventas() // archivos secuenciales
+void menu_control_ventas(FILE *fventas) // archivos secuenciales
 {
-    FILE *mercadolocal;
-    struct Mercado mercados;
     int mercado, articulo, cantidad, empleado;
-    float precio;
+    float precioarticulo, total;
     char factura;
 
-
-    //imprimir numero de mercado debe existir en mercados, devolver bool
-    if((mercadolocal = fopen("Mercados.dat", "r")) == NULL)
-        printf("Error con el archivo de mercados\n");
-
-    else
-        {
-            printf("Numero de mercados: \n");
-
-            while (!feof(stdin))
-            {
-                fread()
-            }
-
-        }
-
-        fclose(Mercadolocal);
-
-        printf("Ingrese la clave de mercado: \n");
-        scanf("%d", &mercado);
-
-        //lo correspondiente
-
-    //numero de articulo debe existir en articulos, devolver bool
-
-    printf("Ingrese el numero de articulo: \n");
-    scanf("%d", &mercado);
-
-    //cantidad maor a 0 y suficiente inventario para la venta y bool COMO RAYOS ES ESO DE Q TIENE Q SUFICIENTE PARA LA VENTA?
     do
     {
-        printf("Ingrese la cantidad: \n");
+        printf("1. Ingrese la clave de mercado: \n");
+        scanf("%d", &mercado);
+
+        if(!validarmercado(mercado))
+            printf("Clave de mercado no encontrada.\n");
+
+    }while(!validarmercado(mercado));
+    
+    //numero de articulo debe existir en articulos, devolver bool
+
+    do
+    {
+        printf("2. Ingrese la clave del articulo: \n");
+        scanf("%d", &articulo);
+
+        if(!validararticulo(articulo))
+            printf("Clave de articulo no encontrada.\n");
+
+    }while(!validararticulo(articulo));
+    
+    //cantidad menor a 0 y suficiente inventario para la venta y bool COMO RAYOS ES ESO DE Q TIENE Q SUFICIENTE PARA LA VENTA?
+    do
+    {
+        printf("3. Ingrese la cantidad: \n");
         scanf("%d", &cantidad);
 
-        if (cantidad < 0)
+        if (!validarcantidad(articulo, mercado))
             printf("Cantidad invalida \n");
 
-    } while (cantidad < 0);
-
+    } while (!validarcantidad(articulo, mercado));
 
     //precio del catalago de articulos para el calculo a pagar traerlo para aca
+    precioarticulo = precio(articulo);
+    total = precioarticulo * cantidad;
+    printf("El precio total a pagar es de: %.2f \n", total);
 
     //numero de empleado debe existir en empleados
+
+    do
+    {
+        printf("4. Ingrese el numero de empleado: \n");
+        scanf("%d", &empleado);
+
+        if(!validarempleado(empleado))
+            printf("Numero invalido \n");
+
+    } while (!validarempleado(empleado));
 
     //factura preguntar si desea y si si imprimirlo
 
@@ -999,10 +1009,127 @@ bool validarDiaMes(struct Fechas fecha)
 
     }while (factura != 'S' && factura != 's' && factura != 'N' && factura != 'n');
 
+    if (factura == 'S' || factura == 's') 
+        imprimir_factura(mercado, articulo, cantidad, precioarticulo, empleado, total);
+}
+    
+bool validarmercado(int fmercado)
+{
+    FILE *mercado;
+    struct Mercado mercados;
+    bool mercadovalido = false;
 
+    //imprimir numero de mercado debe existir en mercados, devolver bool
+    if((mercado = fopen("Mercados.dat", "r")) == NULL)
+        printf("Error con el archivo de mercados\n");
 
+    else
+    {
+        fseek(mercado, (fmercado - 1) * sizeof(struct Mercado), SEEK_SET);
+        fread(&mercados, sizeof(struct Mercado), 1, mercado);
+        if (fmercado == mercados.clave_mercado)
+            mercadovalido = true;
+    }
+    fclose(mercado);
+    return mercadovalido;
+}
 
-}*/
+bool validararticulo(int farticulo)
+{
+    FILE *articuloptr;
+    struct Articulos articulo;
+    bool articulovalido = false;
+
+    if((articuloptr = fopen("Articulos.dat", "r")) == NULL)
+        printf("Error con el archivo de mercados\n");
+
+    else
+    {
+        fseek(articuloptr, (farticulo - 1) * sizeof(struct Articulos), SEEK_SET);
+        fread(&articulo, sizeof(struct Articulos), 1, articuloptr);
+        if (farticulo == articulo.clave_articulo)
+            articulovalido = true;
+    }
+    fclose(articuloptr);
+    return articulovalido;
+}
+
+bool validarcantidad(int fcantidad, int fclave)
+{
+    FILE *articulolocal;
+    struct Articulos articulos;
+    bool cantidad = false;
+
+    if ((articulolocal = fopen("Articulos.dat", "r")) == NULL) 
+        printf("Error al abrir el archivo de articulos.\n");
+
+    else
+    {
+        fseek(articulolocal, (fclave - 1) * sizeof(struct Articulos), SEEK_SET);
+        fread(&articulos, sizeof(struct Articulos), 1, articulolocal);
+        if (articulos.clave_articulo == fclave)
+        {
+            if (fcantidad > 0 && articulos.inventario > fcantidad)
+                cantidad = true;
+        }   
+    }
+    fclose(articulolocal);
+    return cantidad;    
+}
+
+float precio(int fclave)
+{
+     FILE *articulolocal;
+     struct Articulos articuloleido;
+     float precioarticulo;
+
+     if ((articulolocal = fopen("Articulos.dat", "r")) == NULL) 
+        printf("Error al abrir el archivo de articulos.\n");
+
+    else
+    {
+        fseek(articulolocal, (fclave - 1) * sizeof(struct Articulos), SEEK_SET);
+        fread(&articuloleido, sizeof(struct Articulos), 1, articulolocal);
+        precioarticulo = articuloleido.precio_venta;
+
+    }
+    fclose(articulolocal);
+    return precioarticulo;
+}
+
+bool validarempleado(int fempleado)
+{
+    FILE *empleado;
+    struct Empleado empleadoleido;
+    bool empleadovalido = false;
+
+    if ((empleado = fopen("Empleados.dat", "r")) == NULL) 
+        printf("Error al abrir el archivo de empleados.\n");
+
+    else
+    {
+        fseek(empleado, (fempleado - 1) * sizeof(struct Empleado), SEEK_SET);
+        fread(&empleadoleido, sizeof(struct Empleado), 1, empleado);
+
+        if (empleadoleido.numero_empleado == fempleado)
+            empleadovalido = true;
+    }
+    fclose(empleado);
+    return empleadovalido;
+}
+
+void imprimir_factura(int mercado, int articulo, int cantidad, float precio_unitario, int empleado, float total)
+{
+    printf("\n------- FACTURA -------\n");
+    printf("Numero de mercado (cliente): %d\n", mercado);
+    printf("Numero de articulo: %d\n", articulo);
+    printf("Cantidad: %d\n", cantidad);
+    printf("Precio unitario: %.2f\n", precio_unitario);
+    printf("Total a pagar: %.2f\n", total);
+    printf("Numero de empleado: %d\n", empleado);
+    printf("-----------------------\n");
+}
+
 
 void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t tamanoRegistro, int cantidad) {
     FILE *archivo = fopen(nombreArchivo, "w");
