@@ -14,6 +14,7 @@ main()
     struct Insumo insumoVacio = {0, "", 0, 0, {0,0,0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0,0,0}};
     struct Proveedor proveedorVacio = {0, "", "", "", 0, 0, 0, 0, "", {0,0,0,0,0,0,0,0,0,0}};
     struct Mercado mercadoVacio = {0, "", "", "", 0, 0, 0, 0, ""};
+    struct Empleado empleadoVacio = {0, "", "", "", 0.0, {0, 0, 0}, {"", 0, "", "", ""}};
 
     while (ciclo)
     {
@@ -42,9 +43,9 @@ main()
                 break;
 
             case 2:
-                if ((archivo = fopen("Insumos.dat", "r+")) == NULL)
+                if ((archivo = fopen("Insumos.dat", "rb+")) == NULL)
                     {
-                    printf("ERROR.\nSe esta creando el archvio intenta de nuevo.\n");
+                    printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
                     crearRegistrosVacios("Insumos.dat", &insumoVacio, sizeof(struct Articulos), 100);
                     }
                 else
@@ -69,8 +70,10 @@ main()
 
             case 4:
                 if ((archivo = fopen("Empleados.dat", "r+")) == NULL)
+                {
                     printf("ERROR.\nSe esta creando el archvio intenta de nuevo.\n");
-
+					crearRegistrosVacios("Empleados.dat", &empleadoVacio, sizeof(struct Empleado), 1000);
+				}
                 else
                 {
                     menu_empleados(archivo);
@@ -78,7 +81,7 @@ main()
                 }
                 break;
 
-            case 5:
+            case 5: // ✅ LISTO
                 if((archivo = fopen("Proveedores.dat", "r+")) == NULL)
                 {
                     printf("ERROR.\nSe esta creando el archvio intenta de nuevo.\n");
