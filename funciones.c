@@ -191,7 +191,6 @@ void menu_articulos(FILE *articulosf)
                 // Clave de mercados *******************************************************************************************
                 while (n_mercados < 10 && agregar_mercado == 's')
                 {
-
                     do
                     {
                         printf("8) Ingresa la clave de mercado [%d]: ", n_mercados + 1);
@@ -1174,3 +1173,4 @@ void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t
 
     fclose(archivo);
 }
+
