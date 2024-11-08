@@ -634,16 +634,47 @@ void menu_proveedores(FILE *fproveedores)
 
         }while (!validardia);
 
+        printf("9) Direccion: \n");
 
         do
         {
-            printf("9) Direccion: ");//validar cositas esas
+            printf("Calle: ");//validar cositas esas
             fflush(stdin);
-            gets(proveedores.direccion);
-            if (strlen(proveedores.direccion) < 0)
+            gets(proveedores.direccion.calle);
+            if (strlen(proveedores.direccion.calle) < 0)
                 printf("Falta validar.\n");
 
-        }while (strlen(proveedores.direccion) < 0);
+        }while (strlen(proveedores.direccion.calle) < 0);
+
+        do
+        {
+            printf("Numero: ");//validar cositas esas
+            fflush(stdin);
+            gets(proveedores.direccion.numero);
+            if (strlen(proveedores.direccion.numero) < 0)
+                printf("Falta validar.\n");
+
+        }while (strlen(proveedores.direccion.numero) < 0);
+
+        do
+        {
+            printf("Colonia: ");//validar cositas esas
+            fflush(stdin);
+            gets(proveedores.direccion.colonia);
+            if (strlen(proveedores.direccion.colonia) < 0)
+                printf("Falta validar.\n");
+
+        }while (strlen(proveedores.direccion.colonia) < 0);
+
+        do
+        {
+            printf("Municipio: ");//validar cositas esas
+            fflush(stdin);
+            gets(proveedores.direccion.municipio);
+            if (strlen(proveedores.direccion.municipio) < 0)
+                printf("Falta validar.\n");
+
+        }while (strlen(proveedores.direccion.municipio) < 0);
 
         fseek(fproveedores, (proveedores.numero_proveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
         fwrite(&proveedores, sizeof(struct Proveedor), 1, fproveedores);
@@ -802,18 +833,49 @@ void menu_mercados(FILE *mercadosf)
                 printf("Ingrese un dia valido correspondiente al mes\n");
         }while (!validardia);
 
+        printf("9) Direccion: \n");
 
         do
         {
-            printf("9) Direccion: ");//validar cositas esas
+            printf("Calle: ");//validar cositas esas
             fflush(stdin);
-            gets(mercados.direccion);
-            if (strlen(mercados.direccion) < 0)
+            gets(mercados.direccion.calle);
+            if (strlen(mercados.direccion.calle) < 0)
                 printf("Falta validar.\n");
 
-        }while (strlen(mercados.direccion) < 0);
+        }while (strlen(mercados.direccion.calle) < 0);
 
+        do
+        {
+            printf("Numero: ");//validar cositas esas
+            fflush(stdin);
+            gets(mercados.direccion.numero);
+            if (strlen(mercados.direccion.numero) < 0)
+                printf("Falta validar.\n");
 
+        }while (strlen(mercados.direccion.numero) < 0);
+
+        do
+        {
+            printf("Colonia: ");//validar cositas esas
+            fflush(stdin);
+            gets(mercados.direccion.colonia);
+            if (strlen(mercados.direccion.colonia) < 0)
+                printf("Falta validar.\n");
+
+        }while (strlen(mercados.direccion.colonia) < 0);
+
+        do
+        {
+            printf("Municipio: ");//validar cositas esas
+            fflush(stdin);
+            gets(mercados.direccion.municipio);
+            if (strlen(mercados.direccion.municipio) < 0)
+                printf("Falta validar.\n");
+
+        }while (strlen(mercados.direccion.municipio) < 0);
+
+        fseek(mercadosf, (mercados.clave_mercado - 1) * sizeof(struct Mercado), SEEK_SET);
         fwrite(&mercados, sizeof(struct Mercado), 1, mercadosf);
 
 
