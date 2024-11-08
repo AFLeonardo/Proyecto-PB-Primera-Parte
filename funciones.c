@@ -156,7 +156,6 @@ void menu_articulos(FILE *articulosf)
                             costo_produccion += LecturaInsumo.precio_compra[cant_insumos];
                             clave_valida = true;
                             cant_insumos++;
-                            costo_produccion += LecturaInsumo.precio_compra[cant_insumos];
                         }
 
                         if (!clave_valida)
@@ -186,10 +185,6 @@ void menu_articulos(FILE *articulosf)
                 // Clave de mercados *******************************************************************************************
                 while (n_mercados < 10 && agregar_mercado == 's')
                 {
-<<<<<<< Updated upstream
-                    
-=======
->>>>>>> Stashed changes
 
                     do
                     {
@@ -442,7 +437,6 @@ void menu_empleados(FILE *fempleados)
 
             if (empleados.fecha.anio < 1990 || empleados.fecha.anio > 2024)
                 printf("Año de nacimiento invalido, debe de estar entre 1950 y 2006\n");
-anio
         }while (empleados.fecha.anio < 1990 || empleados.fecha.anio > 2024);
 
         do
@@ -947,8 +941,6 @@ bool validarDiaMes(struct Fechas fecha)
 
 
 }*/
-<<<<<<< Updated upstream
-=======
 
 void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t tamanoRegistro, int cantidad) {
     FILE *archivo = fopen(nombreArchivo, "w");
@@ -956,15 +948,10 @@ void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t
         printf("Error al abrir el archivo");
         return;
     }
-    else
-    {
-
-    }
-
+    
     for (int i = 0; i < cantidad; i++) {
         fwrite(registroVacio, tamanoRegistro, 1, archivo);
     }
 
     fclose(archivo);
 }
->>>>>>> Stashed changes
