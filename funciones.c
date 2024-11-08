@@ -19,7 +19,6 @@ void menu_reportes();
 
 // FUNCIONES
 char *convertir_a_minusculas(char *);
-bool cadena_minimo10(char *);
 bool validar_rfc(char *);
 bool validar_correo(char *);
 bool validarDiaMes(struct Fechas);
@@ -293,7 +292,6 @@ void menu_insumos(FILE *insumosf)
 
             }while(insumos.inventario < 0 && cant_proveedores < 10);
 
-            //hay q validar q exista en proveedores y maximo 10 checarlo pq esta mal**************************************************
             while(agregar_proveedor == 's' && cant_proveedores < 10)
             {
                 do
@@ -318,22 +316,22 @@ void menu_insumos(FILE *insumosf)
                 {
                     printf("6) Precio: ");
                     scanf("%f", &insumos.precio_compra[cant_proveedores]);
-                    if (insumos.precio_compra <= 0)
+                    if (insumos.precio_compra[cant_proveedores] <= 0)
                         printf("Precio invalido\n");
 
-                } while(insumos.precio_compra <= 0);
+                } while(insumos.precio_compra[cant_proveedores] <= 0);
 
                 do
                 {
                     printf("Quieres agregar otro proveedor al insumo?(s/n): \n");
                     fflush(stdin);
                     scanf("%c", &agregar_proveedor);
-                    agregar = tolower(agregar);
+                    agregar_proveedor = tolower(agregar_proveedor);
 
                     if (agregar_proveedor != 's' && agregar_proveedor != 'n') //hay q ver como hacer para que acepte mayus
                         printf("Valor no valido, solo se permite (s/n) \n");
 
-                }while (agregar_proveedor != 's' && agregar_proveedor != 'n');
+                } while (agregar_proveedor != 's' && agregar_proveedor != 'n');
             }
 
             if(cant_proveedores > 10)
@@ -350,12 +348,11 @@ void menu_insumos(FILE *insumosf)
                 if (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n')
                     printf("Valor no valido.\nSolo se permite S o N.\n");
 
-            }while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
+            } while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
 
         }
         fclose(proveedorlocal);
     }
-
 }
 
 void menu_empleados(FILE *fempleados)
@@ -738,7 +735,7 @@ void menu_mercados(FILE *mercadosf)
     struct Mercado mercados;
     bool correo_correcto = true, rfc_valido=true, validardia=true; //checar si se puede inicializar o no
 
-    printf("%s\n", "MERCADOS\n");
+    printf("%s\n", "\nMERCADOS\n");
 
     while (agregar != 'N' && agregar != 'n')
     {
@@ -761,7 +758,7 @@ void menu_mercados(FILE *mercadosf)
 
         }while (strlen(mercados.nombre_completo) < 10);
 
-        do //falta validar lo correspondiente
+        do
         {
             printf("3) RFC: ");
             fflush(stdin);
@@ -789,10 +786,10 @@ void menu_mercados(FILE *mercadosf)
 
             correo_correcto = validar_correo(mercados.correo);
 
-            if (correo_correcto == false)
+            if (!correo_correcto)
                 printf("El correo no cumple con el formato\n");
 
-        }while(correo_correcto == false);
+        }while(!correo_correcto);
 
         do
         {
@@ -804,7 +801,6 @@ void menu_mercados(FILE *mercadosf)
 
         }while (mercados.descuento < 0 || mercados.descuento > 1);
 
-
         do
         {
             printf("6) Anio de nacimiento: ");
@@ -813,7 +809,6 @@ void menu_mercados(FILE *mercadosf)
                 printf("Año de nacimiento invalido, debe de estar entre 1950 y 2006\n");
 
         }while (mercados.fecha.anio < 1950 || mercados.fecha.anio > 2006);
-
 
         do
         {
@@ -837,47 +832,46 @@ void menu_mercados(FILE *mercadosf)
 
         do
         {
-            printf("Calle: ");//validar cositas esas
+            printf("\tCalle: ");//validar cositas esas
             fflush(stdin);
             gets(mercados.direccion.calle);
             if (strlen(mercados.direccion.calle) < 0)
                 printf("Falta validar.\n");
 
-        }while (strlen(mercados.direccion.calle) < 0);
+        } while (strlen(mercados.direccion.calle) < 0);
 
         do
         {
-            printf("Numero: ");//validar cositas esas
+            printf("\tNumero: ");//validar cositas esas
             fflush(stdin);
-            gets(mercados.direccion.numero);
-            if (strlen(mercados.direccion.numero) < 0)
+            scanf("%d", &mercados.direccion.numero);
+            if (mercados.direccion.numero < 0)
                 printf("Falta validar.\n");
 
-        }while (strlen(mercados.direccion.numero) < 0);
+        } while (mercados.direccion.numero < 0);
 
         do
         {
-            printf("Colonia: ");//validar cositas esas
+            printf("\tColonia: ");//validar cositas esas
             fflush(stdin);
             gets(mercados.direccion.colonia);
             if (strlen(mercados.direccion.colonia) < 0)
                 printf("Falta validar.\n");
 
-        }while (strlen(mercados.direccion.colonia) < 0);
+        } while (strlen(mercados.direccion.colonia) < 0);
 
         do
         {
-            printf("Municipio: ");//validar cositas esas
+            printf("\tMunicipio: ");//validar cositas esas
             fflush(stdin);
             gets(mercados.direccion.municipio);
             if (strlen(mercados.direccion.municipio) < 0)
                 printf("Falta validar.\n");
 
-        }while (strlen(mercados.direccion.municipio) < 0);
+        } while (strlen(mercados.direccion.municipio) < 0);
 
         fseek(mercadosf, (mercados.clave_mercado - 1) * sizeof(struct Mercado), SEEK_SET);
         fwrite(&mercados, sizeof(struct Mercado), 1, mercadosf);
-
 
         do
         {
@@ -887,10 +881,8 @@ void menu_mercados(FILE *mercadosf)
             if (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n')
                 printf("Valor no valido.\nSolo se permite S o N.\n");
 
-        }while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
+        } while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
     }
-
-
 }
 
 bool validar_correo(char * fcorreo)
