@@ -14,6 +14,7 @@ main()
     struct Insumo insumoVacio = {0, "", 0, 0, {0,0,0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0,0,0}};
     struct Proveedor proveedorVacio = {0, "", "", "", 0, 0, 0, 0, "", {0,0,0,0,0,0,0,0,0,0}};
     struct Mercado mercadoVacio = {0, "", "", "", 0, 0, 0, 0, ""};
+    struct Venta ventavacia = {0, 0, 0, 0, 0, 0};
     struct Empleado empleadoVacio = {0, "", "", "", 0.0, {0, 0, 0}, {"", 0, "", "", ""}};
 
     while (ciclo)
@@ -96,6 +97,16 @@ main()
 
             case 6:
                 printf("%s\n", "VENTAS\n");
+                if((archivo = fopen("Ventas.txt", "r+")) == NULL)
+                {
+                    printf("ERROR.\nSe esta creando el archvio intenta de nuevo.\n");
+                    crearRegistrosVacios("Ventas.txt", &ventavacia, sizeof(struct Venta), 100);
+                }
+                else
+                {
+                    menu_control_ventas(archivo);
+                    fclose(archivo);
+                }
                 break;
 
             case 7:
