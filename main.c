@@ -10,10 +10,12 @@ main()
     int opcion;
     bool ciclo = true;
     FILE *archivo;
-    struct Articulos articuloVacio = {0, "", "", "", {0,0,0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0,0,0}, 0.0, 0, 0.0};
-    struct Insumo insumoVacio = {0, "", 0, 0, {0,0,0,0,0,0,0,0,0,0}, {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0}};
-    struct Proveedor proveedorVacio = {0, "", "", "", 0.0, 0, 0, 0, "", {0,0,0,0,0,0,0,0,0,0}};
-    struct Mercado mercadoVacio = {0, "", "", "", 0.0f, 0, 0, 0, ""};
+    struct Articulos articuloVacio = {0, "", "", "", {0,0,0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0,0,0}, 0, 0, 0};
+    struct Insumo insumoVacio = {0, "", 0, 0, {0,0,0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0,0,0}};
+    struct Proveedor proveedorVacio = {0, "", "", "", 0, 0, 0, 0, "", {0,0,0,0,0,0,0,0,0,0}};
+    struct Mercado mercadoVacio = {0, "", "", "", 0, 0, 0, 0, ""};
+    struct Venta ventavacia = {0, 0, 0, 0, 0, 0};
+    struct Empleado empleadoVacio = {0, "", "", "", 0.0, {0, 0, 0}, {"", 0, "", "", ""}};
 
     while (ciclo)
     {
@@ -29,11 +31,11 @@ main()
         switch (opcion)
         {
             case 1:
-                if ((archivo = fopen("Articulos.dat", "rb+")) == NULL)// hay q checar si edna nos pide lo de que se tienen q guardar para ponrelo en "a"
-                    { //sino lo dejamos como "w" pq con el w si valida clave insumos
-                    printf("Error al abrir el archivo\n"); 
+                if((archivo = fopen("Articulos.dat", "r+") == NULL))
+                {
+                    printf("ERROR.\nSe esta creando el archvio intenta de nuevo.\n");
                     crearRegistrosVacios("Articulos.dat", &articuloVacio, sizeof(struct Articulos), 100);
-                    }          
+                }
                 else
                 {
                     menu_articulos(archivo);
@@ -44,7 +46,7 @@ main()
             case 2:
                 if ((archivo = fopen("Insumos.dat", "rb+")) == NULL)
                     {
-                    printf("Error al abrir el archivo\n"); 
+                    printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
                     crearRegistrosVacios("Insumos.dat", &insumoVacio, sizeof(struct Articulos), 100);
                     }
                 else
@@ -55,9 +57,9 @@ main()
                 break;
 
             case 3:
-                if ((archivo = fopen("Mercados.dat", "rb+")) == NULL)
+                if ((archivo = fopen("Mercados.dat", "r+")) == NULL)
                     {
-                    printf("Error al abrir el archivo\n");
+                    printf("ERROR.\nSe esta creando el archvio intenta de nuevo.\n");
                     crearRegistrosVacios("Mercados.dat", &mercadoVacio, sizeof(struct Mercado), 100);
                     }
                 else
@@ -68,9 +70,11 @@ main()
                 break;
 
             case 4:
-                if ((archivo = fopen("Empleados.dat", "rb+")) == NULL)
-                    printf("Error al abrir el archivo\n");
-
+                if ((archivo = fopen("Empleados.dat", "r+")) == NULL)
+                {
+                    printf("ERROR.\nSe esta creando el archvio intenta de nuevo.\n");
+					crearRegistrosVacios("Empleados.dat", &empleadoVacio, sizeof(struct Empleado), 1000);
+				}
                 else
                 {
                     menu_empleados(archivo);
@@ -78,11 +82,11 @@ main()
                 }
                 break;
 
-            case 5:
-                if((archivo = fopen("Proveedores.dat", "rb+")) == NULL)
+            case 5: // ✅ LISTO
+                if((archivo = fopen("Proveedores.dat", "r+")) == NULL)
                 {
+                    printf("ERROR.\nSe esta creando el archvio intenta de nuevo.\n");
                     crearRegistrosVacios("Proveedores.dat", &proveedorVacio, sizeof(struct Proveedor), 100);
-                    printf("Error al abrir el archivo\n");
                 }
                 else
                 {
@@ -93,6 +97,16 @@ main()
 
             case 6:
                 printf("%s\n", "VENTAS\n");
+                if((archivo = fopen("Ventas.txt", "r+")) == NULL)
+                {
+                    printf("ERROR.\nSe esta creando el archvio intenta de nuevo.\n");
+                    crearRegistrosVacios("Ventas.txt", &ventavacia, sizeof(struct Venta), 100);
+                }
+                else
+                {
+                    menu_control_ventas(archivo);
+                    fclose(archivo);
+                }
                 break;
 
             case 7:

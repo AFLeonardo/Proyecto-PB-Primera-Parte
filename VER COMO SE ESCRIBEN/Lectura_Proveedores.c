@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 struct Proveedor {
     int numero_proveedor;
@@ -13,36 +15,49 @@ struct Proveedor {
     int articulos_produce[10]; // Claves de los artículos que produce
 };
 
-int main() {
-    FILE *archivo;
+// Función para mostrar la información de los proveedores
+void mostrar_proveedores(FILE *proveedorlocal) {
     struct Proveedor proveedor;
 
-    archivo = fopen("..\\Proveedores.dat", "rb");  // Abre el archivo en modo lectura binaria
-    if (archivo == NULL) {
-        printf("No se pudo abrir el archivo 'Proveedores.dat'.\n");
-        return 1;
+    // Verificar si el archivo de proveedores está abierto
+    if (proveedorlocal == NULL) {
+        printf("Error al abrir el archivo de proveedores.\n");
+        return;
     }
 
-    // Leer y mostrar la información de cada proveedor en el archivo
-    while (fread(&proveedor, sizeof(struct Proveedor), 1, archivo) == 1) {
-        printf("Numero de Proveedor: %d\n", proveedor.numero_proveedor);
+    // Leer cada proveedor y mostrar su información
+    printf("\n--- Lista de Proveedores ---\n");
+    while (fread(&proveedor, sizeof(struct Proveedor), 1, proveedorlocal) == 1) {
+        printf("Número de Proveedor: %d\n", proveedor.numero_proveedor);
         printf("Nombre Completo: %s\n", proveedor.nombre_completo);
         printf("RFC: %s\n", proveedor.RFC);
         printf("Correo: %s\n", proveedor.correo);
         printf("Descuento: %.2f%%\n", proveedor.descuento);
-        printf("Fecha de Nacimiento: %02d-%02d-%04d\n",
-               proveedor.dia_nacimiento, proveedor.mes_nacimiento, proveedor.anio_nacimiento);
-        printf("Direccion: %s\n", proveedor.direccion);
-
-        printf("Articulos que Produce:\n");
+        printf("Fecha de Nacimiento: %02d/%02d/%d\n", proveedor.dia_nacimiento, proveedor.mes_nacimiento, proveedor.anio_nacimiento);
+        printf("Dirección: %s\n", proveedor.direccion);
+        printf("Artículos que Produce: ");
+        
+        // Mostrar las claves de los artículos que produce
         for (int i = 0; i < 10; i++) {
-            if (proveedor.articulos_produce[i] != 0) {  // Para evitar mostrar artículos vacíos
-                printf("  Articulo [%d]: %d\n", i + 1, proveedor.articulos_produce[i]);
+            if (proveedor.articulos_produce[i] != 0) { // Suponiendo que 0 indica que no produce un artículo
+                printf("%d ", proveedor.articulos_produce[i]);
             }
         }
-        printf("\n");
+        printf("\n\n");
     }
+}
 
-    fclose(archivo);  // Cierra el archivo después de leerlo
+int main() {
+    FILE *proveedorlocal;
+
+    // Abrir el archivo de proveedores
+    proveedorlocal = fopen("..\\Proveedores.dat", "rb");
+
+    // Mostrar la información de los proveedores
+    mostrar_proveedores(proveedorlocal);
+
+    // Cerrar el archivo
+    fclose(proveedorlocal);
+
     return 0;
 }

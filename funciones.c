@@ -19,11 +19,17 @@ void menu_reportes();
 
 // FUNCIONES
 char *convertir_a_minusculas(char *);
-bool cadena_minimo10(char *);
 bool validar_rfc(char *);
 bool validar_correo(char *);
 bool validarDiaMes(struct Fechas);
 void crearRegistrosVacios(const char *, void *, size_t , int );
+bool validarmercado(int);
+bool validararticulo(int);
+bool validarcantidad(int, int );
+float precio(int);
+bool validarempleado(int );
+bool validarchar(char *);
+void imprimir_factura(int, int, int, float, int, float);
 
 int menu_principal()
 {
@@ -82,8 +88,9 @@ void menu_articulos(FILE *articulosf)
                     printf("2) Descripcion: ");
                     fflush(stdin);
                     gets(x_articulo.descripcion);
-                    cadena_valida = cadena_minimo10(x_articulo.descripcion);
-                }while (!cadena_valida);
+                    if (strlen(x_articulo.descripcion) < 10)
+                        printf("Los caracteres minimos son 10.\n");
+                }while (strlen(x_articulo.descripcion) < 10);
 
                 do
                 {
@@ -136,9 +143,8 @@ void menu_articulos(FILE *articulosf)
                         printf("Valor invalido.\nValor minimo 0.\n");
                 }while (x_articulo.precio_venta < 0);
 
-                //x_articulo.costo_produccion = 0.0;
+                x_articulo.costo_produccion = 0.0;
 
-                // Validar que la clave del insumo este en el catalogo
                 // SE VERIFICA SI LA CLAVE ESTA EN INSUMOS.DAT
                 while (cant_insumos < 10 && agregar_insumo == 's')
                 {
@@ -153,14 +159,9 @@ void menu_articulos(FILE *articulosf)
 
                         if (LecturaInsumo.clave_insumo == x_articulo.insumos_requeridos[cant_insumos])
                         {
-                            clave_valida = true;
-<<<<<<< Updated upstream
-                            cant_insumos++;
-                            costo_produccion += insumos.precio_compra[cant_insumos];
-=======
                             costo_produccion += LecturaInsumo.precio_compra[cant_insumos];
+                            clave_valida = true;
                             cant_insumos++;
->>>>>>> Stashed changes
                         }
 
                         if (!clave_valida)
@@ -174,7 +175,7 @@ void menu_articulos(FILE *articulosf)
                         fflush(stdin);
                         scanf("%c", &agregar_insumo);
 
-                        if (agregar_insumo != 's' && agregar_insumo != 'n') //hay q ver como hacer para que acepte mayus
+                        if (agregar_insumo != 's' && agregar_insumo != 'n')
                             printf("Valor no valido, solo se permite (s/n) \n");
                     } while(agregar_insumo != 's' && agregar_insumo != 'n');
                 }
@@ -190,17 +191,9 @@ void menu_articulos(FILE *articulosf)
                 // Clave de mercados *******************************************************************************************
                 while (n_mercados < 10 && agregar_mercado == 's')
                 {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-                    fseek(mercado_local, (x_articulo.clave_mercados[n_mercados] - 1) * sizeof(struct Mercado), SEEK_SET);
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-
                     do
                     {
-                        printf("8) Ingresa la clave de mercado %d: ", n_mercados + 1);
+                        printf("8) Ingresa la clave de mercado [%d]: ", n_mercados + 1);
                         scanf("%d", &x_articulo.clave_mercados[n_mercados]);
 
                         // Validar si esta en Mercados.dat
@@ -305,7 +298,6 @@ void menu_insumos(FILE *insumosf)
 
             }while(insumos.inventario < 0 && cant_proveedores < 10);
 
-            //hay q validar q exista en proveedores y maximo 10 checarlo pq esta mal**************************************************
             while(agregar_proveedor == 's' && cant_proveedores < 10)
             {
                 do
@@ -330,22 +322,22 @@ void menu_insumos(FILE *insumosf)
                 {
                     printf("6) Precio: ");
                     scanf("%f", &insumos.precio_compra[cant_proveedores]);
-                    if (insumos.precio_compra <= 0)
+                    if (insumos.precio_compra[cant_proveedores] <= 0)
                         printf("Precio invalido\n");
 
-                } while(insumos.precio_compra <= 0);
+                } while(insumos.precio_compra[cant_proveedores] <= 0);
 
                 do
                 {
                     printf("Quieres agregar otro proveedor al insumo?(s/n): \n");
                     fflush(stdin);
                     scanf("%c", &agregar_proveedor);
-                    agregar = tolower(agregar);
+                    agregar_proveedor = tolower(agregar_proveedor);
 
                     if (agregar_proveedor != 's' && agregar_proveedor != 'n') //hay q ver como hacer para que acepte mayus
                         printf("Valor no valido, solo se permite (s/n) \n");
 
-                }while (agregar_proveedor != 's' && agregar_proveedor != 'n');
+                } while (agregar_proveedor != 's' && agregar_proveedor != 'n');
             }
 
             if(cant_proveedores > 10)
@@ -362,12 +354,11 @@ void menu_insumos(FILE *insumosf)
                 if (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n')
                     printf("Valor no valido.\nSolo se permite S o N.\n");
 
-            }while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
+            } while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
 
         }
         fclose(proveedorlocal);
     }
-
 }
 
 void menu_empleados(FILE *fempleados)
@@ -382,7 +373,7 @@ void menu_empleados(FILE *fempleados)
     {
         do
         {
-            printf("1) Ingrese su numero de empleado: ");
+            printf("1) Numero de empleado: ");
             scanf("%d", &empleados.numero_empleado);
 
             if(empleados.numero_empleado < 1 || empleados.numero_empleado > 1000)
@@ -434,7 +425,7 @@ void menu_empleados(FILE *fempleados)
 
         do
         {
-            printf("5) Comision recibida: ");
+            printf("5) Comision: ");
             scanf("%f", &empleados.comision);
 
             if(empleados.comision < 0)
@@ -444,26 +435,25 @@ void menu_empleados(FILE *fempleados)
 
         do
         {
-            printf("6) Año de nacimiento: ");
+            printf("6) Año de contratacion: ");
             scanf("%d", &empleados.fecha.anio);
 
             if (empleados.fecha.anio < 1990 || empleados.fecha.anio > 2024)
-                printf("Año de nacimiento invalido, debe de estar entre 1950 y 2006\n");
-anio
+                printf("Año de nacimiento invalido, debe de estar entre 1990 y 2024\n");
         }while (empleados.fecha.anio < 1990 || empleados.fecha.anio > 2024);
 
         do
         {
-            printf("7) Mes de nacimiento: ");
+            printf("7) Mes de contratacion: ");
             scanf("%d", &empleados.fecha.mes);
             if (empleados.fecha.mes < 1 || empleados.fecha.mes > 12)
-                printf("Mes de nacimiento invalido, debe de estar entre 1 y 12\n");
+                printf("Mes de contratacion invalido, debe de estar entre 1 y 12\n");
 
         }while (empleados.fecha.mes < 1 || empleados.fecha.mes > 12);
 
         do
         {
-            printf("8) Dia de nacimiento: ");//validar q dia corresponda a mes***************************
+            printf("8) Dia de contratacion: ");//validar q dia corresponda a mes***************************
             scanf("%d", &empleados.fecha.dia);
             validardia = validarDiaMes(empleados.fecha);
             if (!validardia)
@@ -472,27 +462,27 @@ anio
         }while (!validardia);//**********************************************************
 
 
-        printf("9) Direccion:");
+        printf("9) Direccion:\n");
         do
         {
             //validar cositas esas************************************************
             printf("Ingrese la calle: ");
             fflush(stdin);
             gets(empleados.direccion.calle);
-            if (strlen(empleados.direccion.calle) < 0)
-                printf("Falta validar.\n");
+            if (!(validarchar(empleados.direccion.calle)))
+                printf("Ingrese una calle valida.\n");
 
-        }while (strlen(empleados.direccion.calle) < 0);//*****************************************************************
+        }while (!(validarchar(empleados.direccion.calle)));//*****************************************************************
 
         do
         {
             //validar cositas esas************************************************
             printf("Ingrese el numero: ");
             scanf("%d", &empleados.direccion.numero);
-            if (strlen(empleados.direccion.numero) < 0)
+            if (empleados.direccion.numero < 0)
                 printf("Falta validar.\n");
 
-        }while (strlen(empleados.direccion.numero) < 0);
+        }while (empleados.direccion.numero < 0);
 
         do
         {
@@ -500,10 +490,10 @@ anio
             printf("Ingrese la colonia: ");
             fflush(stdin);
             gets(empleados.direccion.colonia);
-            if (strlen(empleados.direccion.colonia) < 0)
-                printf("Falta validar.\n");
+            if (!(validarchar(empleados.direccion.colonia)))
+                printf("Ingrese una colonia valida.\n");
 
-        }while (strlen(empleados.direccion.colonia) < 0);
+        }while (!(validarchar(empleados.direccion.colonia)));
 
         do
         {
@@ -511,8 +501,8 @@ anio
             printf("Ingrese el municipio: ");
             fflush(stdin);
             gets(empleados.direccion.municipio);
-            if (strlen(empleados.direccion.municipio) < 0)
-                printf("Falta validar.\n");
+            if (!(validarchar(empleados.direccion.municipio)))
+                printf("Ingrese un municipio valido.\n");
 
         }while (strlen(empleados.direccion.municipio) < 0);
 
@@ -522,10 +512,10 @@ anio
             printf("Ingrese el estado: ");
             fflush(stdin);
             gets(empleados.direccion.estado);
-            if (strlen(empleados.direccion.estado) < 0)
-                printf("Falta validar.\n");
+            if (!(validarchar(empleados.direccion.estado)))
+                printf("Ingrese un estado valido.\n");
 
-        }while (strlen(empleados.direccion.estado) < 0);
+        }while (!(validarchar(empleados.direccion.estado)));
 
 
 
@@ -603,10 +593,10 @@ void menu_proveedores(FILE *fproveedores)
 
             correo_correcto = validar_correo(proveedores.correo);
 
-            if (correo_correcto == false)
+            if (!correo_correcto)
                 printf("El correo no cumple con el formato\n");
 
-        }while(correo_correcto == false);
+        }while(!correo_correcto);
 
 
         do
@@ -647,16 +637,57 @@ void menu_proveedores(FILE *fproveedores)
 
         }while (!validardia);
 
+        printf("9) Direccion: \n");
 
         do
         {
-            printf("9) Direccion: ");//validar cositas esas
+            printf("Calle: ");//validar cositas esas
             fflush(stdin);
-            gets(proveedores.direccion);
-            if (strlen(proveedores.direccion) < 0)
+            gets(proveedores.direccion.calle);
+            if (!(validarchar(proveedores.direccion.calle)))
+                printf("Ingresa una calle valida.\n");
+
+        }while (!(validarchar(proveedores.direccion.calle)));
+
+        do
+        {
+            printf("Numero: ");//validar cositas esas
+            scanf("%d", &proveedores.direccion.numero);
+            if (proveedores.direccion.numero < 0)
                 printf("Falta validar.\n");
 
-        }while (strlen(proveedores.direccion) < 0);
+        }while (proveedores.direccion.numero < 0);
+
+        do
+        {
+            printf("Colonia: ");//validar cositas esas
+            fflush(stdin);
+            gets(proveedores.direccion.colonia);
+            if (!(validarchar(proveedores.direccion.colonia)))
+                printf("Ingresa una colonia valida.\n");
+
+        }while (!(validarchar(proveedores.direccion.colonia)));
+
+        do
+        {
+            printf("Municipio: ");//validar cositas esas
+            fflush(stdin);
+            gets(proveedores.direccion.municipio);
+            if (!(validarchar(proveedores.direccion.municipio)))
+                printf("Ingresa un municipio valido.\n");
+
+        }while (!(validarchar(proveedores.direccion.calle)));
+
+        do
+        {
+            //validar cositas esas************************************************
+            printf("Ingrese el estado: ");
+            fflush(stdin);
+            gets(proveedores.direccion.estado);
+            if (!(validarchar(proveedores.direccion.estado)))
+                printf("Ingrese un estado valido.\n");
+
+        }while (!(validarchar(proveedores.direccion.estado)));
 
         fseek(fproveedores, (proveedores.numero_proveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
         fwrite(&proveedores, sizeof(struct Proveedor), 1, fproveedores);
@@ -680,16 +711,6 @@ char *convertir_a_minusculas(char *cadena)
         cadena[i] = tolower(cadena[i]);
 
     return cadena;
-}
-
-bool cadena_minimo10(char *descripcion)
-{
-    if (strlen(descripcion) < 10)
-    {
-        printf("Los caracteres minimos son de 10.\n");
-        return false;
-    }
-    return true;
 }
 
 bool validar_rfc(char *frfc) {
@@ -730,7 +751,7 @@ void menu_mercados(FILE *mercadosf)
     struct Mercado mercados;
     bool correo_correcto = true, rfc_valido=true, validardia=true; //checar si se puede inicializar o no
 
-    printf("%s\n", "MERCADOS\n");
+    printf("%s\n", "\nMERCADOS\n");
 
     while (agregar != 'N' && agregar != 'n')
     {
@@ -753,7 +774,7 @@ void menu_mercados(FILE *mercadosf)
 
         }while (strlen(mercados.nombre_completo) < 10);
 
-        do //falta validar lo correspondiente
+        do
         {
             printf("3) RFC: ");
             fflush(stdin);
@@ -781,10 +802,10 @@ void menu_mercados(FILE *mercadosf)
 
             correo_correcto = validar_correo(mercados.correo);
 
-            if (correo_correcto == false)
+            if (!correo_correcto)
                 printf("El correo no cumple con el formato\n");
 
-        }while(correo_correcto == false);
+        }while(!correo_correcto);
 
         do
         {
@@ -796,7 +817,6 @@ void menu_mercados(FILE *mercadosf)
 
         }while (mercados.descuento < 0 || mercados.descuento > 1);
 
-
         do
         {
             printf("6) Anio de nacimiento: ");
@@ -805,7 +825,6 @@ void menu_mercados(FILE *mercadosf)
                 printf("Año de nacimiento invalido, debe de estar entre 1950 y 2006\n");
 
         }while (mercados.fecha.anio < 1950 || mercados.fecha.anio > 2006);
-
 
         do
         {
@@ -825,20 +844,60 @@ void menu_mercados(FILE *mercadosf)
                 printf("Ingrese un dia valido correspondiente al mes\n");
         }while (!validardia);
 
+        printf("9) Direccion: \n");
 
         do
         {
-            printf("9) Direccion: ");//validar cositas esas
+            printf("Calle: ");//validar cositas esas
             fflush(stdin);
-            gets(mercados.direccion);
-            if (strlen(mercados.direccion) < 0)
+            gets(mercados.direccion.calle);
+            if (!(validarchar(mercados.direccion.calle)))
+                printf("Ingrese calle valida.\n");
+
+        } while (!(validarchar(mercados.direccion.calle)));
+
+        do
+        {
+            printf("Numero: ");//validar cositas esas
+            scanf("%d", &mercados.direccion.numero);
+            if (mercados.direccion.numero < 0)
                 printf("Falta validar.\n");
 
-        }while (strlen(mercados.direccion) < 0);
+        } while (mercados.direccion.numero < 0);
 
+        do
+        {
+            printf("Colonia: ");//validar cositas esas
+            fflush(stdin);
+            gets(mercados.direccion.colonia);
+            if (!(validarchar(mercados.direccion.colonia)))
+                printf("Ingrese una colonia valida.\n");
 
+        } while (!(validarchar(mercados.direccion.colonia)));
+
+        do
+        {
+            printf("Municipio: ");//validar cositas esas
+            fflush(stdin);
+            gets(mercados.direccion.municipio);
+            if (!(validarchar(mercados.direccion.municipio)))
+                printf("Ingrese municipio valida.\n");
+
+        } while (!(validarchar(mercados.direccion.municipio)));
+
+        do
+        {
+            //validar cositas esas************************************************
+            printf("Ingrese el estado: ");
+            fflush(stdin);
+            gets(mercados.direccion.estado);
+            if (!(validarchar(mercados.direccion.estado)))
+                printf("Ingrese un estado valido.\n");
+
+        }while (!(validarchar(mercados.direccion.estado)));
+
+        fseek(mercadosf, (mercados.clave_mercado - 1) * sizeof(struct Mercado), SEEK_SET);
         fwrite(&mercados, sizeof(struct Mercado), 1, mercadosf);
-
 
         do
         {
@@ -848,10 +907,8 @@ void menu_mercados(FILE *mercadosf)
             if (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n')
                 printf("Valor no valido.\nSolo se permite S o N.\n");
 
-        }while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
+        } while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
     }
-
-
 }
 
 bool validar_correo(char * fcorreo)
@@ -896,57 +953,78 @@ bool validarDiaMes(struct Fechas fecha)
     return fecha.dia >= 1 && fecha.dia <= diasEnMes;
 }
 
-/*void menu_control_ventas() // archivos secuenciales
+bool validarchar(char * fcadena)
+{ 
+    bool todoschar=true;
+    int i=0;
+
+    while ((fcadena[i] != '\0') && (todoschar))
+    {
+        if ((fcadena[i] >= 'A' && fcadena[i] <= 'Z') || (fcadena[i] >= 'a' && fcadena[i] <= 'z') || fcadena[i] == ' ')
+            todoschar=true;
+        else 
+            todoschar=false;
+
+        i++;
+    }
+    return(todoschar);
+}
+
+void menu_control_ventas(FILE *fventas) // archivos secuenciales
 {
-    FILE *mercadolocal;
-    struct Mercado mercados;
     int mercado, articulo, cantidad, empleado;
-    float precio;
+    float precioarticulo, total;
     char factura;
 
-
-    //imprimir numero de mercado debe existir en mercados, devolver bool
-    if((mercadolocal = fopen("Mercados.dat", "r")) == NULL)
-        printf("Error con el archivo de mercados\n");
-
-    else
-        {
-            printf("Numero de mercados: \n");
-
-            while (!feof(stdin))
-            {
-                fread()
-            }
-
-        }
-
-        fclose(Mercadolocal);
-
-        printf("Ingrese la clave de mercado: \n");
+    do
+    {
+        printf("1. Ingrese la clave de mercado: \n");
         scanf("%d", &mercado);
 
-        //lo correspondiente
+        if(!validarmercado(mercado))
+            printf("Clave de mercado no encontrada.\n");
+
+    }while(!validarmercado(mercado));
 
     //numero de articulo debe existir en articulos, devolver bool
 
-    printf("Ingrese el numero de articulo: \n");
-    scanf("%d", &mercado);
-
-    //cantidad maor a 0 y suficiente inventario para la venta y bool COMO RAYOS ES ESO DE Q TIENE Q SUFICIENTE PARA LA VENTA?
     do
     {
-        printf("Ingrese la cantidad: \n");
+        printf("2. Ingrese la clave del articulo: \n");
+        scanf("%d", &articulo);
+
+        if(!validararticulo(articulo))
+            printf("Clave de articulo no encontrada.\n");
+
+    }while(!validararticulo(articulo));
+
+    //cantidad menor a 0 y suficiente inventario para la venta y bool COMO RAYOS ES ESO DE Q TIENE Q SUFICIENTE PARA LA VENTA?
+    do
+    {
+        printf("3. Ingrese la cantidad: \n");
         scanf("%d", &cantidad);
 
-        if (cantidad < 0)
+        if (!validarcantidad(articulo, mercado))
             printf("Cantidad invalida \n");
 
-    } while (cantidad < 0);
-
+    } while (!validarcantidad(articulo, mercado));
 
     //precio del catalago de articulos para el calculo a pagar traerlo para aca
+    precioarticulo = precio(articulo);
+    total = precioarticulo * cantidad;
+    printf("El precio total a pagar es de: %.2f \n", total);
 
     //numero de empleado debe existir en empleados
+
+    do
+    {
+        printf("4. Ingrese el numero de empleado: \n");
+        scanf("%d", &empleado);
+
+        if(!validarempleado(empleado))
+            printf("Numero invalido \n");
+
+    } while (!validarempleado(empleado));
 
     //factura preguntar si desea y si si imprimirlo
 
@@ -960,15 +1038,130 @@ bool validarDiaMes(struct Fechas fecha)
 
     }while (factura != 'S' && factura != 's' && factura != 'N' && factura != 'n');
 
+    if (factura == 'S' || factura == 's')
+        imprimir_factura(mercado, articulo, cantidad, precioarticulo, empleado, total);
+}
 
+bool validarmercado(int fmercado)
+{
+    FILE *mercado;
+    struct Mercado mercados;
+    bool mercadovalido = false;
 
+    //imprimir numero de mercado debe existir en mercados, devolver bool
+    if((mercado = fopen("Mercados.dat", "r")) == NULL)
+        printf("Error con el archivo de mercados\n");
 
-}*/
-<<<<<<< Updated upstream
-=======
+    else
+    {
+        fseek(mercado, (fmercado - 1) * sizeof(struct Mercado), SEEK_SET);
+        fread(&mercados, sizeof(struct Mercado), 1, mercado);
+        if (fmercado == mercados.clave_mercado)
+            mercadovalido = true;
+    }
+    fclose(mercado);
+    return mercadovalido;
+}
+
+bool validararticulo(int farticulo)
+{
+    FILE *articuloptr;
+    struct Articulos articulo;
+    bool articulovalido = false;
+
+    if((articuloptr = fopen("Articulos.dat", "r")) == NULL)
+        printf("Error con el archivo de mercados\n");
+
+    else
+    {
+        fseek(articuloptr, (farticulo - 1) * sizeof(struct Articulos), SEEK_SET);
+        fread(&articulo, sizeof(struct Articulos), 1, articuloptr);
+        if (farticulo == articulo.clave_articulo)
+            articulovalido = true;
+    }
+    fclose(articuloptr);
+    return articulovalido;
+}
+
+bool validarcantidad(int fcantidad, int fclave)
+{
+    FILE *articulolocal;
+    struct Articulos articulos;
+    bool cantidad = false;
+
+    if ((articulolocal = fopen("Articulos.dat", "r")) == NULL)
+        printf("Error al abrir el archivo de articulos.\n");
+
+    else
+    {
+        fseek(articulolocal, (fclave - 1) * sizeof(struct Articulos), SEEK_SET);
+        fread(&articulos, sizeof(struct Articulos), 1, articulolocal);
+        if (articulos.clave_articulo == fclave)
+        {
+            if (fcantidad > 0 && articulos.inventario > fcantidad)
+                cantidad = true;
+        }
+    }
+    fclose(articulolocal);
+    return cantidad;
+}
+
+float precio(int fclave)
+{
+     FILE *articulolocal;
+     struct Articulos articuloleido;
+     float precioarticulo;
+
+     if ((articulolocal = fopen("Articulos.dat", "r")) == NULL)
+        printf("Error al abrir el archivo de articulos.\n");
+
+    else
+    {
+        fseek(articulolocal, (fclave - 1) * sizeof(struct Articulos), SEEK_SET);
+        fread(&articuloleido, sizeof(struct Articulos), 1, articulolocal);
+        precioarticulo = articuloleido.precio_venta;
+
+    }
+    fclose(articulolocal);
+    return precioarticulo;
+}
+
+bool validarempleado(int fempleado)
+{
+    FILE *empleado;
+    struct Empleado empleadoleido;
+    bool empleadovalido = false;
+
+    if ((empleado = fopen("Empleados.dat", "r")) == NULL)
+        printf("Error al abrir el archivo de empleados.\n");
+
+    else
+    {
+        fseek(empleado, (fempleado - 1) * sizeof(struct Empleado), SEEK_SET);
+        fread(&empleadoleido, sizeof(struct Empleado), 1, empleado);
+
+        if (empleadoleido.numero_empleado == fempleado)
+            empleadovalido = true;
+    }
+    fclose(empleado);
+    return empleadovalido;
+}
+
+void imprimir_factura(int mercado, int articulo, int cantidad, float precio_unitario, int empleado, float total)
+{
+    printf("\n------- FACTURA -------\n");
+    printf("Numero de mercado (cliente): %d\n", mercado);
+    printf("Numero de articulo: %d\n", articulo);
+    printf("Cantidad: %d\n", cantidad);
+    printf("Precio unitario: %.2f\n", precio_unitario);
+    printf("Total a pagar: %.2f\n", total);
+    printf("Numero de empleado: %d\n", empleado);
+    printf("-----------------------\n");
+}
+
 
 void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t tamanoRegistro, int cantidad) {
-    FILE *archivo = fopen(nombreArchivo, "wb");
+    FILE *archivo = fopen(nombreArchivo, "w");
     if (!archivo) {
         printf("Error al abrir el archivo");
         return;
@@ -980,7 +1173,4 @@ void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t
 
     fclose(archivo);
 }
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+

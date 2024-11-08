@@ -6,42 +6,63 @@ struct Insumo {
     char descripcion[100];
     int punto_reorden;
     int inventario;
-    int clave_proveedor[10]; // Hasta 10 claves de proveedores
-    float precio_compra;
+    int clave_proveedor[10]; // Suponiendo que hay un m谩ximo de 10 proveedores
+    float precio_compra[10]; // Suponiendo que hay un m谩ximo de 10 proveedores
 };
 
-void mostrar_datos_insumos(const char *nombre_archivo) {
-    FILE *archivo = fopen("..\\Insumos.dat", "r"); // Abrir el archivo en modo binario
-    if (archivo == NULL) {
-        perror("Error al abrir el archivo");
-        exit(1);
+struct Proveedor {
+    int numero_proveedor;
+    // Otros campos del proveedor
+};
+
+// Funci贸n para mostrar la informaci贸n de los insumos
+void mostrar_insumos(FILE *insumosf, FILE *proveedorlocal) {
+    struct Insumo insumos;
+    struct Proveedor proveedores;
+    int i;
+
+    // Verificar si el archivo de insumos est谩 abierto
+    if (insumosf == NULL) {
+        printf("Error al abrir el archivo de insumos.\n");
+        return;
     }
 
-    struct Insumo insumo;
+    // Leer cada insumo y mostrar su informaci贸n
+    printf("\n--- Lista de Insumos ---\n");
+    while (fread(&insumos, sizeof(struct Insumo), 1, insumosf) == 1) {
+        printf("Clave del Insumo: %d\n", insumos.clave_insumo);
+        printf("Descripci贸n: %s\n", insumos.descripcion);
+        printf("Punto de Reorden: %d\n", insumos.punto_reorden);
+        printf("Inventario: %d\n", insumos.inventario);
+        printf("Proveedores:\n");
 
-    // Leer y mostrar cada registro
-    while (fread(&insumo, sizeof(struct Insumo), 1, archivo) == 1) {
-        printf("Clave de Insumo: %d\n", insumo.clave_insumo);
-        printf("Descripci髇: %s\n", insumo.descripcion);
-        printf("Punto de Reorden: %d\n", insumo.punto_reorden);
-        printf("Inventario: %d\n", insumo.inventario);
-
-        printf("Claves de Proveedor: ");
-        for (int i = 0; i < 10; i++) {
-            if (insumo.clave_proveedor[i] != 0) { // Muestra solo claves v醠idas
-                printf("%d", insumo.clave_proveedor[i]);
+        // Leer la informaci贸n de los proveedores
+        for (i = 0; i < 10; i++) {
+            if (insumos.clave_proveedor[i] != 0) { // Verificar que el proveedor est茅 registrado
+                fseek(proveedorlocal, (insumos.clave_proveedor[i] - 1) * sizeof(struct Proveedor), SEEK_SET);
+                fread(&proveedores, sizeof(struct Proveedor), 1, proveedorlocal);
+                printf("  Proveedor Clave: %d, Precio: %.2f\n", proveedores.numero_proveedor, insumos.precio_compra[i]);
             }
         }
         printf("\n");
-
-        printf("Precio de Compra: %.2f\n\n", insumo.precio_compra);
     }
-
-    fclose(archivo); // Cerrar el archivo
 }
 
 int main() {
-    const char *nombre_archivo = "Insumos.dat";
-    mostrar_datos_insumos(nombre_archivo);
+    FILE *insumosf;
+    FILE *proveedorlocal;
+
+    // Abrir el archivo de insumos
+    insumosf = fopen("..\\Insumos.dat", "rb");
+    // Abrir el archivo de proveedores
+    proveedorlocal = fopen("..\\Proveedores.dat", "rb");
+
+    // Mostrar la informaci贸n de los insumos
+    mostrar_insumos(insumosf, proveedorlocal);
+
+    // Cerrar los archivos
+    fclose(insumosf);
+    fclose(proveedorlocal);
+
     return 0;
 }
