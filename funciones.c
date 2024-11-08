@@ -82,8 +82,9 @@ void menu_articulos(FILE *articulosf)
                     printf("2) Descripcion: ");
                     fflush(stdin);
                     gets(x_articulo.descripcion);
-                    cadena_valida = cadena_minimo10(x_articulo.descripcion);
-                }while (!cadena_valida);
+                    if (strlen(x_articulo.descripcion) < 10)
+                        printf("Los caracteres minimos son 10.\n");
+                }while (strlen(x_articulo.descripcion) < 10);
 
                 do
                 {
@@ -136,9 +137,8 @@ void menu_articulos(FILE *articulosf)
                         printf("Valor invalido.\nValor minimo 0.\n");
                 }while (x_articulo.precio_venta < 0);
 
-                //x_articulo.costo_produccion = 0.0;
+                x_articulo.costo_produccion = 0.0;
 
-                // Validar que la clave del insumo este en el catalogo
                 // SE VERIFICA SI LA CLAVE ESTA EN INSUMOS.DAT
                 while (cant_insumos < 10 && agregar_insumo == 's')
                 {
@@ -153,14 +153,10 @@ void menu_articulos(FILE *articulosf)
 
                         if (LecturaInsumo.clave_insumo == x_articulo.insumos_requeridos[cant_insumos])
                         {
-                            clave_valida = true;
-<<<<<<< Updated upstream
-                            cant_insumos++;
-                            costo_produccion += insumos.precio_compra[cant_insumos];
-=======
                             costo_produccion += LecturaInsumo.precio_compra[cant_insumos];
+                            clave_valida = true;
                             cant_insumos++;
->>>>>>> Stashed changes
+                            costo_produccion += LecturaInsumo.precio_compra[cant_insumos];
                         }
 
                         if (!clave_valida)
@@ -174,7 +170,7 @@ void menu_articulos(FILE *articulosf)
                         fflush(stdin);
                         scanf("%c", &agregar_insumo);
 
-                        if (agregar_insumo != 's' && agregar_insumo != 'n') //hay q ver como hacer para que acepte mayus
+                        if (agregar_insumo != 's' && agregar_insumo != 'n')
                             printf("Valor no valido, solo se permite (s/n) \n");
                     } while(agregar_insumo != 's' && agregar_insumo != 'n');
                 }
@@ -191,13 +187,13 @@ void menu_articulos(FILE *articulosf)
                 while (n_mercados < 10 && agregar_mercado == 's')
                 {
 <<<<<<< Updated upstream
-                    fseek(mercado_local, (x_articulo.clave_mercados[n_mercados] - 1) * sizeof(struct Mercado), SEEK_SET);
+                    
 =======
 >>>>>>> Stashed changes
 
                     do
                     {
-                        printf("8) Ingresa la clave de mercado %d: ", n_mercados + 1);
+                        printf("8) Ingresa la clave de mercado [%d]: ", n_mercados + 1);
                         scanf("%d", &x_articulo.clave_mercados[n_mercados]);
 
                         // Validar si esta en Mercados.dat
@@ -600,10 +596,10 @@ void menu_proveedores(FILE *fproveedores)
 
             correo_correcto = validar_correo(proveedores.correo);
 
-            if (correo_correcto == false)
+            if (!correo_correcto)
                 printf("El correo no cumple con el formato\n");
 
-        }while(correo_correcto == false);
+        }while(!correo_correcto);
 
 
         do
@@ -677,16 +673,6 @@ char *convertir_a_minusculas(char *cadena)
         cadena[i] = tolower(cadena[i]);
 
     return cadena;
-}
-
-bool cadena_minimo10(char *descripcion)
-{
-    if (strlen(descripcion) < 10)
-    {
-        printf("Los caracteres minimos son de 10.\n");
-        return false;
-    }
-    return true;
 }
 
 bool validar_rfc(char *frfc) {
@@ -965,10 +951,14 @@ bool validarDiaMes(struct Fechas fecha)
 =======
 
 void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t tamanoRegistro, int cantidad) {
-    FILE *archivo = fopen(nombreArchivo, "wb");
+    FILE *archivo = fopen(nombreArchivo, "w");
     if (!archivo) {
         printf("Error al abrir el archivo");
         return;
+    }
+    else
+    {
+
     }
 
     for (int i = 0; i < cantidad; i++) {
