@@ -26,5 +26,12 @@ bool validararticulo(int);
 bool validarcantidad(int, int );
 float precio(int);
 bool validarempleado(int );
+float descuento(int );
 bool validarchar(char *);
 void imprimir_factura(int, int, int, float, int, float);
+bool validarproveedor(int );
+bool validarnumeroinsumo(int );
+float precioinsumo(int );
+float descuento_proveedor(int );
+
+
