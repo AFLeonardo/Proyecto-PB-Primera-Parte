@@ -159,14 +159,21 @@ void menu_articulos(FILE *articulosf)
                         cant_insumos++;
                 }
 
-            	if (cant_insumos > 10)
+            	if (cant_insumos >= 10)
                		printf("\nHa llegado al limite de insumos 10.\n");
 
                 //calcular el costo de produccion
                 x_articulo.costo_produccion = costo_produccion;
                 printf("El costo de produccion fue de %.2f \n", x_articulo.costo_produccion);
+                printf("\nClave articulo: %d", x_articulo.clave_articulo);
+                printf("\nDescripcion: %s", x_articulo.descripcion);
+                printf("\nTemp. siembra: %s", x_articulo.temp_siembra);
+                printf("\nTemp. cosecha: %s", x_articulo.temp_cosecha);
+                printf("\nInventario: %d", x_articulo.inventario);
+                printf("\nPrecio venta: %f", x_articulo.precio_venta);
+                printf("\nClave insumo: %d\n", x_articulo.insumos_requeridos[n_mercados]);
                 
-                // Clave de mercados *******************************************************************************************
+                // Clave de mercados ****************************************************** VALIDAR ESTO LEOOO
                 while (n_mercados < 10 && agregar_mercado == 's')
                 {
                     do // Validar si esta en Mercados.dat
@@ -192,7 +199,7 @@ void menu_articulos(FILE *articulosf)
                         scanf("%c", &agregar_mercado);
 
                         if (agregar_mercado != 'S' && agregar_mercado != 's' && agregar_mercado != 'N' && agregar_mercado != 'n')
-                            printf("Valor no vlido, solo se permite (s/n) \n");
+                            printf("Valor no valido, solo se permite (s/n) \n");
 
                     } while (agregar_mercado != 'S' && agregar_mercado != 's' && agregar_mercado != 'N' && agregar_mercado != 'n');
 
@@ -200,6 +207,9 @@ void menu_articulos(FILE *articulosf)
                         n_mercados++;
 
                 }
+
+                if (n_mercados >= 10)
+                    printf("\nHa alcanzado el limite de mercados.\n");
 
                 // GUARDAMOS LOS DATOS EN ARCHIVOS.DAT
                 fseek(articulosf, (x_articulo.clave_articulo - 1) * sizeof(struct Articulos), SEEK_SET);
@@ -664,6 +674,10 @@ void menu_proveedores(FILE *fproveedores)
                 printf("Ingrese un estado valido.\n");
 
         }while (!(validarchar(proveedores.direccion.estado)));
+
+        // VEREMOS SI SE QUEDA
+        for (int i = 0; i < 10; i++)
+            proveedores.articulos_produce[i] = 0;
 
         fseek(fproveedores, (proveedores.numero_proveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
         fwrite(&proveedores, sizeof(struct Proveedor), 1, fproveedores);
