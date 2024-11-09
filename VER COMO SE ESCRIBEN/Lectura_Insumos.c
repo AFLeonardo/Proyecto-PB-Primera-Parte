@@ -62,12 +62,12 @@ void mostrar_insumos(FILE *insumosf, FILE *proveedorlocal) {
 
         // Leer la información de los proveedores
         for (i = 0; i < 10; i++) {
-            if (insumos.clave_proveedor[i] != 0) { // Verificar que el proveedor esté registrado
+            
                 fseek(proveedorlocal, (insumos.clave_proveedor[i] - 1) * sizeof(struct Proveedor), SEEK_SET);
                 fread(&proveedores, sizeof(struct Proveedor), 1, proveedorlocal);
                 printf("  Proveedor Clave: %d, Precio: %.2f\n", proveedores.numero_proveedor, insumos.precio_compra[i]);
             }
-        }
+        
         printf("\n");
     }
 }

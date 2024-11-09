@@ -525,6 +525,7 @@ void menu_proveedores(FILE *fproveedores)
     struct Proveedor proveedores;
     char agregar = 's';
     bool rfc_valido = true, correo_correcto = true, validardia = true;
+    int i;
 
     printf("%s", "\nPROVEEDORES\n");
 
@@ -676,7 +677,7 @@ void menu_proveedores(FILE *fproveedores)
         }while (!(validarchar(proveedores.direccion.estado)));
 
         // VEREMOS SI SE QUEDA
-        for (int i = 0; i < 10; i++)
+        for (i = 0; i < 10; i++)
             proveedores.articulos_produce[i] = 0;
 
         fseek(fproveedores, (proveedores.numero_proveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
