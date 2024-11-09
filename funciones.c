@@ -1264,7 +1264,7 @@ void menu_control_compras(FILE *finsumos)
 
         printf("Total de la compra: %.2f\n", total);
 
-         do 
+        do 
         {
             printf("¿Agregar otra compra? (S/N): ");
             fflush(stdin);
@@ -1357,4 +1357,53 @@ float descuento_proveedor(int fproveedor)
     }
     fclose(proveedorlocal);
     return descuento;
+}
+
+void menu_control_inventario(FILE * farchivo)
+{
+    int proveedor, compra;
+    char recepcion = 's', respuesta[5];
+
+    while (recepcion == 'S' || recepcion == 's')
+    {
+
+        do
+        {
+            printf("1. Numero de proveedor: \n");
+            scanf("%d", &proveedor);
+
+            if (!validarproveedor(proveedor))//mande a llamar a la misma funcion que en compras para validar proveedor
+                    printf("Numero de proveedor invalido.\n");
+            
+        } while (!validarproveedor(proveedor));
+
+        printf("%-20s%-20s%-20s%-20s", "ID Compra", "Insumo", "Descripcion", "Cantidad"); // no se como imprimir lo pendiente
+
+        //******************************************************** */
+
+        /*do
+        {
+            printf("2. Numero de compra: \n");
+            scanf("%d", &compra);
+
+            //no se como hay q validarla
+            
+        } while ();*/
+
+        printf("¿Le fue recibida la compra?: \n");
+        gets(respuesta); //falta hacer lo q se hace aqui ocupo ayuda
+        
+        do 
+        {
+            printf("¿Agregar otra recepcion? (S/N): ");
+            fflush(stdin);
+            scanf("%c", &recepcion);
+
+            if (recepcion != 'S' && recepcion != 's' && recepcion != 'N' && recepcion != 'n')
+                printf("Valor no valido. Solo se permite S o N.\n");
+
+        }while(recepcion != 'S' && recepcion != 's' && recepcion != 'N' && recepcion != 'n');
+        
+    }
+    
 }
