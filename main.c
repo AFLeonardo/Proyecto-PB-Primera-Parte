@@ -4,6 +4,7 @@
 #include <string.h>
 #include "funciones.c"
 
+
 // ESTO SI FUNCIONA
 main()
 {
@@ -31,10 +32,10 @@ main()
         switch (opcion)
         {
             case 1:
-                if((archivo = fopen("Articulos.dat", "r+") == NULL))
+                if((archivo = fopen("Articulos.dat", "r+")) == NULL)
                 {
                     printf("ERROR.\nSe esta creando el archvio intenta de nuevo.\n");
-                    crearRegistrosVacios("Articulos.dat", &articuloVacio, sizeof(struct Articulos), 100);
+                    crearRegistrosVacios("Articulos.dat", &articuloVacio, sizeof(struct Articulos), 1000);
                 }
                 else
                 {
@@ -47,7 +48,7 @@ main()
                 if ((archivo = fopen("Insumos.dat", "rb+")) == NULL)
                     {
                     printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
-                    crearRegistrosVacios("Insumos.dat", &insumoVacio, sizeof(struct Articulos), 100);
+                    crearRegistrosVacios("Insumos.dat", &insumoVacio, sizeof(struct Insumo), 100);
                     }
                 else
                 {

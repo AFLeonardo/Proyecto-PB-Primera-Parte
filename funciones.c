@@ -3,33 +3,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
-#include "estructuras.c"
-
-// MENUS
-int menu_principal();
-void menu_articulos(FILE *);
-void menu_insumos(FILE *);
-void menu_mercados(FILE *);
-void menu_empleados(FILE *);
-void menu_proveedores(FILE *);
-void menu_control_ventas(FILE *);
-void menu_control_compras(FILE *);
-void menu_control_inventario();
-void menu_reportes();
-
-// FUNCIONES
-char *convertir_a_minusculas(char *);
-bool validar_rfc(char *);
-bool validar_correo(char *);
-bool validarDiaMes(struct Fechas);
-void crearRegistrosVacios(const char *, void *, size_t , int );
-bool validarmercado(int);
-bool validararticulo(int);
-bool validarcantidad(int, int );
-float precio(int);
-bool validarempleado(int );
-bool validarchar(char *);
-void imprimir_factura(int, int, int, float, int, float);
+#include "estructuras.h"
+#include "funciones.h"
 
 int menu_principal()
 {
@@ -58,22 +33,24 @@ void menu_articulos(FILE *articulosf)
     struct Insumo LecturaInsumo;
     struct Mercado mercado;
     char *estaciones[4] = {"p", "v", "o", "i"}, agregar_mercado = 's';
-    bool checar, cadena_valida, clave_valida = false;
-    int i, cant_insumos = 0, n_mercados = 0;
-    FILE *insumolocal, *mercado_local;
+    bool temporadaValida, 
+         cadena_valida, 
+         clave_valida = false;
+    int i, 
+        cant_insumos = 0, 
+        n_mercados = 0;
+    FILE *InsumoF, *MercadoF;
     float costo_produccion = 0;
 
-    if ((insumolocal = fopen("Insumos.dat", "r")) == NULL)
+    if ((InsumoF = fopen("Insumos.dat", "r")) == NULL)
         printf("No existen insumos necesarios para crear articulos.\nAgregue insumos en el menu de insumos.\n");
-    else
-    {
-        if ((mercado_local = fopen("Mercados.dat", "r")) == NULL)
+    else if ((MercadoF = fopen("Mercados.dat", "r")) == NULL)
             printf("No existen mercados registrados en \"Mercados.dat\".\nAgregue mercados en el menu de mercados para continuar.\n");
         else
         {
             while (agregar != 'N' && agregar != 'n')
             {
-                printf("%s\n", "ARTICULOS\n");
+                printf("\nARTICULOS\n");
 
                 do
                 {
@@ -81,7 +58,7 @@ void menu_articulos(FILE *articulosf)
                     scanf("%d", &x_articulo.clave_articulo);
                     if (x_articulo.clave_articulo > 1000 || x_articulo.clave_articulo < 1)
                         printf("Clave invalida.\nValores admitidos 1 a 1000\n");
-                }while (x_articulo.clave_articulo > 1000 || x_articulo.clave_articulo < 1);
+                } while (x_articulo.clave_articulo > 1000 || x_articulo.clave_articulo < 1);
 
                 do
                 {
@@ -90,11 +67,11 @@ void menu_articulos(FILE *articulosf)
                     gets(x_articulo.descripcion);
                     if (strlen(x_articulo.descripcion) < 10)
                         printf("Los caracteres minimos son 10.\n");
-                }while (strlen(x_articulo.descripcion) < 10);
+                } while (strlen(x_articulo.descripcion) < 10);
 
                 do
                 {
-                    checar = false;
+                    temporadaValida = false;
                     printf("3) Temporada de siembra: ");
                     fflush(stdin);
                     gets(x_articulo.temp_siembra);
@@ -102,16 +79,16 @@ void menu_articulos(FILE *articulosf)
                     for (i = 0; i < 4; i++)
                     {
                         if (strcmp(convertir_a_minusculas(x_articulo.temp_siembra), estaciones[i]) == 0)
-                            checar = true;
+                            temporadaValida = true;
                     }
 
-                    if (!checar)
+                    if (!temporadaValida)
                         printf("\n*** Estacion invalida ***\nSolo se permite:\nP - Primavera\nV - Verano\nO - Otoño\nI - Invierno.\n");
-                }while (!checar);
+                }while (!temporadaValida);
 
                 do
                 {
-                    checar = false;
+                    temporadaValida = false;
                     printf("4) Temporada de cosecha: ");
                     fflush(stdin);
                     gets(x_articulo.temp_cosecha);
@@ -119,11 +96,11 @@ void menu_articulos(FILE *articulosf)
                     for (i = 0; i < 4; i++)
                     {
                         if (strcmp(convertir_a_minusculas(x_articulo.temp_cosecha), estaciones[i]) == 0)
-                            checar = true;
+                            temporadaValida = true;
                     }
-                    if (!checar)
+                    if (!temporadaValida)
                         printf("\n*** Estacion invalida ***\nSolo se permite:\nP - Primavera\nV - Verano\nO - Otoño\nI - Invierno.\n");
-                }while (!checar);
+                }while (!temporadaValida);
 
                 do
                 {
@@ -143,7 +120,7 @@ void menu_articulos(FILE *articulosf)
                         printf("Valor invalido.\nValor minimo 0.\n");
                 }while (x_articulo.precio_venta < 0);
 
-                x_articulo.costo_produccion = 0.0;
+                x_articulo.costo_produccion = 0;
 
                 // SE VERIFICA SI LA CLAVE ESTA EN INSUMOS.DAT
                 while (cant_insumos < 10 && agregar_insumo == 's')
@@ -154,14 +131,13 @@ void menu_articulos(FILE *articulosf)
                         printf("7) Clave del insumo: ");
                         scanf("%d", &x_articulo.insumos_requeridos[cant_insumos]);
 
-                        fseek(insumolocal, (x_articulo.insumos_requeridos[cant_insumos] - 1) * sizeof(struct Insumo), SEEK_SET);
-                        fread(&LecturaInsumo, sizeof(struct Insumo), 1, insumolocal);
+                        fseek(InsumoF, (x_articulo.insumos_requeridos[cant_insumos] - 1) * sizeof(struct Insumo), SEEK_SET);
+                        fread(&LecturaInsumo, sizeof(struct Insumo), 1, InsumoF);
 
                         if (LecturaInsumo.clave_insumo == x_articulo.insumos_requeridos[cant_insumos])
                         {
                             costo_produccion += LecturaInsumo.precio_compra[cant_insumos];
                             clave_valida = true;
-                            cant_insumos++;
                         }
 
                         if (!clave_valida)
@@ -178,6 +154,9 @@ void menu_articulos(FILE *articulosf)
                         if (agregar_insumo != 's' && agregar_insumo != 'n')
                             printf("Valor no valido, solo se permite (s/n) \n");
                     } while(agregar_insumo != 's' && agregar_insumo != 'n');
+
+                    if (agregar_insumo == 's')
+                        cant_insumos++;
                 }
 
             	if (cant_insumos > 10)
@@ -186,25 +165,20 @@ void menu_articulos(FILE *articulosf)
                 //calcular el costo de produccion
                 x_articulo.costo_produccion = costo_produccion;
                 printf("El costo de produccion fue de %.2f \n", x_articulo.costo_produccion);
-                //ya jala pero no se si tenga algo q ver con la cantidad de insumos q hay no se qpd
-
+                
                 // Clave de mercados *******************************************************************************************
                 while (n_mercados < 10 && agregar_mercado == 's')
                 {
-                    do
+                    do // Validar si esta en Mercados.dat
                     {
                         printf("8) Ingresa la clave de mercado [%d]: ", n_mercados + 1);
                         scanf("%d", &x_articulo.clave_mercados[n_mercados]);
-
-                        // Validar si esta en Mercados.dat
-                        fseek(mercado_local, (x_articulo.clave_mercados[n_mercados] - 1) * sizeof(struct Mercado), SEEK_SET);
-                        fread(&mercado, sizeof(struct Mercado), 1, mercado_local);
+                        
+                        fseek(MercadoF, (x_articulo.clave_mercados[n_mercados] - 1) * sizeof(struct Mercado), SEEK_SET);
+                        fread(&mercado, sizeof(struct Mercado), 1, MercadoF);
 
                         if (mercado.clave_mercado == x_articulo.clave_mercados[n_mercados])
-                        {
                             clave_valida = true;
-                            n_mercados++;
-                        }
 
                         if(!clave_valida)
                             printf("Clave del mercado no encontrada.\nIntenta con otra.\n");
@@ -222,9 +196,12 @@ void menu_articulos(FILE *articulosf)
 
                     } while (agregar_mercado != 'S' && agregar_mercado != 's' && agregar_mercado != 'N' && agregar_mercado != 'n');
 
-                }
-                // Cerrar archivos y guardar datos
+                    if (agregar_mercado == 'S' || agregar_mercado == 's')
+                        n_mercados++;
 
+                }
+
+                // GUARDAMOS LOS DATOS EN ARCHIVOS.DAT
                 fseek(articulosf, (x_articulo.clave_articulo - 1) * sizeof(struct Articulos), SEEK_SET);
                 fwrite(&x_articulo, sizeof(struct Articulos), 1, articulosf);
 
@@ -237,10 +214,9 @@ void menu_articulos(FILE *articulosf)
                         printf("Valor no valido. Solo se permite S o N.\n");
                 } while (agregar != 'S' && agregar != 's' && agregar != 'N' && agregar != 'n');
             }
-            fclose(insumolocal);
-            fclose(mercado_local);
+            fclose(InsumoF);
+            fclose(MercadoF);
         }
-    }
 }
 
 void menu_insumos(FILE *insumosf)
@@ -310,10 +286,7 @@ void menu_insumos(FILE *insumosf)
                     fread(&proveedores, sizeof(struct Proveedor), 1, proveedorlocal);
 
                     if(proveedores.numero_proveedor == insumos.clave_proveedor[cant_proveedores])
-                    {
                         clave_valida = true;
-                        cant_proveedores++;
-                    }
                     else
                         printf("Clave del proveedor invalida.\nIngresa una clave valida.\n");
                 } while (!clave_valida);
@@ -338,6 +311,9 @@ void menu_insumos(FILE *insumosf)
                         printf("Valor no valido, solo se permite (s/n) \n");
 
                 } while (agregar_proveedor != 's' && agregar_proveedor != 'n');
+
+                if(agregar_proveedor == 's')
+                    cant_proveedores++;
             }
 
             if(cant_proveedores > 10)
