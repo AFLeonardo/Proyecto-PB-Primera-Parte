@@ -1209,7 +1209,7 @@ void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t
 
 void menu_control_compras(FILE *finsumos) 
 {
-    int proveedor, insumo, cantidad;
+    int Num_proveedor, insumo, cantidad;
     float precio_insumo, total = 0, descuento;
     char agregar_insumo = 's', compra;
 
@@ -1218,12 +1218,12 @@ void menu_control_compras(FILE *finsumos)
         do 
         {
             printf("1. Numero de proveedor: \n");
-            scanf("%d", &proveedor);
+            scanf("%d", &Num_proveedor);
 
-            if (!validarproveedor(proveedor))
+            if (!validarproveedor(Num_proveedor))
                 printf("Numero de proveedor invalido.\n");
 
-        } while (!validarproveedor(proveedor));
+        } while (!validarproveedor(Num_proveedor));
 
         do 
         {
@@ -1248,12 +1248,13 @@ void menu_control_compras(FILE *finsumos)
         precio_insumo = precioinsumo(insumo);
         printf("El precio del insumo es: %.2f\n", precio_insumo);
 
-        descuento = descuento_proveedor(proveedor);  
+        descuento = descuento_proveedor(Num_proveedor); 
+        printf("Descuento de: %f",descuento); //SOLO PARA VER LUEGO ELIMINAR
         total += precio_insumo * cantidad * (1 - descuento);
 
         do 
         {
-            printf("¿Agregar otro insumo? (S/N): ");
+            printf("Agregar otro insumo? (S/N): ");
             fflush(stdin);
             scanf("%c", &agregar_insumo);
 
@@ -1266,7 +1267,7 @@ void menu_control_compras(FILE *finsumos)
 
         do 
         {
-            printf("¿Agregar otra compra? (S/N): ");
+            printf("Agregar otra compra? (S/N): ");
             fflush(stdin);
             scanf("%c", &compra);
 
@@ -1278,21 +1279,21 @@ void menu_control_compras(FILE *finsumos)
 }
 
 
-bool validarproveedor(int fproveedor)
+bool validarproveedor(int NumeroProveedor)
 {
     FILE *proveedorlocal;
     struct Proveedor proveedores;
     bool proovedorvalido = false;
 
-    if ((proveedorlocal = fopen("Proveedor.dat", "r")) == NULL)
+    if ((proveedorlocal = fopen("Proveedores.dat", "r")) == NULL)
         printf("Error al abrir el archivo de proveedores.\n");
 
     else
     {
-        fseek(proveedorlocal, (fproveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
+        fseek(proveedorlocal, (NumeroProveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
         fread(&proveedores, sizeof(struct Proveedor), 1, proveedorlocal);
 
-        if (proveedores.numero_proveedor == fproveedor)
+        if (proveedores.numero_proveedor == NumeroProveedor)
             proovedorvalido = true;
     }
     fclose(proveedorlocal);
@@ -1343,18 +1344,18 @@ float precioinsumo(int fnumero)
     return precioinsumo;
 }
 
-float descuento_proveedor(int fproveedor)
+float descuento_proveedor(int NumProveedor)
 {
     FILE *proveedorlocal;
     struct Proveedor proveedorleido;
     float descuento = 0.0;
 
-    if((proveedorlocal = fopen("Proveedor.dat", "r")) == NULL)
+    if((proveedorlocal = fopen("Proveedores.dat", "r")) == NULL)
         printf("Error al abrir el archivo de proveedores");
 
     else
     {
-        fseek(proveedorlocal, (fproveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
+        fseek(proveedorlocal, (NumProveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
         fread(&proveedorleido, sizeof(struct Proveedor), 1, proveedorlocal); // lo hice pero hay q checar q este bien vdd
         descuento = proveedorleido.descuento;
     }
