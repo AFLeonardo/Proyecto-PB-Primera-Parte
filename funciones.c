@@ -961,77 +961,100 @@ bool validarchar(char * fcadena)
     return(todoschar);
 }
 
-void menu_control_ventas(FILE *fventas) // archivos secuenciales
+void menu_control_ventas(FILE *fventas) 
 {
     int mercado, articulo, cantidad, empleado;
-    float precioarticulo, total;
-    char factura;
+    float precioarticulo, total, descuento;
+    char agregar_articulo, factura, agregar_venta = 'S';
 
-    do
+    while (agregar_venta == 'S' || agregar_venta == 's') 
     {
-        printf("1. Ingrese la clave de mercado: \n");
-        scanf("%d", &mercado);
+        total = 0; 
 
-        if(!validarmercado(mercado))
-            printf("Clave de mercado no encontrada.\n");
+        do {
+            printf("1. Ingrese la clave de mercado: \n");
+            scanf("%d", &mercado);
 
-    }while(!validarmercado(mercado));
+            if (!validarmercado(mercado))
+                printf("Clave de mercado no encontrada.\n");
 
-    //numero de articulo debe existir en articulos, devolver bool
+        } while (!validarmercado(mercado));
 
-    do
-    {
-        printf("2. Ingrese la clave del articulo: \n");
-        scanf("%d", &articulo);
+        do {
+            printf("4. Ingrese el numero de empleado: \n");
+            scanf("%d", &empleado);
 
-        if(!validararticulo(articulo))
-            printf("Clave de articulo no encontrada.\n");
+            if (!validarempleado(empleado))
+                printf("Numero de empleado no encontrado.\n");
 
-    }while(!validararticulo(articulo));
+        } while (!validarempleado(empleado));
 
-    //cantidad menor a 0 y suficiente inventario para la venta y bool COMO RAYOS ES ESO DE Q TIENE Q SUFICIENTE PARA LA VENTA?
-    do
-    {
-        printf("3. Ingrese la cantidad: \n");
-        scanf("%d", &cantidad);
+        do {
+            do {
+                printf("2. Ingrese la clave del articulo: \n");
+                scanf("%d", &articulo);
 
-        if (!validarcantidad(articulo, mercado))
-            printf("Cantidad invalida \n");
+                if (!validararticulo(articulo))
+                    printf("Clave de articulo no encontrada.\n");
 
-    } while (!validarcantidad(articulo, mercado));
+            } while (!validararticulo(articulo));
 
-    //precio del catalago de articulos para el calculo a pagar traerlo para aca
-    precioarticulo = precio(articulo);
-    total = precioarticulo * cantidad;
-    printf("El precio total a pagar es de: %.2f \n", total);
+            do {
+                printf("3. Ingrese la cantidad: \n");
+                scanf("%d", &cantidad);
 
-    //numero de empleado debe existir en empleados
+                if (!validarcantidad(articulo, mercado))
+                    printf("Cantidad invalida o insuficiente en inventario.\n");
 
-    do
-    {
-        printf("4. Ingrese el numero de empleado: \n");
-        scanf("%d", &empleado);
+            } while (!validarcantidad(articulo, mercado));
 
-        if(!validarempleado(empleado))
-            printf("Numero invalido \n");
+            precioarticulo = precio(articulo);
+            descuento = obtener_descuento(mercado); //checar si esta bien
+            total += precioarticulo * cantidad * (1 - descuento);  
 
-    } while (!validarempleado(empleado));
+            printf("Precio actual acumulado con descuento: %.2f \n", total);
 
-    //factura preguntar si desea y si si imprimirlo
+            do {
+                printf("¿Deseas agregar otro articulo? (S/N): ");
+                fflush(stdin);
+                scanf("%c", &agregar_articulo);
+                if (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n')
+                    printf("Respuesta no valida. Solo se permite S o N.\n");
 
-    do
-    {
-        printf("Deseas recibir una factura?: \n");
-        fflush(stdin);
-        scanf("%c", &factura);
-        if (factura != 'S' && factura != 's' && factura != 'N' && factura != 'n')
-            printf("Valor no valido.\nSolo se permite S o N.\n");
+            } while (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n');
 
-    }while (factura != 'S' && factura != 's' && factura != 'N' && factura != 'n');
+        } while (agregar_articulo == 'S' || agregar_articulo == 's');
 
-    if (factura == 'S' || factura == 's')
-        imprimir_factura(mercado, articulo, cantidad, precioarticulo, empleado, total);
+        printf("Total de la venta (con descuento aplicado): %.2f \n", total);
+
+        do 
+        {
+            printf("¿Deseas recibir una factura? (S/N): ");
+            fflush(stdin);
+            scanf("%c", &factura);
+            if (factura != 'S' && factura != 's' && factura != 'N' && factura != 'n')
+                printf("Respuesta no valida. Solo se permite S o N.\n");
+
+        } while (factura != 'S' && factura != 's' && factura != 'N' && factura != 'n');
+
+        if (factura == 'S' || factura == 's')
+        {
+            imprimir_factura(mercado, articulo, cantidad, precioarticulo, empleado, total);
+            //registrar_comision(empleado, total);  //no se como hacer esta es para registrar la comision
+        }
+
+        do 
+        {
+            printf("¿Deseas iniciar otra venta? (S/N): ");
+            fflush(stdin);
+            scanf("%c", &agregar_venta);
+            if (agregar_venta != 'S' && agregar_venta != 's' && agregar_venta != 'N' && agregar_venta != 'n')
+                printf("Respuesta no valida. Solo se permite S o N.\n");
+
+        } while (agregar_venta != 'S' && agregar_venta != 's' && agregar_venta != 'N' && agregar_venta != 'n');
+    }
 }
+
 
 bool validarmercado(int fmercado)
 {
@@ -1138,6 +1161,25 @@ bool validarempleado(int fempleado)
     return empleadovalido;
 }
 
+float descuento(int fclave)
+{
+    FILE *mercadolocal;
+    struct Mercado mercadoleido;
+    float descuento = 0.0;
+
+    if((mercadolocal = fopen("Mercado.dat", "r")) == NULL)
+        printf("Error al abrir el archivo de mercado");
+
+    else
+    {
+        fseek(mercadolocal, (fclave - 1) * sizeof(struct Mercado), SEEK_SET);
+        fread(&mercadoleido, sizeof(struct Mercado), 1, mercadolocal); // lo hice pero hay q checar q este bien vdd
+        descuento = mercadoleido.descuento;
+    }
+    fclose(mercadolocal);
+    return descuento;
+}
+
 void imprimir_factura(int mercado, int articulo, int cantidad, float precio_unitario, int empleado, float total)
 {
     printf("\n------- FACTURA -------\n");
@@ -1165,3 +1207,203 @@ void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t
     fclose(archivo);
 }
 
+void menu_control_compras(FILE *finsumos) 
+{
+    int proveedor, insumo, cantidad;
+    float precio_insumo, total = 0, descuento;
+    char agregar_insumo = 's', compra;
+
+    while(agregar_insumo == 'S' || agregar_insumo == 's')
+    {
+        do 
+        {
+            printf("1. Numero de proveedor: \n");
+            scanf("%d", &proveedor);
+
+            if (!validarproveedor(proveedor))
+                printf("Numero de proveedor invalido.\n");
+
+        } while (!validarproveedor(proveedor));
+
+        do 
+        {
+            printf("2. Numero de insumo: \n");
+            scanf("%d", &insumo);
+
+            if (!validarnumeroinsumo(insumo))
+                printf("Numero de insumo invalido.\n");
+
+        } while (!validarnumeroinsumo(insumo));
+
+        do 
+        {
+            printf("3. Cantidad: \n");
+            scanf("%d", &cantidad);
+
+            if (cantidad < 0)
+                printf("Cantidad invalida.\n");
+
+        } while (cantidad < 0);
+
+        precio_insumo = precioinsumo(insumo);
+        printf("El precio del insumo es: %.2f\n", precio_insumo);
+
+        descuento = descuento_proveedor(proveedor);  
+        total += precio_insumo * cantidad * (1 - descuento);
+
+        do 
+        {
+            printf("¿Agregar otro insumo? (S/N): ");
+            fflush(stdin);
+            scanf("%c", &agregar_insumo);
+
+            if (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n')
+                printf("Valor no valido. Solo se permite S o N.\n");
+
+        } while (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n');
+
+        printf("Total de la compra: %.2f\n", total);
+
+        do 
+        {
+            printf("¿Agregar otra compra? (S/N): ");
+            fflush(stdin);
+            scanf("%c", &compra);
+
+            if (compra != 'S' && compra != 's' && compra != 'N' && compra != 'n')
+                printf("Valor no valido. Solo se permite S o N.\n");
+
+        }while(compra != 'S' && compra != 's' && compra != 'N' && compra != 'n');
+    }
+}
+
+
+bool validarproveedor(int fproveedor)
+{
+    FILE *proveedorlocal;
+    struct Proveedor proveedores;
+    bool proovedorvalido = false;
+
+    if ((proveedorlocal = fopen("Proveedor.dat", "r")) == NULL)
+        printf("Error al abrir el archivo de proveedores.\n");
+
+    else
+    {
+        fseek(proveedorlocal, (fproveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
+        fread(&proveedores, sizeof(struct Proveedor), 1, proveedorlocal);
+
+        if (proveedores.numero_proveedor == fproveedor)
+            proovedorvalido = true;
+    }
+    fclose(proveedorlocal);
+    return proovedorvalido;
+}
+
+bool validarnumeroinsumo(int fnumero)
+{
+    FILE *insumolocal;
+    struct Insumo insumos;
+    bool numerovalido = false;
+
+    if((insumolocal = fopen("Insumos.dat", "r")) == NULL)
+        printf("Error al abrir el archivo de insumos");
+    
+    else
+    {
+        fseek(insumolocal, (fnumero - 1) * sizeof(struct Insumo), SEEK_SET);
+        fread(&insumos, sizeof(struct Insumo), 1, insumolocal);
+
+        if (insumos.clave_insumo == fnumero)
+            numerovalido = true;
+    }
+    fclose(insumolocal);
+    return numerovalido;
+}
+
+float precioinsumo(int fnumero)
+{
+     FILE *insumolocal;
+     struct Insumo insumos;
+     float precioinsumo;
+
+     if ((insumolocal = fopen("Insumos.dat", "r")) == NULL)
+        printf("Error al abrir el archivo de Insumos.\n");
+
+    else
+    {
+        fseek(insumolocal, (fnumero - 1) * sizeof(struct Insumo), SEEK_SET);
+        fread(&insumos, sizeof(struct Insumo), 1, insumolocal);
+        precioinsumo = insumos.precio_compra; //error pq es un arreglo pero ocupo preguntar qpd
+
+    }
+    fclose(insumolocal);
+    return precioinsumo;
+}
+
+float descuento_proveedor(int fproveedor)
+{
+    FILE *proveedorlocal;
+    struct Proveedor proveedorleido;
+    float descuento = 0.0;
+
+    if((proveedorlocal = fopen("Proveedor.dat", "r")) == NULL)
+        printf("Error al abrir el archivo de proveedores");
+
+    else
+    {
+        fseek(proveedorlocal, (fproveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
+        fread(&proveedorleido, sizeof(struct Proveedor), 1, proveedorlocal); // lo hice pero hay q checar q este bien vdd
+        descuento = proveedorleido.descuento;
+    }
+    fclose(proveedorlocal);
+    return descuento;
+}
+
+void menu_control_inventario(FILE * farchivo)
+{
+    int proveedor, compra;
+    char recepcion = 's', respuesta[5];
+
+    while (recepcion == 'S' || recepcion == 's')
+    {
+
+        do
+        {
+            printf("1. Numero de proveedor: \n");
+            scanf("%d", &proveedor);
+
+            if (!validarproveedor(proveedor))//mande a llamar a la misma funcion que en compras para validar proveedor
+                    printf("Numero de proveedor invalido.\n");
+            
+        } while (!validarproveedor(proveedor));
+
+        printf("%-20s%-20s%-20s%-20s", "ID Compra", "Insumo", "Descripcion", "Cantidad"); // no se como imprimir lo pendiente
+
+        //******************************************************** */
+
+        /*do
+        {
+            printf("2. Numero de compra: \n");
+            scanf("%d", &compra);
+
+            //no se como hay q validarla
+            
+        } while ();*/
+
+        printf("¿Le fue recibida la compra?: \n");
+        gets(respuesta); //falta hacer lo q se hace aqui ocupo ayuda
+        
+        do 
+        {
+            printf("¿Agregar otra recepcion? (S/N): ");
+            fflush(stdin);
+            scanf("%c", &recepcion);
+
+            if (recepcion != 'S' && recepcion != 's' && recepcion != 'N' && recepcion != 'n')
+                printf("Valor no valido. Solo se permite S o N.\n");
+
+        }while(recepcion != 'S' && recepcion != 's' && recepcion != 'N' && recepcion != 'n');
+        
+    }
+    
+}

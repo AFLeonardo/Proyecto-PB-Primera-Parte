@@ -17,6 +17,7 @@ main()
     struct Mercado mercadoVacio = {0, "", "", "", 0, 0, 0, 0, ""};
     struct Venta ventavacia = {0, 0, 0, 0, 0, 0};
     struct Empleado empleadoVacio = {0, "", "", "", 0.0, {0, 0, 0}, {"", 0, "", "", ""}};
+    struct Compra comprasvacia = {0, 0, 0, 0};
 
     while (ciclo)
     {
@@ -100,9 +101,10 @@ main()
                 printf("%s\n", "VENTAS\n");
                 if((archivo = fopen("Ventas.txt", "r+")) == NULL)
                 {
-                    printf("ERROR.\nSe esta creando el archvio intenta de nuevo.\n");
+                    printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
                     crearRegistrosVacios("Ventas.txt", &ventavacia, sizeof(struct Venta), 100);
                 }
+
                 else
                 {
                     menu_control_ventas(archivo);
@@ -112,10 +114,29 @@ main()
 
             case 7:
                 printf("%s\n", "COMPRAS\n");
+                if (archivo = fopen(archivo = fopen("Compras.txt", "r+")) == NULL)
+                {
+                    printf("ERROR \nSe esta creando el archivo intenta de nuevo\n");
+                    crearRegistrosVacios("Compras.txt", &comprasvacia, sizeof(struct Compra), 100);
+                }
+
+                else
+                {
+                    menu_control_compras(archivo);
+                    fclose(archivo);
+                }
+
                 break;
 
             case 8:
                 printf("%s\n", "CONTROL DE INVENTARIO\n");
+                if((archivo = fopen("Proveedores.dat", "r+")) == NULL)
+                    printf("ERROR.\nSe esta creando el archvio intenta de nuevo.\n"); // no se si tengo q agregar registros vacios segun yo no vdd pq no hay estructura
+                else
+                {
+                    menu_control_inventario(archivo);
+                    fclose(archivo);
+                }
                 break;
 
             case 9:
