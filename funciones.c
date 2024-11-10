@@ -738,7 +738,7 @@ bool validar_rfc(char *frfc) {
 
 void menu_mercados(FILE *mercadosf)
 {
-    char agregar;
+    char agregar = 's';
     struct Mercado mercados;
     bool correo_correcto = true, rfc_valido=true, validardia=true; //checar si se puede inicializar o no
 
