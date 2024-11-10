@@ -970,7 +970,7 @@ bool validarnumerodireccion(char *fnumero)
 
 void menu_control_ventas(FILE *fventas)
 {
-    int mercado, articulo, cantidad, empleado;
+    int Clave_mercado, Clave_articulo, cantidad, empleado;
     float precioarticulo, total, descuento_mercado;
     char agregar_articulo, factura, agregar_venta = 'S';
 
@@ -981,35 +981,35 @@ void menu_control_ventas(FILE *fventas)
         do
         {
             printf("1) Ingrese la clave de mercado: \n");
-            scanf("%d", &mercado);
+            scanf("%d", &Clave_mercado);
 
-            if (!validarmercado(mercado))
+            if (!validarmercado(Clave_mercado))
                 printf("Clave de mercado no encontrada.\n");
 
-        } while (!validarmercado(mercado));
+        } while (!validarmercado(Clave_mercado));
 
         do
         {
             printf("2) Ingrese la clave del articulo: \n");
-            scanf("%d", &articulo);
+            scanf("%d", &Clave_articulo);
 
-            if (!validararticulo(articulo))
+            if (!validararticulo(Clave_articulo))
                 printf("Clave de articulo no encontrada.\n");
 
-        } while (!validararticulo(articulo));
+        } while (!validararticulo(Clave_articulo));
 
         do
         {
             printf("3) Ingrese la cantidad: \n"); // falta restarle al inventarios la cantidad vendida
             scanf("%d", &cantidad);
 
-            if (!validarcantidad(cantidad, mercado))
-                printf("Cantidad invalida o insuficiente en inventario.\n");
+            if (!validarcantidad(cantidad, Clave_articulo))
+                printf("\nCantidad invalida o insuficiente en inventario.\n");
 
-        } while (!validarcantidad(cantidad, mercado));
+        } while (!validarcantidad(cantidad, Clave_articulo));
 
-        precioarticulo = precio(articulo);
-        descuento_mercado = descuento(mercado); //checar si esta bien
+        precioarticulo = precio(Clave_articulo);
+        descuento_mercado = descuento(Clave_mercado); //checar si esta bien
         total += precioarticulo * cantidad * (1 - descuento_mercado);
 
         printf("4) Precio actual acumulado con descuento: %.2f \n", total);
@@ -1050,7 +1050,7 @@ void menu_control_ventas(FILE *fventas)
 
         if (factura == 'S' || factura == 's')
         {
-            imprimir_factura(mercado, articulo, cantidad, precioarticulo, empleado, total);
+            imprimir_factura(Clave_mercado, Clave_articulo, cantidad, precioarticulo, empleado, total);
             //registrar_comision(empleado, total);  //no se como hacer esta es para registrar la comision
         }
 
@@ -1151,7 +1151,7 @@ bool validararticulo(int farticulo) //con secuencial nose si funciona
 
 
 
-/*bool validarcantidad(int fcantidad, int fclave)
+bool validarcantidad(int cantidad_articulos, int fclave)
 {
     FILE *articulolocal;
     struct Articulos articulos;
@@ -1166,15 +1166,23 @@ bool validararticulo(int farticulo) //con secuencial nose si funciona
         fread(&articulos, sizeof(struct Articulos), 1, articulolocal);
         if (articulos.clave_articulo == fclave)
         {
-            if (fcantidad > 0 && articulos.inventario > fcantidad)
-                cantidad = true;
+            if (cantidad_articulos > 0)
+                if (articulos.inventario > cantidad_articulos)
+                    cantidad = true;
+                else
+                    printf("\nCantidad no mayor que inventario.");
+            else
+                printf("\nCantidad no mayor que 0");
         }
+        else
+            printf("\nClave no encontrada.");
     }
     fclose(articulolocal);
     return cantidad;
-}*/
+}
 
-bool validarcantidad(int fcantidad, int fclave)
+
+/* bool validarcantidad(int fcantidad, int fclave)
 {
     FILE *articulolocal;
     struct Articulos articulos;
@@ -1197,7 +1205,7 @@ bool validarcantidad(int fcantidad, int fclave)
         fclose(articulolocal);
     }
     return cantidad;
-}
+} */
 
 
 /*float precio(int fclave)
