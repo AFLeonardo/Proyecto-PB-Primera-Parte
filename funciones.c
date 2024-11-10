@@ -1009,7 +1009,7 @@ void menu_control_ventas(FILE *fventas)
             } while (!validarcantidad(articulo, mercado));
 
             precioarticulo = precio(articulo);
-            descuento = obtener_descuento(mercado); //checar si esta bien
+            descuento = 0; //obtener_descuento(mercado); //checar si esta bien
             total += precioarticulo * cantidad * (1 - descuento);  
 
             printf("Precio actual acumulado con descuento: %.2f \n", total);
@@ -1324,7 +1324,8 @@ float precioinsumo(int fnumero)
 {
      FILE *insumolocal;
      struct Insumo insumos;
-     float precioinsumo;
+     float precioinsumo = 0;
+     int i;
 
      if ((insumolocal = fopen("Insumos.dat", "r")) == NULL)
         printf("Error al abrir el archivo de Insumos.\n");
@@ -1333,7 +1334,9 @@ float precioinsumo(int fnumero)
     {
         fseek(insumolocal, (fnumero - 1) * sizeof(struct Insumo), SEEK_SET);
         fread(&insumos, sizeof(struct Insumo), 1, insumolocal);
-        precioinsumo = insumos.precio_compra; //error pq es un arreglo pero ocupo preguntar qpd
+
+        for (i=0; i<10; i++)
+            precioinsumo += insumos.precio_compra[i]; //error pq es un arreglo pero ocupo preguntar qpd
 
     }
     fclose(insumolocal);
