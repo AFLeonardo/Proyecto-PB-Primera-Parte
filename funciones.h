@@ -12,7 +12,7 @@ void menu_empleados(FILE *);
 void menu_proveedores(FILE *);
 void menu_control_ventas(FILE *);
 void menu_control_compras(FILE *);
-void menu_control_inventario();
+void menu_control_inventario(FILE *);
 void menu_reportes();
 
 // FUNCIONES
@@ -34,5 +34,6 @@ bool validarproveedor(int );
 bool validarnumeroinsumo(int );
 float precioinsumo(int );
 float descuento_proveedor(int );
+//********************************** */
 
 

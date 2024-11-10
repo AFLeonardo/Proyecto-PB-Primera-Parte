@@ -734,7 +734,7 @@ bool validar_rfc(char *frfc)
 
 void menu_mercados(FILE *mercadosf)
 {
-    char agregar;
+    char agregar = 's';
     struct Mercado mercados;
     bool correo_correcto = true, rfc_valido=true, validardia=true; //checar si se puede inicializar o no
 
@@ -1021,7 +1021,7 @@ void menu_control_ventas(FILE *fventas)
             } while (!validarcantidad(articulo, mercado));
 
             precioarticulo = precio(articulo);
-            descuento = obtener_descuento(mercado); //checar si esta bien
+            descuento = 0; //obtener_descuento(mercado); //checar si esta bien
             total += precioarticulo * cantidad * (1 - descuento);  
 
             printf("Precio actual acumulado con descuento: %.2f \n", total);
@@ -1281,6 +1281,7 @@ void menu_control_compras(FILE *finsumos)
         printf("Total de la compra: %.2f\n", total);
 
         do 
+        do 
         {
             printf("¿Agregar otra compra? (S/N): ");
             fflush(stdin);
@@ -1338,9 +1339,10 @@ bool validarnumeroinsumo(int fnumero)
 
 float precioinsumo(int fnumero)
 {
-    FILE *insumolocal;
-    struct Insumo insumos;
-    float precioinsumo;
+     FILE *insumolocal;
+     struct Insumo insumos;
+     float precioinsumo = 0;
+     int i;
 
     if ((insumolocal = fopen("Insumos.dat", "r")) == NULL)
         printf("Error al abrir el archivo de Insumos.\n");
@@ -1349,7 +1351,9 @@ float precioinsumo(int fnumero)
     {
         fseek(insumolocal, (fnumero - 1) * sizeof(struct Insumo), SEEK_SET);
         fread(&insumos, sizeof(struct Insumo), 1, insumolocal);
-        precioinsumo = insumos.precio_compra; //error pq es un arreglo pero ocupo preguntar qpd
+
+        for (i=0; i<10; i++)
+            precioinsumo += insumos.precio_compra[i]; //error pq es un arreglo pero ocupo preguntar qpd
 
     }
     fclose(insumolocal);
@@ -1373,4 +1377,53 @@ float descuento_proveedor(int fproveedor)
     }
     fclose(proveedorlocal);
     return descuento;
+}
+
+void menu_control_inventario(FILE * farchivo)
+{
+    int proveedor, compra;
+    char recepcion = 's', respuesta[5];
+
+    while (recepcion == 'S' || recepcion == 's')
+    {
+
+        do
+        {
+            printf("1. Numero de proveedor: \n");
+            scanf("%d", &proveedor);
+
+            if (!validarproveedor(proveedor))//mande a llamar a la misma funcion que en compras para validar proveedor
+                    printf("Numero de proveedor invalido.\n");
+            
+        } while (!validarproveedor(proveedor));
+
+        printf("%-20s%-20s%-20s%-20s", "ID Compra", "Insumo", "Descripcion", "Cantidad"); // no se como imprimir lo pendiente
+
+        //******************************************************** */
+
+        /*do
+        {
+            printf("2. Numero de compra: \n");
+            scanf("%d", &compra);
+
+            //no se como hay q validarla
+            
+        } while ();*/
+
+        printf("¿Le fue recibida la compra?: \n");
+        gets(respuesta); //falta hacer lo q se hace aqui ocupo ayuda
+        
+        do 
+        {
+            printf("¿Agregar otra recepcion? (S/N): ");
+            fflush(stdin);
+            scanf("%c", &recepcion);
+
+            if (recepcion != 'S' && recepcion != 's' && recepcion != 'N' && recepcion != 'n')
+                printf("Valor no valido. Solo se permite S o N.\n");
+
+        }while(recepcion != 'S' && recepcion != 's' && recepcion != 'N' && recepcion != 'n');
+        
+    }
+    
 }
