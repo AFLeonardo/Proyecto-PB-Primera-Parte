@@ -964,7 +964,7 @@ bool validarchar(char * fcadena)
 void menu_control_ventas(FILE *fventas) 
 {
     int mercado, articulo, cantidad, empleado;
-    float precioarticulo, total, descuento;
+    float precioarticulo, total, descuento_mercado;
     char agregar_articulo, factura, agregar_venta = 'S';
 
     while (agregar_venta == 'S' || agregar_venta == 's') 
@@ -1009,8 +1009,8 @@ void menu_control_ventas(FILE *fventas)
             } while (!validarcantidad(articulo, mercado));
 
             precioarticulo = precio(articulo);
-            descuento = obtener_descuento(mercado); //checar si esta bien
-            total += precioarticulo * cantidad * (1 - descuento);  
+            descuento_mercado = descuento(mercado); //checar si esta bien
+            total += precioarticulo * cantidad * (1 - descuento_mercado);  
 
             printf("Precio actual acumulado con descuento: %.2f \n", total);
 
