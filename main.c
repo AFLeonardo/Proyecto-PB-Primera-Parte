@@ -114,7 +114,7 @@ main()
 
             case 7:
                 printf("%s\n", "COMPRAS\n");
-                if (archivo = fopen(archivo = fopen("Compras.txt", "r+")) == NULL)
+                if ((archivo = fopen("Compras.txt", "r+")) == NULL)
                 {
                     printf("ERROR \nSe esta creando el archivo intenta de nuevo\n");
                     crearRegistrosVacios("Compras.txt", &comprasvacia, sizeof(struct Compra), 100);
