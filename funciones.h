@@ -13,7 +13,7 @@ void menu_proveedores(FILE *);
 void menu_control_ventas(FILE *);
 void menu_control_compras(FILE *);
 void menu_control_inventario(FILE *);
-void menu_reportes();
+void menu_reportes(FILE *);
 
 // FUNCIONES
 char *convertir_a_minusculas(char *);
@@ -28,10 +28,11 @@ float precio(int);
 bool validarempleado(int );
 float descuento(int );
 bool validarchar(char *);
+bool validarnumerodireccion(char *);
 void imprimir_factura(int, int, int, float, int, float);
 bool validarproveedor(int );
 bool validarnumeroinsumo(int );
-float precioinsumo(int );
+float precioinsumo(int);
 float descuento_proveedor(int );
 //********************************** */
 
