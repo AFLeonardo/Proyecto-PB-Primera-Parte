@@ -31,7 +31,7 @@ main()
 
         switch (opcion)
         {
-            case 1:
+            case 1: // ✅ LISTO
                 if((archivo = fopen("Articulos.dat", "r+")) == NULL)
                 {
                     printf("ERROR.\nSe esta creando el archvio intenta de nuevo.\n");
@@ -44,7 +44,7 @@ main()
                 }
                 break;
 
-            case 2:
+            case 2: // ✅ LISTO
                 if ((archivo = fopen("Insumos.dat", "rb+")) == NULL)
                     {
                     printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
