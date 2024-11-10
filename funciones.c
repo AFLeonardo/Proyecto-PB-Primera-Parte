@@ -28,7 +28,7 @@ int menu_principal()
 
 void menu_articulos(FILE *articulosf)
 {
-    char agregar, agregar_insumo = 's';
+    char agregar, agregar_insumo;
     struct Articulos x_articulo;
     struct Insumo LecturaInsumo;
     struct Mercado mercado;
@@ -50,6 +50,7 @@ void menu_articulos(FILE *articulosf)
         {
             while (agregar != 'N' && agregar != 'n')
             {
+                agregar_insumo = 's';
                 printf("\nARTICULOS\n");
 
                 do
@@ -524,7 +525,7 @@ void menu_proveedores(FILE *fproveedores)
     bool rfc_valido = true, correo_correcto = true, validardia = true;
     int i;
 
-    printf("%s", "\nPROVEEDORES\n");
+    printf("\nPROVEEDORES\n");
 
     while(agregar != 'n' && agregar != 'N')
     {
@@ -635,12 +636,12 @@ void menu_proveedores(FILE *fproveedores)
 
         do
         {
-            printf("Numero: ");//validar cositas esas
+            printf("Numero: ");
             gets(proveedores.direccion.numero);
-            if (!(validarnumerodireccion(proveedores.direccion.numero)))
+            if (!validarnumerodireccion(proveedores.direccion.numero))
                 printf("Ingrese un numero valido.\n");
 
-        }while (!(validarnumerodireccion(proveedores.direccion.numero)));
+        }while (!validarnumerodireccion(proveedores.direccion.numero));
 
         do
         {
@@ -672,7 +673,6 @@ void menu_proveedores(FILE *fproveedores)
 
         }while (!(validarchar(proveedores.direccion.estado)));
 
-        // VEREMOS SI SE QUEDA
         for (i = 0; i < 10; i++)
             proveedores.articulos_produce[i] = 0;
 
@@ -958,12 +958,12 @@ bool validarchar(char * fcadena)
 
 bool validarnumerodireccion(char *fnumero) 
 {
-    int i;
+    int i, len = strlen(fnumero);
 
-    for (i = 0; i < 30; i++) 
+    for (i = 0; i < len; i++) 
     {
         if (fnumero[i] < '0' || fnumero[i] > '9') 
-            return false; 
+            return false;
     }
     return true; 
 }
