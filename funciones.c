@@ -1279,8 +1279,7 @@ void menu_control_compras(FILE *finsumos)
         } while (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n');
 
         printf("Total de la compra: %.2f\n", total);
-
-        do 
+ 
         do 
         {
             printf("¿Agregar otra compra? (S/N): ");
@@ -1339,10 +1338,10 @@ bool validarnumeroinsumo(int fnumero)
 
 float precioinsumo(int fnumero)
 {
-     FILE *insumolocal;
-     struct Insumo insumos;
-     float precioinsumo = 0;
-     int i;
+    FILE *insumolocal;
+    struct Insumo insumos;
+    float precioinsumo = 0;
+    int i;
 
     if ((insumolocal = fopen("Insumos.dat", "r")) == NULL)
         printf("Error al abrir el archivo de Insumos.\n");
