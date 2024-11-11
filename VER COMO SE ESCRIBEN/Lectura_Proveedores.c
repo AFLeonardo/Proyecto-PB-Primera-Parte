@@ -12,7 +12,7 @@ struct Fechas
 struct Direcciones
 {
     char calle[50];
-    int numero;
+    char numero[30];
     char colonia[50];
     char municipio[50];
     char estado[50];
@@ -49,7 +49,14 @@ void mostrar_proveedores(FILE *proveedorlocal) {
         printf("Correo: %s\n", proveedor.correo);
         printf("Descuento: %f\n", proveedor.descuento);
         printf("Fecha de Nacimiento: %02d/%02d/%d\n", proveedor.fecha.dia, proveedor.fecha.mes, proveedor.fecha.anio);
-        printf("Direccion: %s\n", proveedor.direccion);
+        printf("Direccion:");
+        printf("Calle: %s\n", proveedor.direccion.calle);
+        printf("Numero: %s\n", proveedor.direccion.numero);
+        printf("Colonia: %s\n", proveedor.direccion.colonia);
+        printf("Municipio: %s\n", proveedor.direccion.municipio);
+        printf("Estado: %s\n", proveedor.direccion.estado);
+
+
         printf("Articulos que Produce: ");
         
         // Mostrar las claves de los artículos que produce
@@ -65,7 +72,7 @@ int main() {
     FILE *proveedorlocal;
 
     // Abrir el archivo de proveedores
-    proveedorlocal = fopen("..\\Proveedores.dat", "rb");
+    proveedorlocal = fopen("..\\Proveedores.dat", "r");
 
     // Mostrar la información de los proveedores
     mostrar_proveedores(proveedorlocal);
