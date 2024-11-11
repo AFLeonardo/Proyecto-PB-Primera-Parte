@@ -69,20 +69,3 @@ struct Mercado
     struct Fechas fecha;
     struct Direcciones direccion;
 };
-struct Venta
-{
-    int numero_mercado;
-    int numero_articulo;
-    int cantidad;
-    float precio_total;
-    int numero_empleado;
-    float comision_empleado;
-    int factura;
-};
-struct Compra
-{
-    int numero_proveedor;
-    int numero_insumo;
-    int cantidad;
-    float precio_total;
-};
