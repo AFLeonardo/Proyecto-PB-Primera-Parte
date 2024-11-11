@@ -15,7 +15,7 @@ main()
     struct Insumo insumoVacio = {0, "", 0, 0, {0,0,0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0,0,0}};
     struct Proveedor proveedorVacio = {0, "", "", "", 0, 0, 0, 0, "", {0,0,0,0,0,0,0,0,0,0}};
     struct Mercado mercadoVacio = {0, "", "", "", 0, 0, 0, 0, ""};
-    struct Venta ventavacia = {0, 0, 0, 0, 0, 0};
+    struct Venta ventavacia = {0, 0, 0, 0, 0, 0, 0};
     struct Empleado empleadoVacio = {0, "", "", "", 0.0, {0, 0, 0}, {"", 0, "", "", ""}};
     struct Compra comprasvacia = {0, 0, 0, 0};
 
@@ -32,7 +32,7 @@ main()
 
         switch (opcion)
         {
-            case 1: // ✅ LISTO
+            case 1: // ✅ FALTA MERCADOS
                 if((archivo = fopen("Articulos.dat", "r+")) == NULL)
                 {
                     printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
@@ -97,7 +97,7 @@ main()
                 }
                 break;
 
-            case 6:
+            case 6: 
                 printf("%s\n", "VENTAS\n");
                 if((archivo = fopen("Ventas.txt", "r+")) == NULL)
                 {

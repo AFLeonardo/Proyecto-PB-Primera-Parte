@@ -1005,16 +1005,14 @@ void menu_control_ventas(FILE *fventas)
         {
             do
             {
-                printf("3) Ingrese la cantidad: "); // falta restarle al inventarios la cantidad vendida
+                printf("3) Ingrese la cantidad: ");
                 scanf("%d", &Cantidad_articulo);
 
                 if (Cantidad_articulo < 0)
-                    printf("Eh pendejo, dime una cantidad mayor a 0.\n"); //CAMBIAR MENSAJE EDNA
+                    printf("Por favor, ingresa una cantidad mayor a 0.\n");
                 
             } while (Cantidad_articulo < 0);
             
-            if (!validarcantidad(Cantidad_articulo, clave_articulo))
-                printf("Cantidad invalida o insuficiente en inventario.\n");
         } while (!validarcantidad(Cantidad_articulo, clave_articulo));
 
         precioarticulo = precio(clave_articulo);
@@ -1027,21 +1025,17 @@ void menu_control_ventas(FILE *fventas)
         {
             fseek(articulof, (clave_articulo - 1) * sizeof(struct Articulos), SEEK_SET);
             fread(&articuloleido, sizeof(struct Articulos), 1, articulof);
-            printf("\nArticulo antes de restarlo: %d", articuloleido.inventario);
             articuloleido.inventario -= Cantidad_articulo;
-            printf("\nCantidad a restar: %d", articuloleido.inventario);
             fseek(articulof, (clave_articulo - 1) * sizeof(struct Articulos), SEEK_SET);
             fwrite(&articuloleido, sizeof(struct Articulos), 1, articulof);
-            fread(&articuloleido, sizeof(struct Articulos), 1, articulof);
-            printf("\nArticulo despues de restar: %d\n", articuloleido.inventario);
             fclose(articulof);
         }
 
-        printf("4) Precio actual acumulado con descuento: %.2f \n", total);
+        printf("4) Precio actual acumulado con descuento: %.2f\n", total);
 
         do
         {
-            printf("5) Ingrese el numero de empleado: ");//estoorden esta todo mal tmb no pide eso
+            printf("5) Ingrese el numero de empleado: ");
             scanf("%d", &empleado);
 
             if (!validarempleado(empleado))
@@ -1051,37 +1045,40 @@ void menu_control_ventas(FILE *fventas)
 
         do
         {
-            printf("¿Deseas agregar otro articulo? (S/N): ");
+            printf("Deseas agregar otro articulo? (S/N): ");
             fflush(stdin);
             scanf("%c", &agregar_articulo);
+
             if (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n')
                 printf("Respuesta no valida. Solo se permite S o N.\n");
 
         } while (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n'); 
 
-        printf("Total de la venta (con descuento aplicado): %.2f \n", total);
+        printf("Total de la venta (con descuento aplicado): %.2f\n", total);
 
         do
         {
-            printf("¿Deseas recibir una factura? (S/N): ");
+            printf("Deseas recibir una factura? (S/N): ");
             fflush(stdin);
             scanf("%c", &factura);
+
             if (factura != 'S' && factura != 's' && factura != 'N' && factura != 'n')
                 printf("Respuesta no valida. Solo se permite S o N.\n");
 
         } while (factura != 'S' && factura != 's' && factura != 'N' && factura != 'n');
 
-        if (factura == 'S' && factura == 's')
+        if (factura == 'S' || factura == 's')
         {   
             imprimir_factura(clave_mercado, clave_articulo, Cantidad_articulo, precioarticulo, empleado, total);
-            //registrar_comision(empleado, total);  //no se como hacer esta es para registrar la comision
+            registrar_comision(empleado, total); // Implementar función para registrar la comisión
         }
 
         do
         {
-            printf("¿Deseas iniciar otra venta? (S/N): ");
+            printf("Deseas iniciar otra venta? (S/N): ");
             fflush(stdin);
             scanf("%c", &agregar_venta);
+
             if (agregar_venta != 'S' && agregar_venta != 's' && agregar_venta != 'N' && agregar_venta != 'n')
                 printf("Respuesta no valida. Solo se permite S o N.\n");
 
