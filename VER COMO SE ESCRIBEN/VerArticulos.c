@@ -14,7 +14,7 @@ struct Articulos {
 };
 
 void mostrar_datos_articulos(const char *nombre_archivo) {
-    FILE *archivo = fopen(nombre_archivo, "rb"); // Abrir el archivo en modo binario
+    FILE *archivo = fopen(nombre_archivo, "r"); // Abrir el archivo en modo binario
     if (archivo == NULL) {
         perror("Error al abrir el archivo");
         exit(1);
