@@ -970,53 +970,53 @@ bool validarnumerodireccion(char *fnumero)
 
 void menu_control_ventas(FILE *fventas)
 {
-    int Clave_mercado, Clave_articulo, cantidad, empleado;
+    int Clave_mercado, Clave_articulo, Cantidad_articulo, empleado;
     float precioarticulo, total, descuento_mercado;
     char agregar_articulo, factura, agregar_venta = 'S';
 
-    while (agregar_venta == 'S' || agregar_venta == 's')
+    while (agregar_venta != 'n' && agregar_venta != 'N')
     {
         total = 0;
 
         do
         {
-            printf("1) Ingrese la clave de mercado: \n");
+            printf("1) Ingrese la clave de mercado: ");
             scanf("%d", &Clave_mercado);
 
             if (!validarmercado(Clave_mercado))
-                printf("Clave de mercado no encontrada.\n");
+                printf("\nClave de mercado no encontrada.");
 
         } while (!validarmercado(Clave_mercado));
 
         do
         {
-            printf("2) Ingrese la clave del articulo: \n");
+            printf("2) Ingrese la clave del articulo: ");
             scanf("%d", &Clave_articulo);
 
             if (!validararticulo(Clave_articulo))
-                printf("Clave de articulo no encontrada.\n");
+                printf("\nClave de articulo no encontrada.\n");
 
         } while (!validararticulo(Clave_articulo));
 
         do
         {
-            printf("3) Ingrese la cantidad: \n"); // falta restarle al inventarios la cantidad vendida
-            scanf("%d", &cantidad);
+            printf("3) Ingrese la cantidad: "); // falta restarle al inventarios la cantidad vendida
+            scanf("%d", &Cantidad_articulo);
 
-            if (!validarcantidad(cantidad, Clave_articulo))
+            if (!validarcantidad(Cantidad_articulo, Clave_articulo))
                 printf("\nCantidad invalida o insuficiente en inventario.\n");
 
-        } while (!validarcantidad(cantidad, Clave_articulo));
+        } while (!validarcantidad(Cantidad_articulo, Clave_articulo));
 
         precioarticulo = precio(Clave_articulo);
-        descuento_mercado = descuento(Clave_mercado); //checar si esta bien
-        total += precioarticulo * cantidad * (1 - descuento_mercado);
+        descuento_mercado = descuento(Clave_mercado); 
+        total += precioarticulo * Cantidad_articulo * (1 - descuento_mercado);
 
         printf("4) Precio actual acumulado con descuento: %.2f \n", total);
 
         do
         {
-            printf("5) Ingrese el numero de empleado: \n");//estoorden esta todo mal tmb no pide eso
+            printf("5) Ingrese el numero de empleado: ");//estoorden esta todo mal tmb no pide eso
             scanf("%d", &empleado);
 
             if (!validarempleado(empleado))
@@ -1024,17 +1024,15 @@ void menu_control_ventas(FILE *fventas)
 
         } while (!validarempleado(empleado));
 
-            do
-            {
-                printf("¿Deseas agregar otro articulo? (S/N): ");
-                fflush(stdin);
-                scanf("%c", &agregar_articulo);
-                if (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n')
-                    printf("Respuesta no valida. Solo se permite S o N.\n");
+        do
+        {
+            printf("¿Deseas agregar otro articulo? (S/N): ");
+            fflush(stdin);
+            scanf("%c", &agregar_articulo);
+            if (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n')
+                printf("Respuesta no valida. Solo se permite S o N.\n");
 
-            } while (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n');
-
-        } while (agregar_articulo == 'S' || agregar_articulo == 's');
+        } while (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n'); 
 
         printf("Total de la venta (con descuento aplicado): %.2f \n", total);
 
@@ -1048,9 +1046,9 @@ void menu_control_ventas(FILE *fventas)
 
         } while (factura != 'S' && factura != 's' && factura != 'N' && factura != 'n');
 
-        if (factura == 'S' || factura == 's')
-        {
-            imprimir_factura(Clave_mercado, Clave_articulo, cantidad, precioarticulo, empleado, total);
+        if (factura == 'S' && factura == 's')
+        {   
+            imprimir_factura(Clave_mercado, Clave_articulo, Cantidad_articulo, precioarticulo, empleado, total);
             //registrar_comision(empleado, total);  //no se como hacer esta es para registrar la comision
         }
 
@@ -1063,9 +1061,8 @@ void menu_control_ventas(FILE *fventas)
                 printf("Respuesta no valida. Solo se permite S o N.\n");
 
         } while (agregar_venta != 'S' && agregar_venta != 's' && agregar_venta != 'N' && agregar_venta != 'n');
+    }
 }
-
-
 
 /*bool validarmercado(int fmercado)
 {
@@ -1095,7 +1092,7 @@ bool validarmercado(int fmercado) //con secuencial nose si funciona
     bool mercadovalido = false;
 
     if ((mercado = fopen("Mercados.dat", "r")) == NULL)
-        printf("Error con el archivo de mercados\n");
+        printf("\nError con el archivo de mercados\n");
     else
     {
         while (fread(&mercados, sizeof(struct Mercado), 1, mercado) == 1 && !mercadovalido)
@@ -1107,7 +1104,6 @@ bool validarmercado(int fmercado) //con secuencial nose si funciona
     }
     return mercadovalido;
 }
-
 
 /*bool validararticulo(int farticulo)
 {
@@ -1149,8 +1145,7 @@ bool validararticulo(int farticulo) //con secuencial nose si funciona
     return articulovalido;
 }
 
-
-
+/*
 bool validarcantidad(int cantidad_articulos, int fclave)
 {
     FILE *articulolocal;
@@ -1180,33 +1175,35 @@ bool validarcantidad(int cantidad_articulos, int fclave)
     fclose(articulolocal);
     return cantidad;
 }
+*/
 
-
-/* bool validarcantidad(int fcantidad, int fclave)
+bool validarcantidad(int cantidad_articulos, int fclave)
 {
     FILE *articulolocal;
     struct Articulos articulos;
     bool cantidad = false;
 
     if ((articulolocal = fopen("Articulos.dat", "r")) == NULL)
-        printf("Error al abrir el archivo de artículos.\n");
+        printf("\nError al abrir el archivo de artículos.\n");
     else
     {
+        fseek(articulolocal, fclave - 1 * sizeof(struct Articulos), SEEK_SET);
         fread(&articulos, sizeof(struct Articulos), 1, articulolocal);
-        while (!cantidad && !feof(articulolocal)) //error que hizo isa
+        
+        if (articulos.clave_articulo == fclave)
         {
-            if (articulos.clave_articulo == fclave)
+            if (cantidad_articulos > 0 && articulos.inventario >= cantidad_articulos)
             {
-                if (fcantidad > 0 && articulos.inventario > fcantidad)
-                    cantidad = true;
+                cantidad = true;
+                articulos.inventario -= cantidad_articulos;
+                /* fseek(articulolocal, fclave - 1 * sizeof(struct Articulos), SEEK_SET);
+                fwrite(&articulos, sizeof(struct Articulos), 1, articulolocal); */
             }
-            fread(&articulos, sizeof(struct Articulos), 1, articulolocal);
         }
         fclose(articulolocal);
     }
     return cantidad;
-} */
-
+}
 
 /*float precio(int fclave)
 {
@@ -1236,7 +1233,6 @@ float precio(int fclave)
     bool articulo_encontrado = false;
 
     if ((articulolocal = fopen("Articulos.dat", "r")) == NULL)
-
         printf("Error al abrir el archivo de articulos.\n");
     else
     {
@@ -1252,7 +1248,6 @@ float precio(int fclave)
     }
     return precioarticulo;
 }
-
 
 /*bool validarempleado(int fempleado)
 {
@@ -1295,7 +1290,6 @@ bool validarempleado(int fempleado)
     return empleadovalido;
 }
 
-
 /*float descuento(int fclave)
 {
     FILE *mercadolocal;
@@ -1321,9 +1315,8 @@ float descuento(int fclave)
     struct Mercado mercadoleido;
     float descuento = 0.0;
 
-    if((mercadolocal = fopen("Mercado.dat", "r")) == NULL)
+    if((mercadolocal = fopen("Mercados.dat", "r")) == NULL)
         printf("Error al abrir el archivo de mercado");
-
     else
     {
         fseek(mercadolocal, (fclave - 1) * sizeof(struct Mercado), SEEK_SET);
@@ -1333,8 +1326,6 @@ float descuento(int fclave)
     fclose(mercadolocal);
     return descuento;
 }
-
-
 
 void imprimir_factura(int mercado, int articulo, int cantidad, float precio_unitario, int empleado, float total)
 {
@@ -1347,7 +1338,6 @@ void imprimir_factura(int mercado, int articulo, int cantidad, float precio_unit
     printf("Numero de empleado: %d\n", empleado);
     printf("-----------------------\n");
 }
-
 
 void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t tamanoRegistro, int cantidad)
 {
@@ -1437,7 +1427,6 @@ void menu_control_compras(FILE *finsumos)
     }
 }
 
-
 /*bool validarproveedor(int NumeroProveedor)
 {
     FILE *proveedorlocal;
@@ -1479,7 +1468,6 @@ bool validarproveedor(int fproveedor)
     return proveedorvalido;
 }
 
-
 /*bool validarnumeroinsumo(int fnumero)
 {
     FILE *insumolocal;
@@ -1520,7 +1508,6 @@ bool validarnumeroinsumo(int fnumero)
     }
     return numerovalido;
 }
-
 
 /*float precioinsumo(int fnumero)
 {
@@ -1572,7 +1559,6 @@ float precioinsumo(int fnumero)
     return precio_total;
 }
 
-
 /*float descuento_proveedor(int NumProveedor)
 {
     FILE *proveedorlocal;
@@ -1615,7 +1601,6 @@ float descuento_proveedor(int fproveedor)
     }
     return descuento;
 }
-
 
 void menu_control_inventario(FILE * farchivo)
 {
