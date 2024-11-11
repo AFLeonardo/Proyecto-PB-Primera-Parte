@@ -241,7 +241,7 @@ void menu_insumos(FILE *insumosf)
 
     printf("%s", "\nINSUMOS\n");
 
-    if((proveedorlocal = fopen("Proveedores.dat", "rb")) == NULL)
+    if((proveedorlocal = fopen("Proveedores.dat", "r")) == NULL)
         printf("\nError.\nNo existen proveedores.\nAgrega en el menu correspondiente.\n");
     else
     {
@@ -300,6 +300,7 @@ void menu_insumos(FILE *insumosf)
                         clave_valida = true;
                     else
                         printf("Clave del proveedor invalida.\nIngresa una clave valida.\n");
+                        
                 } while (!clave_valida);
 
                 do
@@ -661,7 +662,7 @@ void menu_proveedores(FILE *fproveedores)
             if (!validarchar(proveedores.direccion.calle))
                 printf("Ingresa un municipio valido.\n");
 
-        }while (!validarchar(proveedores.direccion.calle));
+        }while (!validarchar(proveedores.direccion.municipio));
 
         do
         {
@@ -984,7 +985,7 @@ void menu_control_ventas(FILE *fventas)
             scanf("%d", &Clave_mercado);
 
             if (!validarmercado(Clave_mercado))
-                printf("\nClave de mercado no encontrada.");
+                printf("\nClave de mercado no encontrada.\n");
 
         } while (!validarmercado(Clave_mercado));
 
@@ -994,7 +995,7 @@ void menu_control_ventas(FILE *fventas)
             scanf("%d", &Clave_articulo);
 
             if (!validararticulo(Clave_articulo))
-                printf("\nClave de articulo no encontrada.\n");
+                printf("Clave de articulo no encontrada.\n");
 
         } while (!validararticulo(Clave_articulo));
 
@@ -1004,7 +1005,7 @@ void menu_control_ventas(FILE *fventas)
             scanf("%d", &Cantidad_articulo);
 
             if (!validarcantidad(Cantidad_articulo, Clave_articulo))
-                printf("\nCantidad invalida o insuficiente en inventario.\n");
+                printf("Cantidad invalida o insuficiente en inventario.\n");
 
         } while (!validarcantidad(Cantidad_articulo, Clave_articulo));
 
@@ -1064,7 +1065,7 @@ void menu_control_ventas(FILE *fventas)
     }
 }
 
-/*bool validarmercado(int fmercado)
+bool validarmercado(int fmercado)
 {
     FILE *mercado;
     struct Mercado mercados;
@@ -1078,34 +1079,16 @@ void menu_control_ventas(FILE *fventas)
     {
         fseek(mercado, (fmercado - 1) * sizeof(struct Mercado), SEEK_SET);
         fread(&mercados, sizeof(struct Mercado), 1, mercado);
+
         if (fmercado == mercados.clave_mercado)
             mercadovalido = true;
     }
     fclose(mercado);
     return mercadovalido;
-}*/
-
-bool validarmercado(int fmercado) //con secuencial nose si funciona
-{
-    FILE *mercado;
-    struct Mercado mercados;
-    bool mercadovalido = false;
-
-    if ((mercado = fopen("Mercados.dat", "r")) == NULL)
-        printf("\nError con el archivo de mercados\n");
-    else
-    {
-        while (fread(&mercados, sizeof(struct Mercado), 1, mercado) == 1 && !mercadovalido)// no queremos los fread igualaddos al las variables
-        {
-            if (fmercado == mercados.clave_mercado)
-                mercadovalido = true;
-        }
-        fclose(mercado);
-    }
-    return mercadovalido;
 }
 
-/*bool validararticulo(int farticulo)
+
+bool validararticulo(int farticulo)
 {
     FILE *articuloptr;
     struct Articulos articulo;
@@ -1118,94 +1101,56 @@ bool validarmercado(int fmercado) //con secuencial nose si funciona
     {
         fseek(articuloptr, (farticulo - 1) * sizeof(struct Articulos), SEEK_SET);
         fread(&articulo, sizeof(struct Articulos), 1, articuloptr);
+
         if (farticulo == articulo.clave_articulo)
             articulovalido = true;
     }
     fclose(articuloptr);
     return articulovalido;
-}*/
-
-bool validararticulo(int farticulo) //con secuencial nose si funciona
-{
-    FILE *articuloptr;
-    struct Articulos articulo;
-    bool articulovalido = false;
-
-    if ((articuloptr = fopen("Articulos.dat", "r")) == NULL)
-        printf("Error al abrir el archivo de artículos.\n");
-    else
-    {
-        while (fread(&articulo, sizeof(struct Articulos), 1, articuloptr) == 1 && !articulovalido)// no queremos los fread igualaddos al las variables
-        {
-            if (farticulo == articulo.clave_articulo)
-                articulovalido = true;
-        }
-        fclose(articuloptr);
-    }
-    return articulovalido;
 }
 
-/*
+
 bool validarcantidad(int cantidad_articulos, int fclave)
 {
     FILE *articulolocal;
     struct Articulos articulos;
     bool cantidad = false;
 
-    if ((articulolocal = fopen("Articulos.dat", "r")) == NULL)
+    if ((articulolocal = fopen("Articulos.dat", "r+")) == NULL)
         printf("Error al abrir el archivo de articulos.\n");
 
     else
     {
         fseek(articulolocal, (fclave - 1) * sizeof(struct Articulos), SEEK_SET);
         fread(&articulos, sizeof(struct Articulos), 1, articulolocal);
+
         if (articulos.clave_articulo == fclave)
         {
             if (cantidad_articulos > 0)
-                if (articulos.inventario > cantidad_articulos)
+            {
+                if (articulos.inventario >= cantidad_articulos)
+                {
                     cantidad = true;
+                    articulos.inventario -= cantidad_articulos;
+                    fseek(articulolocal, (fclave - 1) * sizeof(struct Articulos), SEEK_SET);
+                    fwrite(&articulos, sizeof(struct Articulos), 1, articulolocal);
+                }
+                
                 else
-                    printf("\nCantidad no mayor que inventario.");
+                    printf("Cantidad mayor que inventario.\n");
+            }
+                
             else
-                printf("\nCantidad no mayor que 0");
+                printf("Cantidad menor que 0\n");
         }
         else
-            printf("\nClave no encontrada.");
+            printf("Clave no encontrada.\n");
     }
     fclose(articulolocal);
     return cantidad;
 }
-*/
 
-bool validarcantidad(int cantidad_articulos, int fclave)//Cambiar secuencial
-{
-    FILE *articulolocal;
-    struct Articulos articulos;
-    bool cantidad = false;
-
-    if ((articulolocal = fopen("Articulos.dat", "r")) == NULL)
-        printf("\nError al abrir el archivo de artículos.\n");
-    else
-    {
-        fseek(articulolocal, fclave - 1 * sizeof(struct Articulos), SEEK_SET);
-        fread(&articulos, sizeof(struct Articulos), 1, articulolocal);
-        
-        if (articulos.clave_articulo == fclave)
-        {
-            if (cantidad_articulos > 0 && articulos.inventario >= cantidad_articulos)
-            {
-                cantidad = true;
-                articulos.inventario -= cantidad_articulos;
-                /* fseek(articulolocal, fclave - 1 * sizeof(struct Articulos), SEEK_SET);
-                fwrite(&articulos, sizeof(struct Articulos), 1, articulolocal); */
-            }
-        }
-        fclose(articulolocal);
-    }
-    return cantidad;
-}
-
-/*float precio(int fclave)
+float precio(int fclave)
 {
     FILE *articulolocal;
     struct Articulos articuloleido;
@@ -1223,33 +1168,9 @@ bool validarcantidad(int cantidad_articulos, int fclave)//Cambiar secuencial
     }
     fclose(articulolocal);
     return precioarticulo;
-}*/
-
-float precio(int fclave)
-{
-    FILE *articulolocal;
-    struct Articulos articuloleido;
-    float precioarticulo = 0.0;
-    bool articulo_encontrado = false;
-
-    if ((articulolocal = fopen("Articulos.dat", "r")) == NULL)
-        printf("Error al abrir el archivo de articulos.\n");
-    else
-    {
-        while (fread(&articuloleido, sizeof(struct Articulos), 1, articulolocal) == 1 && !articulo_encontrado) // no queremos los fread igualaddos al las variables
-        {
-            if (articuloleido.clave_articulo == fclave)
-            {
-                precioarticulo = articuloleido.precio_venta;
-                articulo_encontrado = true;
-            }
-        }
-        fclose(articulolocal);
-    }
-    return precioarticulo;
 }
 
-/*bool validarempleado(int fempleado)
+bool validarempleado(int fempleado)
 {
     FILE *empleado;
     struct Empleado empleadoleido;
@@ -1268,59 +1189,21 @@ float precio(int fclave)
     }
     fclose(empleado);
     return empleadovalido;
-}*/
-
-bool validarempleado(int fempleado)
-{
-    FILE *empleado;
-    struct Empleado empleadoleido;
-    bool empleadovalido = false;
-
-    if ((empleado = fopen("Empleados.dat", "r")) == NULL)
-        printf("Error al abrir el archivo de empleados.\n");
-    else
-    {
-        while (fread(&empleadoleido, sizeof(struct Empleado), 1, empleado) == 1 && !empleadovalido)// no queremos los fread igualaddos al las variables
-        {
-            if (empleadoleido.numero_empleado == fempleado)
-                empleadovalido = true;
-        }
-        fclose(empleado);
-    }
-    return empleadovalido;
 }
 
-/*float descuento(int fclave)
-{
-    FILE *mercadolocal;
-    struct Mercado mercadoleido;
-    float descuento = 0.0;
-
-    if((mercadolocal = fopen("Mercado.dat", "r")) == NULL)
-        printf("Error al abrir el archivo de mercado");
-
-    else
-    {
-        fseek(mercadolocal, (fclave - 1) * sizeof(struct Mercado), SEEK_SET);
-        fread(&mercadoleido, sizeof(struct Mercado), 1, mercadolocal); // lo hice pero hay q checar q este bien vdd
-        descuento = mercadoleido.descuento;
-    }
-    fclose(mercadolocal);
-    return descuento;
-}*/
-
-float descuento(int fclave)//Cambiar a secuencial
+float descuento(int fclave)
 {
     FILE *mercadolocal;
     struct Mercado mercadoleido;
     float descuento = 0.0;
 
     if((mercadolocal = fopen("Mercados.dat", "r")) == NULL)
-        printf("Error al abrir el archivo de mercado");
+        printf("Error al abrir el archivo de mercado\n");
+
     else
     {
         fseek(mercadolocal, (fclave - 1) * sizeof(struct Mercado), SEEK_SET);
-        fread(&mercadoleido, sizeof(struct Mercado), 1, mercadolocal); // lo hice pero hay q checar q este bien vdd
+        fread(&mercadoleido, sizeof(struct Mercado), 1, mercadolocal); 
         descuento = mercadoleido.descuento;
     }
     fclose(mercadolocal);
