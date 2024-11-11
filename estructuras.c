@@ -15,7 +15,7 @@ struct Articulos
 struct Direcciones
 {
     char calle[50];
-    char numero;
+    char numero[30];
     char colonia[50];
     char municipio[50];
     char estado[50];

@@ -1095,7 +1095,7 @@ bool validarmercado(int fmercado) //con secuencial nose si funciona
         printf("\nError con el archivo de mercados\n");
     else
     {
-        while (fread(&mercados, sizeof(struct Mercado), 1, mercado) == 1 && !mercadovalido)
+        while (fread(&mercados, sizeof(struct Mercado), 1, mercado) == 1 && !mercadovalido)// no queremos los fread igualaddos al las variables
         {
             if (fmercado == mercados.clave_mercado)
                 mercadovalido = true;
@@ -1135,7 +1135,7 @@ bool validararticulo(int farticulo) //con secuencial nose si funciona
         printf("Error al abrir el archivo de artículos.\n");
     else
     {
-        while (fread(&articulo, sizeof(struct Articulos), 1, articuloptr) == 1 && !articulovalido)
+        while (fread(&articulo, sizeof(struct Articulos), 1, articuloptr) == 1 && !articulovalido)// no queremos los fread igualaddos al las variables
         {
             if (farticulo == articulo.clave_articulo)
                 articulovalido = true;
@@ -1177,7 +1177,7 @@ bool validarcantidad(int cantidad_articulos, int fclave)
 }
 */
 
-bool validarcantidad(int cantidad_articulos, int fclave)
+bool validarcantidad(int cantidad_articulos, int fclave)//Cambiar secuencial
 {
     FILE *articulolocal;
     struct Articulos articulos;
@@ -1280,7 +1280,7 @@ bool validarempleado(int fempleado)
         printf("Error al abrir el archivo de empleados.\n");
     else
     {
-        while (fread(&empleadoleido, sizeof(struct Empleado), 1, empleado) == 1 && !empleadovalido)
+        while (fread(&empleadoleido, sizeof(struct Empleado), 1, empleado) == 1 && !empleadovalido)// no queremos los fread igualaddos al las variables
         {
             if (empleadoleido.numero_empleado == fempleado)
                 empleadovalido = true;
@@ -1309,7 +1309,7 @@ bool validarempleado(int fempleado)
     return descuento;
 }*/
 
-float descuento(int fclave)
+float descuento(int fclave)//Cambiar a secuencial
 {
     FILE *mercadolocal;
     struct Mercado mercadoleido;
@@ -1458,7 +1458,7 @@ bool validarproveedor(int fproveedor)
         printf("Error al abrir el archivo de proveedores.\n");
     else
     {
-        while (fread(&proveedores, sizeof(struct Proveedor), 1, proveedorlocal) == 1 && !proveedorvalido)
+        while (fread(&proveedores, sizeof(struct Proveedor), 1, proveedorlocal) == 1 && !proveedorvalido)// no queremos los fread igualaddos al las variables
         {
             if (proveedores.numero_proveedor == fproveedor)
                 proveedorvalido = true;
@@ -1499,7 +1499,7 @@ bool validarnumeroinsumo(int fnumero)
         printf("Error al abrir el archivo de insumos.\n");
     else
     {
-        while (fread(&insumos, sizeof(struct Insumo), 1, insumolocal) == 1 && !numerovalido)
+        while (fread(&insumos, sizeof(struct Insumo), 1, insumolocal) == 1 && !numerovalido)// no queremos los fread igualaddos al las variables
         {
             if (insumos.clave_insumo == fnumero)
                 numerovalido = true;
@@ -1543,7 +1543,7 @@ float precioinsumo(int fnumero)
         printf("Error al abrir el archivo de Insumos.\n");
     else
     {
-        while (fread(&insumos, sizeof(struct Insumo), 1, insumolocal) == 1 && !insumo_encontrado)
+        while (fread(&insumos, sizeof(struct Insumo), 1, insumolocal) == 1 && !insumo_encontrado)// no queremos los fread igualaddos al las variables
         {
             if (insumos.clave_insumo == fnumero)
             {
@@ -1589,7 +1589,7 @@ float descuento_proveedor(int fproveedor)
         printf("Error al abrir el archivo de proveedores.\n");
     else
     {
-        while (fread(&proveedorleido, sizeof(struct Proveedor), 1, proveedorlocal) == 1 && !proveedor_encontrado)
+        while (fread(&proveedorleido, sizeof(struct Proveedor), 1, proveedorlocal) == 1 && !proveedor_encontrado)// no queremos los fread igualaddos al las variables
         {
             if (proveedorleido.numero_proveedor == fproveedor)
             {
@@ -1602,7 +1602,7 @@ float descuento_proveedor(int fproveedor)
     return descuento;
 }
 
-void menu_control_inventario(FILE * farchivo)
+void menu_control_inventario(FILE * farchivo)//falta acabar
 {
     int proveedor, compra;
     char recepcion = 's', respuesta[5];
@@ -1651,7 +1651,7 @@ void menu_control_inventario(FILE * farchivo)
 
 }
 
-void menu_reportes(FILE *farticulos)
+void menu_reportes(FILE *farticulos)//falta acabar
 {
     char opcion;
     FILE *archivo;
@@ -1661,11 +1661,12 @@ void menu_reportes(FILE *farticulos)
     do
     {
         printf("a) Listado de artículos\nb) Total de venta por fecha\nc) Total de venta por artículo\nd) Listado de artículos a solicitar\ne) Saldos por pagar\nf) Calculo de comisiones\ng) Compras pendientes de recepcion\nh) Salir");
-        printf("%20s", "Opcion: ");
+        printf("%20s", "\nOpcion: ");
+        fflush(stdin);
         scanf("%c", &opcion);
-        if(opcion < 'a' && opcion > 'h')
+        if(opcion < 'a' || opcion > 'h')
             printf("Ingrese una opcion valida");
-    }while(opcion < 'a' && opcion > 'h');
+    }while(opcion < 'a' || opcion > 'h');
 
     while(opcion != 'h')
     {
@@ -1676,40 +1677,26 @@ void menu_reportes(FILE *farticulos)
                     printf("ERROR.\nNo se pudo abrir el archivo.\n");
                 else
                 {
+                    printf("%-20s %-20s %-10s %-10s %-10s %-15s %-20s\n", 
+                        "Clave del Articulo", "Descripcion", "Siembra", "Cosecha", 
+                        "Inventario", "Precio de venta", "Clave del Insumo");
+                    printf("---------------------------------------------------------------------------------------------------------------\n");
 
-                    printf("%-10s %-30s %-15s %-15s %-30s %-30s %-20s %-15s %-15s\n",
-                        "Clave", "Descripcion", "Temp Siembra", "Temp Cosecha", "Clave Mercados",
-                        "Insumos Requeridos", "Costo Produccion", "Inventario", "Precio Venta");
-                    printf("--------------------------------------------------------------------------------------------------------------------------\n");
-
-
-                    while (fread(&articulo, sizeof(struct Articulos), 1, archivo) == 1)
+                    while (fread(&articulo, sizeof(struct Articulos), 1, archivo) == 1) 
                     {
-                        printf("%-10d %-30s %-15s %-15s ",
-                            articulo.clave_articulo, articulo.descripcion,
-                            articulo.temp_siembra, articulo.temp_cosecha);
+                        printf("%-20d %-20s %-10s %-10s %-10d %-15.2f [", 
+                            articulo.clave_articulo, articulo.descripcion, articulo.temp_siembra, 
+                            articulo.temp_cosecha, articulo.inventario, articulo.precio_venta);
 
-                        printf("[");
-                        for (i = 0; i < 10; i++)
-                        {
-                            printf("%d", articulo.clave_mercados[i]);
-                            if (i < 9)
-                                printf(", ");
-                        }
-                        printf("] ");
 
-                        printf("[");
-                        for (i = 0; i < 10; i++)
+                        for (int i = 0; i < 10; i++) 
                         {
                             printf("%d", articulo.insumos_requeridos[i]);
-                            if (i < 9)
-                                printf(", ");
+                            if (i < 9) printf(", "); 
                         }
-                        printf("] ");
-
-                        printf("%-20.2f %-15d %-15.2f\n",
-                            articulo.costo_produccion, articulo.inventario, articulo.precio_venta);
+                        printf("]\n");
                     }
+
                     fclose(archivo);
                 }
                 break;
@@ -1719,6 +1706,16 @@ void menu_reportes(FILE *farticulos)
 
 
         }
+
+        do
+        {
+            printf("a) Listado de artículos\nb) Total de venta por fecha\nc) Total de venta por artículo\nd) Listado de artículos a solicitar\ne) Saldos por pagar\nf) Calculo de comisiones\ng) Compras pendientes de recepcion\nh) Salir");
+            printf("%20s", "Opcion: ");
+            fflush(stdin);
+            scanf("%c", &opcion);
+            if(opcion < 'a' || opcion > 'h')
+                printf("Ingrese una opcion valida");
+        }while(opcion < 'a' || opcion > 'h');
     }
 
 }
