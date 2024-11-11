@@ -25,5 +25,4 @@ output/main.exe
 output/*.dat
 
 # Archivos
-*.dat
 *.exe
