@@ -522,7 +522,9 @@ void menu_proveedores(FILE *fproveedores)
 {
     struct Proveedor proveedores;
     char agregar = 's';
-    bool rfc_valido = true, correo_correcto = true, validardia = true;
+    bool rfc_valido = true,
+         correo_correcto = true,
+         validardia = true;
     int i;
 
     printf("\nPROVEEDORES\n");
@@ -560,15 +562,13 @@ void menu_proveedores(FILE *fproveedores)
                 printf("Los caracteres deben ser 13.\n");
                 rfc_valido = false;
             }
-
             else
                 rfc_valido = validar_rfc(proveedores.RFC);
 
             if (!rfc_valido)
-                printf("RFC invalido. No cumple con la estructurada adecuada\n");
+                printf("RFC invalido.\nNo cumple con la estructurada adecuada\n");
 
         }while(!rfc_valido);
-
 
         do
         {
@@ -629,10 +629,10 @@ void menu_proveedores(FILE *fproveedores)
             printf("Calle: ");
             fflush(stdin);
             gets(proveedores.direccion.calle);
-            if (!(validarchar(proveedores.direccion.calle)))
+            if (!validarchar(proveedores.direccion.calle))
                 printf("Ingresa una calle valida.\n");
 
-        }while (!(validarchar(proveedores.direccion.calle)));
+        }while (!validarchar(proveedores.direccion.calle));
 
         do
         {
@@ -648,30 +648,30 @@ void menu_proveedores(FILE *fproveedores)
             printf("Colonia: ");
             fflush(stdin);
             gets(proveedores.direccion.colonia);
-            if (!(validarchar(proveedores.direccion.colonia)))
+            if (!validarchar(proveedores.direccion.colonia))
                 printf("Ingresa una colonia valida.\n");
 
-        }while (!(validarchar(proveedores.direccion.colonia)));
+        }while (!validarchar(proveedores.direccion.colonia));
 
         do
         {
             printf("Municipio: ");
             fflush(stdin);
             gets(proveedores.direccion.municipio);
-            if (!(validarchar(proveedores.direccion.municipio)))
+            if (!validarchar(proveedores.direccion.calle))
                 printf("Ingresa un municipio valido.\n");
 
-        }while (!(validarchar(proveedores.direccion.calle)));
+        }while (!validarchar(proveedores.direccion.calle));
 
         do
         {
             printf("Ingrese el estado: ");
             fflush(stdin);
             gets(proveedores.direccion.estado);
-            if (!(validarchar(proveedores.direccion.estado)))
+            if (!validarchar(proveedores.direccion.estado))
                 printf("Ingrese un estado valido.\n");
 
-        }while (!(validarchar(proveedores.direccion.estado)));
+        }while (!validarchar(proveedores.direccion.estado));
 
         for (i = 0; i < 10; i++)
             proveedores.articulos_produce[i] = 0;
