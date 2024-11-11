@@ -76,6 +76,7 @@ struct Venta
     int cantidad;
     float precio_total;
     int numero_empleado;
+    float comision_empleado;
     int factura;
 };
 struct Compra
