@@ -971,7 +971,7 @@ bool validarnumerodireccion(char *fnumero)
 
 void menu_control_ventas(FILE *fventas)
 {
-    int clave_mercado, clave_articulo, Cantidad_articulo, empleado;
+    int clave_mercado, clave_articulo, Cantidad_articulo, num_empleado;
     float precioarticulo, total, descuento_mercado;
     char agregar_articulo, factura, agregar_venta = 'S';
     FILE *articulof;
@@ -1036,12 +1036,12 @@ void menu_control_ventas(FILE *fventas)
         do
         {
             printf("5) Ingrese el numero de empleado: ");
-            scanf("%d", &empleado);
+            scanf("%d", &num_empleado);
 
-            if (!validarempleado(empleado))
+            if (!validarempleado(num_empleado))
                 printf("Numero de empleado no encontrado.\n");
 
-        } while (!validarempleado(empleado));
+        } while (!validarempleado(num_empleado));
 
         do
         {
@@ -1068,11 +1068,15 @@ void menu_control_ventas(FILE *fventas)
         } while (factura != 'S' && factura != 's' && factura != 'N' && factura != 'n');
 
         if (factura == 'S' || factura == 's')
-        {   
-            imprimir_factura(clave_mercado, clave_articulo, Cantidad_articulo, precioarticulo, empleado, total);
-            registrar_comision(empleado, total); // Implementar función para registrar la comisión
-        }
-
+            imprimir_factura(clave_mercado, clave_articulo, Cantidad_articulo, precioarticulo, num_empleado, total);
+            
+        fprintf(fventas, "Clave mercado: %d\n", clave_mercado);
+        fprintf(fventas, "Clave articulo: %d\n", clave_articulo);
+        fprintf(fventas, "Cantidad: %d\n", Cantidad_articulo);
+        fprintf(fventas, "Precio: %.2f\n", precioarticulo);
+        fprintf(fventas, "Num. empleado: %d\n", num_empleado);
+        fprintf(fventas, "Comision: %.2f\n\n", generar_comision(num_empleado, total));
+       
         do
         {
             printf("Deseas iniciar otra venta? (S/N): ");
@@ -1084,6 +1088,25 @@ void menu_control_ventas(FILE *fventas)
 
         } while (agregar_venta != 'S' && agregar_venta != 's' && agregar_venta != 'N' && agregar_venta != 'n');
     }
+}
+
+float generar_comision(int num_empleado, float total) // MAYBE Y NO LA TERMINO PERO AQUI SE HACE EL CALCULO DE LA COMISION DEL EMPLEADO Y SE GUARDA EN VENTAS.TXT
+{
+    FILE *empleadof;
+    struct Empleado lectura_empleado;
+    float comision;
+
+    if((empleadof = fopen("Empleados.dat", "r")) == NULL)
+        printf("Lo siento no podemos abrir el archivo empleados.\n");
+    else
+    {
+        fseek(empleadof, (num_empleado - 1) * sizeof(struct Empleado), SEEK_SET);
+        fread(&lectura_empleado, sizeof(struct Empleado), 1, empleadof);
+        comision = lectura_empleado.comision * total;
+        fclose(empleadof);
+        return comision;
+    }
+    return 0;
 }
 
 bool validarmercado(int fmercado)
@@ -1122,7 +1145,7 @@ bool validararticulo(int farticulo)
     {
         fseek(articuloptr, (farticulo - 1) * sizeof(struct Articulos), SEEK_SET);
         fread(&articulo, sizeof(struct Articulos), 1, articuloptr);
-
+        
         if (farticulo == articulo.clave_articulo)
             articulovalido = true;
     }
@@ -1139,7 +1162,6 @@ bool validarcantidad(int cantidad_articulos, int fclave)
 
     if ((articulolocal = fopen("Articulos.dat", "r+")) == NULL)
         printf("Error al abrir el archivo de articulos.\n");
-
     else
     {
         fseek(articulolocal, (fclave - 1) * sizeof(struct Articulos), SEEK_SET);
@@ -1147,7 +1169,12 @@ bool validarcantidad(int cantidad_articulos, int fclave)
 
         if (articulos.clave_articulo == fclave)
         {
-            if (articulos.inventario >= cantidad_articulos)
+            if (articulos.inventario == 0)
+            {
+                printf("El inventario se encuentra vacio, favor de rebastecerlo.\n");
+                cantidad = false;
+            }
+            else if (articulos.inventario >= cantidad_articulos)
                 cantidad = true;
             else
                 printf("Almacen insuficiente.\n");  

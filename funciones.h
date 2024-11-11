@@ -34,7 +34,7 @@ bool validarproveedor(int );
 bool validarnumeroinsumo(int );
 float precioinsumo(int);
 float descuento_proveedor(int );
-registrar_comision(int, float);
+float generar_comision(int, float);
 //********************************** */
 
 
