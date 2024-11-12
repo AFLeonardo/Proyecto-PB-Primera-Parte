@@ -976,17 +976,16 @@ bool validarnumerodireccion(char *fnumero)
 
 void menu_control_ventas(FILE *fventas)
 {
-    int clave_mercado, clave_articulo, Cantidad_articulo, num_empleado, anio_venta, mes_venta, dia_venta;
+    int clave_mercado, clave_articulo, Cantidad_articulo, num_empleado, anio_venta, mes_venta, dia_venta, clave_valida;
     float precioarticulo, total, descuento_mercado;
     char agregar_articulo, factura, agregar_venta = 'S';
     FILE *articulof;
     struct Articulos articuloleido;
-    bool validardia = true, cantidad_cero = false;
+    bool validardia = true;
 
     while (agregar_venta != 'n' && agregar_venta != 'N')
     {
         total = 0;
-
         do
         {
             printf("Ingrese el anio: ");
@@ -1045,13 +1044,18 @@ void menu_control_ventas(FILE *fventas)
 
                 if (Cantidad_articulo < 0)
                     printf("Por favor, ingresa una cantidad mayor a 0.\n");
-                
             } while (Cantidad_articulo < 0);
 
-            if(cantidad_cero)
-                agregar_venta = 's';
-            
-        } while (!validarcantidad(Cantidad_articulo, clave_articulo, &cantidad_cero));
+            clave_valida = validarcantidad(Cantidad_articulo, clave_articulo);
+
+            // Si el inventario está vacío o la clave no es válida, salimos del ciclo de cantidad
+            if (clave_valida == 0 || clave_valida == 3)
+            {
+                printf("No se puede proceder con la venta.\n");
+                agregar_venta = 'n';  // Salimos del ciclo principal
+            }
+        } while (clave_valida != 1 && agregar_venta != 'n');
+
 
         precioarticulo = precio(clave_articulo);
         descuento_mercado = descuento(clave_mercado); 
@@ -1193,11 +1197,10 @@ bool validararticulo(int farticulo)
 }
 
 
-bool validarcantidad(int cantidad_articulos, int fclave, bool *cantidad_cero)
+int validarcantidad(int cantidad_articulos, int fclave)
 {
     FILE *articulolocal;
     struct Articulos articulos;
-    bool cantidad = false;
 
     if ((articulolocal = fopen("Articulos.dat", "r+")) == NULL)
         printf("Error al abrir el archivo de articulos.\n");
@@ -1208,22 +1211,24 @@ bool validarcantidad(int cantidad_articulos, int fclave, bool *cantidad_cero)
 
         if (articulos.clave_articulo == fclave)
         {
-            if (articulos.inventario == 0)
+            if (articulos.inventario <= 0)
             {
                 printf("El inventario se encuentra vacio, favor de rebastecerlo.\n");
-                cantidad = false;
-                *cantidad_cero = true;
+                return 0; // ERROR SI EL INVETARIO ES 0
             }
             else if (articulos.inventario >= cantidad_articulos)
-                cantidad = true;
+                return 1;
             else
-                printf("Almacen insuficiente.\n");  
+            {
+                printf("Almacen insuficiente.\n");
+                return 2;
+            }
         }
         else
             printf("Clave no encontrada.\n");
+            return 3;
     }
     fclose(articulolocal);
-    return cantidad;
 }
 
 float precio(int fclave)
