@@ -45,7 +45,7 @@ main()
                 break;
 
             case 2: // ✅ LISTO
-                if ((archivo = fopen("Insumos.dat", "rb+")) == NULL)
+                if ((archivo = fopen("Insumos.dat", "r+")) == NULL)
                     {
                     printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
                     crearRegistrosVacios("Insumos.dat", &insumoVacio, sizeof(struct Insumo), 100);

@@ -5,3 +5,11 @@ Precio: 30.00
 Num. empleado: 5
 Comision: 11250.00
 
+Clave mercado: 9
+Clave articulo: 80
+Cantidad: 20
+Precio: 40.00
+Num. empleado: 3
+Comision: 800.00
+
+Fecha de venta: 30/06/1990
