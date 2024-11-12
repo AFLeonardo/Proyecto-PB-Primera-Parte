@@ -171,7 +171,7 @@ void menu_articulos(FILE *articulosf)
                 printf("\nTemp. siembra: %s", x_articulo.temp_siembra);
                 printf("\nTemp. cosecha: %s", x_articulo.temp_cosecha);
                 printf("\nInventario: %d", x_articulo.inventario);
-                printf("\nPrecio venta: %f", x_articulo.precio_venta);
+                printf("\nPrecio venta: %.2f", x_articulo.precio_venta);
                 printf("\nClave insumo: %d\n", x_articulo.insumos_requeridos[n_mercados]);
 
                 // Clave de mercados ****************************************************** VALIDAR ESTO LEOOO
@@ -1141,12 +1141,11 @@ float generar_comision(int num_empleado, float total)
     {
         fseek(empleadof, (num_empleado - 1) * sizeof(struct Empleado), SEEK_SET);
         fread(&lectura_empleado, sizeof(struct Empleado), 1, empleadof);
-        printf("El porcentaje de comision del empleado es de %f\n", lectura_empleado.comision); // ELIMINAR SOLO PARA DEBUGGEAR
+        printf("El porcentaje de comision del empleado es de %f\n", lectura_empleado.comision); // ELIMINAR SOLO PARA DEBUGGEAR 
         comision = lectura_empleado.comision * total;
-        fclose(empleadof);
-        return comision;
     }
-    return 0;
+    fclose(empleadof);
+    return comision;
 }
 
 bool validarmercado(int fmercado)
