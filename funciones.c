@@ -1317,12 +1317,27 @@ void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t
 
 void menu_control_compras(FILE *fcompras)
 {
-    int Num_proveedor, insumo, cantidad;
+    int Num_proveedor, insumo, cantidad, id_compra, ultimo_id_compra = -1;
     float precio_insumo, total = 0, descuento;
-    char agregar_insumo = 's', compra;
+    char agregar_insumo, agregar_compra = 's';
 
-    while(agregar_insumo == 'S' || agregar_insumo == 's')
+    // Leer el último ID de compra en el archivo
+    while (fscanf(fcompras, "%d", &id_compra) == 1) {
+        if (id_compra > ultimo_id_compra) 
+            ultimo_id_compra = id_compra;
+    }
+
+    // Asegúrate de reiniciar la posición del puntero del archivo
+    rewind(fcompras);  // Esto coloca el puntero al inicio del archivo
+
+    // Incrementar el último ID para la siguiente compra
+    ultimo_id_compra++;
+
+    printf("Último ID de compra: %d\n", ultimo_id_compra);
+
+    while(agregar_compra == 'S' || agregar_compra == 's')
     {
+        agregar_insumo = 's';
         do
         {
             printf("1) Numero de proveedor: \n");
@@ -1333,62 +1348,69 @@ void menu_control_compras(FILE *fcompras)
 
         } while (!validarproveedor(Num_proveedor));
 
-        do
+        while (agregar_insumo == 's' || agregar_insumo == 'S')
         {
-            printf("2) Numero de insumo: \n");
-            scanf("%d", &insumo);
+            do
+            {
+                printf("2) Numero de insumo: \n");
+                scanf("%d", &insumo);
 
-            if (!validarnumeroinsumo(insumo))
-                printf("Numero de insumo invalido.\n");
+                if (!validarnumeroinsumo(insumo))
+                    printf("Numero de insumo invalido.\n");
 
-        } while (!validarnumeroinsumo(insumo));
+            } while (!validarnumeroinsumo(insumo));
 
-        do
-        {
-            printf("3) Cantidad: \n");
-            scanf("%d", &cantidad);
+            do
+            {
+                printf("3) Cantidad: \n");
+                scanf("%d", &cantidad);
 
-            if (cantidad < 0)
-                printf("Cantidad invalida.\n");
+                if (cantidad < 0)
+                    printf("Cantidad invalida.\n");
 
-        } while (cantidad < 0);
+            } while (cantidad < 0);
 
-        precio_insumo = precioinsumo(insumo);
-        printf("4) El precio del insumo es: %.2f\n", precio_insumo);
+            precio_insumo = precioinsumo(insumo);
+            printf("\n*** \nEl precio del insumo es: %.2f\n***\n", precio_insumo);
 
-        descuento = descuento_proveedor(Num_proveedor);
-        printf("Descuento de: %f\n",descuento); //SOLO PARA VER LUEGO ELIMINAR
-        total += precio_insumo * cantidad * (1 - descuento);
+            descuento = descuento_proveedor(Num_proveedor);
+            printf("Descuento de: %.2f\n",descuento); //SOLO PARA VER LUEGO ELIMINAR
+            total += precio_insumo * cantidad * (1 - descuento);
 
-        fprintf(fcompras, "Numero de proveedor: %d\n", Num_proveedor);
-        fprintf(fcompras, "Numero de insumo: %d\n", insumo);
-        fprintf(fcompras, "Cantidad: %d\n", cantidad);
-        fprintf(fcompras, "Precio: %.2f\n", precio_insumo);
+            fprintf(fcompras, "ID compra: %d\n", ultimo_id_compra);
+            fprintf(fcompras, "Numero de proveedor: %d\n", Num_proveedor);
+            fprintf(fcompras, "Numero de insumo: %d\n", insumo);
+            fprintf(fcompras, "Cantidad: %d\n", cantidad);
+            fprintf(fcompras, "Precio: %.2f\n", precio_insumo);
 
-        do
-        {
-            printf("Agregar otro insumo? (S/N): ");
-            fflush(stdin);
-            scanf("%c", &agregar_insumo);
+            do
+            {
+                printf("Agregar otro insumo? (S/N): ");
+                fflush(stdin);
+                scanf("%c", &agregar_insumo);
 
-            if (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n')
-                printf("Valor no valido. Solo se permite S o N.\n");
+                if (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n')
+                    printf("Valor no valido. Solo se permite S o N.\n");
 
-        } while (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n');
+            } while (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n');
+        }
 
         printf("Total de la compra: %.2f\n", total);
-        fprintf(fcompras, "Total: %d\n", total);
+        fprintf(fcompras, "Total: %.2f\n\n", total);
 
         do
         {
             printf("Agregar otra compra? (S/N): ");
             fflush(stdin);
-            scanf("%c", &compra);
+            scanf("%c", &agregar_compra);
 
-            if (compra != 'S' && compra != 's' && compra != 'N' && compra != 'n')
+            if (agregar_compra != 'S' && agregar_compra != 's' && agregar_compra != 'N' && agregar_compra != 'n')
                 printf("Valor no valido. Solo se permite S o N.\n");
 
-        }while(compra != 'S' && compra != 's' && compra != 'N' && compra != 'n');
+        }while(agregar_compra != 'S' && agregar_compra != 's' && agregar_compra != 'N' && agregar_compra != 'n');
+
+        if (agregar_compra == 's' || agregar_compra == 'S')
+            ultimo_id_compra++;
     }
 }
 
@@ -1485,7 +1507,7 @@ float descuento_proveedor(int NumProveedor)
 
 void menu_control_inventario(FILE * farchivo)//falta acabar
 {
-    int proveedor, compra;
+    int num_proveedor, compra;
     char recepcion = 's', respuesta[5];
     struct Insumo insumos;
     FILE *archivo_insumo;
@@ -1495,23 +1517,36 @@ void menu_control_inventario(FILE * farchivo)//falta acabar
 
         do
         {
-            printf("1. Numero de proveedor: \n");
-            scanf("%d", &proveedor);
+            printf("1. Numero de proveedor: ");
+            scanf("%d", &num_proveedor);
 
-            if (!validarproveedor(proveedor))//mande a llamar a la misma funcion que en compras para validar proveedor
+            if (!validarproveedor(num_proveedor))//mande a llamar a la misma funcion que en compras para validar proveedor
                     printf("Numero de proveedor invalido.\n");
 
-        } while (!validarproveedor(proveedor));
+        } while (!validarproveedor(num_proveedor));
 
         if ((archivo_insumo = fopen("Insumos.dat", "r")) == NULL)
             printf("Error al abrir el archivo de insumos. \n");
         
         else
         {
-            printf("%-20s%-20s%-20s%-20s", "ID Compra", "Insumo", "Descripcion", "Cantidad"); // no se como imprimir lo pendiente
-            fseek(archivo_insumo, 0, SEEK_SET); //Lo puse en cero pq no supe como mandarle clave del insumo
+            
+            // Encabezado de la tabla con separadores y márgenes
+            printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
+            printf("| %-18s | %-18s | %-40s | %-18s |\n", "ID Compra", "Insumo", "Descripcion", "Cantidad");
+            printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
+
+            // Posiciona el cursor al inicio del archivo de insumos
+            fseek(archivo_insumo, 0, SEEK_SET); 
+
+            // Lectura del primer insumo
             fread(&insumos, sizeof(struct Insumo), 1, archivo_insumo);
-            printf("%-20d%-20s", insumos.clave_insumo, insumos.descripcion,)//hay q hacer cambios aqui
+
+            // Formato para la salida de datos de insumos | CAMBIAR EL NUM_PROVEEDOR POR EL ID DE COMPRA
+            printf("| %-18d | %-18d | %-40s | %-18d |\n", num_proveedor,insumos.clave_insumo, insumos.descripcion, insumos.inventario);
+
+            // Línea de cierre de la tabla
+            printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
         }
         
 
@@ -1531,12 +1566,13 @@ void menu_control_inventario(FILE * farchivo)//falta acabar
 
         } while ();*/
 
-        printf("¿Le fue recibida la compra?: \n");
+        printf("Le fue recibida la compra?: \n");
+        fflush(stdin);
         gets(respuesta); //falta hacer lo q se hace aqui ocupo ayuda
 
         do
         {
-            printf("¿Agregar otra recepcion? (S/N): ");
+            printf("Agregar otra recepcion? (S/N): ");
             fflush(stdin);
             scanf("%c", &recepcion);
 
