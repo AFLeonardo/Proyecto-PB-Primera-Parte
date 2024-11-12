@@ -13,3 +13,17 @@ Num. empleado: 3
 Comision: 800.00
 
 Fecha de venta: 30/06/1990
+Clave mercado: 9
+Clave articulo: 1
+Cantidad: 5
+Precio: 30.00
+Num. empleado: 5
+Comision: 2250.00
+Fecha de venta: 29/02/2000
+Clave mercado: 9
+Clave articulo: 1
+Cantidad: 5
+Precio: 30.00
+Num. empleado: 10
+Comision: 375.00
+Fecha de venta: 13/04/1999
