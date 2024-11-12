@@ -19,7 +19,7 @@ void menu_reportes(FILE *);
 char *convertir_a_minusculas(char *);
 bool validar_rfc(char *);
 bool validar_correo(char *);
-bool validarDiaMes(struct Fechas);
+bool validarDiaMes(int, int, int);
 void crearRegistrosVacios(const char *, void *, size_t , int );
 bool validarmercado(int);
 bool validararticulo(int);

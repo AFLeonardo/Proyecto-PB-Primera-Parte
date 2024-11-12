@@ -443,7 +443,7 @@ void menu_empleados(FILE *fempleados)
         {
             printf("8) Dia de contratacion: ");
             scanf("%d", &empleados.fecha.dia);
-            validardia = validarDiaMes(empleados.fecha);
+            validardia = validarDiaMes(empleados.fecha.dia, empleados.fecha.mes, empleados.fecha.anio);
             if (!validardia)
                 printf("Ingrese un dia valido correspondiente al mes\n");
 
@@ -617,7 +617,7 @@ void menu_proveedores(FILE *fproveedores)
         {
             printf("8) Dia de nacimiento: ");
             scanf("%d", &proveedores.fecha.dia);
-            validardia = validarDiaMes(proveedores.fecha);
+            validardia = validarDiaMes(proveedores.fecha.dia, proveedores.fecha.mes, proveedores.fecha.anio);
             if (!validardia)
                 printf("Ingrese un dia valido correspondiente al mes\n");
 
@@ -827,7 +827,7 @@ void menu_mercados(FILE *mercadosf)
         {
             printf("8) Dia de nacimiento: ");
             scanf("%d", &mercados.fecha.dia);
-            validardia = validarDiaMes(mercados.fecha);
+            validardia = validarDiaMes(mercados.fecha.dia, mercados.fecha.mes, mercados.fecha.anio);
             if (!validardia)
                 printf("Ingrese un dia valido correspondiente al mes\n");
         }while (!validardia);
@@ -918,11 +918,11 @@ bool validar_correo(char * fcorreo)
         return false;
 }
 
-bool validarDiaMes(struct Fechas fecha)
+bool validarDiaMes(int fdia, int fmes, int fanio)
 {
     int diasEnMes;
 
-    switch (fecha.mes)
+    switch (fmes)
     {
         case 1: case 3: case 5: case 7: case 8: case 10: case 12:
             diasEnMes = 31;
@@ -931,13 +931,13 @@ bool validarDiaMes(struct Fechas fecha)
             diasEnMes = 30;
             break;
         case 2:
-            if ((fecha.anio % 4 == 0 && fecha.anio % 100 != 0) || (fecha.anio % 400 == 0))
+            if ((fanio % 4 == 0 && fanio % 100 != 0) || (fanio % 400 == 0))
                 diasEnMes = 29;
             else
                 diasEnMes = 28;
             break;
     }
-    return fecha.dia >= 1 && fecha.dia <= diasEnMes;
+    return fdia >= 1 && fdia <= diasEnMes;
 }
 
 bool validarchar(char * fcadena)
@@ -971,15 +971,48 @@ bool validarnumerodireccion(char *fnumero)
 
 void menu_control_ventas(FILE *fventas)
 {
-    int clave_mercado, clave_articulo, Cantidad_articulo, num_empleado;
+    int clave_mercado, clave_articulo, Cantidad_articulo, num_empleado, anio_venta, mes_venta, dia_venta;
     float precioarticulo, total, descuento_mercado;
     char agregar_articulo, factura, agregar_venta = 'S';
     FILE *articulof;
     struct Articulos articuloleido;
+    bool validardia = true;
 
     while (agregar_venta != 'n' && agregar_venta != 'N')
     {
         total = 0;
+
+        //agregar mes nose si validar se refiera a que dia corresponda o q exista?, ambos
+
+        do
+        {
+            printf("6) Ingrese el año: ");
+            scanf("%d", &anio_venta);
+
+            if (anio_venta < 1990 || anio_venta > 2024)
+                printf("Año de nacimiento invalido, debe de estar entre 1990 y 2024\n");
+        }while (anio_venta < 1990 || anio_venta > 2024);
+
+        do
+        {
+            printf("Ingrese el mes: ");
+            scanf("%d", &mes_venta);
+            if (mes_venta < 1 || mes_venta > 12)
+                printf("Mes de nacimiento invalido, debe de estar entre 1 y 12\n");
+
+        }while (mes_venta < 1 || mes_venta > 12);
+
+        
+        do
+        {
+            printf("Ingrese el dia: ");
+            scanf("%d", &dia_venta);
+            validardia = validarDiaMes(dia_venta, mes_venta, anio_venta);//resolver esto
+            if (!validardia)
+                printf("Ingrese un dia valido correspondiente al mes\n");
+
+        }while (!validardia);
+
 
         do
         {
@@ -1575,7 +1608,7 @@ void menu_reportes(FILE *farticulos)//falta acabar
     char opcion;
     FILE *archivo;
     struct Articulos articulo;
-    int i;
+    int i, clavearticulo;
 
     do
     {
@@ -1620,7 +1653,42 @@ void menu_reportes(FILE *farticulos)//falta acabar
                 }
                 break;
 
-            //case 'b':
+            case 'b':
+                if((archivo = fopen("Articulos.dat", "r")) == NULL)//o r++?
+                    printf("ERROR.\nNo se pudo abrir el archivo.\n");
+                else
+                {
+                    
+                } 
+                break;
+
+            case 'c':
+                if((archivo = fopen("Articulos.dat", "r")) == NULL)//o r++?
+                    printf("ERROR.\nNo se pudo abrir el archivo.\n");
+                else
+                {
+                    do
+                    {
+                        printf("Ingrese la clave del articulo: ");
+                        scanf("%d", &clavearticulo);
+
+                        if (!validararticulo(clavearticulo))
+                            printf("Clave de articulo no encontrada.\n");
+
+                    } while (!validararticulo(clavearticulo));
+
+
+
+                }
+                break;
+
+            case 'd':
+                break;
+            case 'f':
+                break;
+            case 'g':
+                break;
+            
 
 
 
