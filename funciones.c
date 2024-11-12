@@ -1320,20 +1320,19 @@ void menu_control_compras(FILE *fcompras)
     int Num_proveedor, insumo, cantidad, id_compra, ultimo_id_compra = -1;
     float precio_insumo, total = 0, descuento;
     char agregar_insumo, agregar_compra = 's';
-
-    // Leer el último ID de compra en el archivo
-    while (fscanf(fcompras, "%d", &id_compra) == 1) {
+    
+    rewind(fcompras);
+    while (!feof(fcompras)) 
+    {
+        fscanf(fcompras, "ID compra: %d", id_compra);
         if (id_compra > ultimo_id_compra) 
             ultimo_id_compra = id_compra;
     }
-
-    // Asegúrate de reiniciar la posición del puntero del archivo
-    rewind(fcompras);  // Esto coloca el puntero al inicio del archivo
-
+    printf("Último ID de compra: %d\n", ultimo_id_compra);
     // Incrementar el último ID para la siguiente compra
     ultimo_id_compra++;
 
-    printf("Último ID de compra: %d\n", ultimo_id_compra);
+    
 
     while(agregar_compra == 'S' || agregar_compra == 's')
     {
