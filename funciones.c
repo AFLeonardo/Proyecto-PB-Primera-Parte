@@ -413,18 +413,13 @@ void menu_empleados(FILE *fempleados)
 
         do
         {
-            printf("5) Comision: ");
+            printf("5) Comision: (entre 0 y 1)");
             scanf("%f", &empleados.comision);
 
-            if(empleados.comision < 0)
-                printf("Comision invalida");
+            if(empleados.comision < 0 || empleados.comision > 1)
+                printf("Comision invalida \n");
 
-        }while(empleados.comision < 0);
-
-        if (empleados.comision <= 10)
-            empleados.comision *= 0.01;
-        else
-            empleados.comision *= 0.10; 
+        }while(empleados.comision < 0 || empleados.comision > 1);
 
         do
         {
@@ -1386,7 +1381,7 @@ void menu_control_compras(FILE *finsumos)
     }
 }
 
-/*bool validarproveedor(int NumeroProveedor)
+bool validarproveedor(int NumeroProveedor)
 {
     FILE *proveedorlocal;
     struct Proveedor proveedores;
@@ -1405,29 +1400,9 @@ void menu_control_compras(FILE *finsumos)
     }
     fclose(proveedorlocal);
     return proovedorvalido;
-}*/
-
-bool validarproveedor(int fproveedor)
-{
-    FILE *proveedorlocal;
-    struct Proveedor proveedores;
-    bool proveedorvalido = false;
-
-    if ((proveedorlocal = fopen("Proveedores.dat", "r")) == NULL)
-        printf("Error al abrir el archivo de proveedores.\n");
-    else
-    {
-        while (fread(&proveedores, sizeof(struct Proveedor), 1, proveedorlocal) == 1 && !proveedorvalido)// no queremos los fread igualaddos al las variables
-        {
-            if (proveedores.numero_proveedor == fproveedor)
-                proveedorvalido = true;
-        }
-        fclose(proveedorlocal);
-    }
-    return proveedorvalido;
 }
 
-/*bool validarnumeroinsumo(int fnumero)
+bool validarnumeroinsumo(int fnumero)
 {
     FILE *insumolocal;
     struct Insumo insumos;
@@ -1446,34 +1421,16 @@ bool validarproveedor(int fproveedor)
     }
     fclose(insumolocal);
     return numerovalido;
-}*/
-
-bool validarnumeroinsumo(int fnumero)
-{
-    FILE *insumolocal;
-    struct Insumo insumos;
-    bool numerovalido = false;
-
-    if ((insumolocal = fopen("Insumos.dat", "r")) == NULL)
-        printf("Error al abrir el archivo de insumos.\n");
-    else
-    {
-        while (fread(&insumos, sizeof(struct Insumo), 1, insumolocal) == 1 && !numerovalido)// no queremos los fread igualaddos al las variables
-        {
-            if (insumos.clave_insumo == fnumero)
-                numerovalido = true;
-        }
-        fclose(insumolocal);
-    }
-    return numerovalido;
 }
 
-/*float precioinsumo(int fnumero)
+
+float precioinsumo(int fnumero)
 {
     FILE *insumolocal;
     struct Insumo insumos;
-    float precioinsumo = 0;
+    float precio_total = 0;
     int i;
+    bool insumo_encontrado = false;
 
     if ((insumolocal = fopen("Insumos.dat", "r")) == NULL)
         printf("Error al abrir el archivo de Insumos.\n");
@@ -1482,39 +1439,16 @@ bool validarnumeroinsumo(int fnumero)
     {
         fseek(insumolocal, (fnumero - 1) * sizeof(struct Insumo), SEEK_SET);
         fread(&insumos, sizeof(struct Insumo), 1, insumolocal);
+        
+        if (insumos.clave_insumo == fnumero)
+        {
+            insumo_encontrado = true;
 
-        for (i=0; i<10; i++)
-            precioinsumo += insumos.precio_compra[i]; //error pq es un arreglo pero ocupo preguntar qpd
-
+            for (i = 0; i < 10; i++)
+                precio_total += insumos.precio_compra[i];   
+        }
     }
     fclose(insumolocal);
-    return precioinsumo;
-}*/
-
-float precioinsumo(int fnumero)
-{
-    FILE *insumolocal;
-    struct Insumo insumos;
-    float precio_total = 0;
-    bool insumo_encontrado = false;
-
-    if ((insumolocal = fopen("Insumos.dat", "r")) == NULL)
-        printf("Error al abrir el archivo de Insumos.\n");
-    else
-    {
-        while (fread(&insumos, sizeof(struct Insumo), 1, insumolocal) == 1 && !insumo_encontrado)// no queremos los fread igualaddos al las variables
-        {
-            if (insumos.clave_insumo == fnumero)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    precio_total += insumos.precio_compra[i];
-                }
-                insumo_encontrado = true;
-            }
-        }
-        fclose(insumolocal);
-    }
     return precio_total;
 }
 
