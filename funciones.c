@@ -175,11 +175,12 @@ void menu_articulos(FILE *articulosf)
                 printf("\nClave insumo: %d\n", x_articulo.insumos_requeridos[n_mercados]);
 
                 // Clave de mercados ****************************************************** VALIDAR ESTO LEOOO
-                while (n_mercados < 10 && agregar_mercado == 's')
+                while (n_mercados < 10 && (agregar_mercado == 's' || agregar_mercado == 'S'))
                 {
+                    clave_valida = false;
                     do // Validar si esta en Mercados.dat
                     {
-                        printf("8) Ingresa la clave de mercado [%d]: ", n_mercados + 1);
+                        printf("8) Ingresa la clave de mercado %d: ", n_mercados + 1);
                         scanf("%d", &x_articulo.clave_mercados[n_mercados]);
 
                         fseek(MercadoF, (x_articulo.clave_mercados[n_mercados] - 1) * sizeof(struct Mercado), SEEK_SET);
