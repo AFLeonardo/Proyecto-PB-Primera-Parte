@@ -1105,6 +1105,7 @@ void menu_control_ventas(FILE *fventas)
             fprintf(fventas, "Num. empleado: %d\n", num_empleado);
             fprintf(fventas, "Comision: %.2f\n", generar_comision(num_empleado, total));
             fprintf(fventas, "Fecha de venta: %02d/%02d/%04d\n", dia_venta, mes_venta, anio_venta);
+            fprintf(fventas, "Total: %.2f\n", total);
 
             do
             {
@@ -1323,23 +1324,18 @@ void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t
 
 void menu_control_compras(FILE *fcompras)
 {
-    int Num_proveedor, insumo, cantidad, id_compra, ultimo_id_compra = -1;
+    int Num_proveedor, insumo, cantidad, id_compra = 0, ultimo_id = -20;
     float precio_insumo, total = 0, descuento;
     char agregar_insumo, agregar_compra = 's';
 
-    // Leer el último ID de compra en el archivo
-    while (fscanf(fcompras, "%d", &id_compra) == 1) {
-        if (id_compra > ultimo_id_compra) 
-            ultimo_id_compra = id_compra;
+    while(fscanf(fcompras, "ID compra: %d", &id_compra))
+    {
+        if (id_compra >= ultimo_id)
+            ultimo_id = id_compra + 1;
+        fscanf(fcompras, "ID compra: %d", &id_compra);
     }
 
-    // Asegúrate de reiniciar la posición del puntero del archivo
-    rewind(fcompras);  // Esto coloca el puntero al inicio del archivo
-
-    // Incrementar el último ID para la siguiente compra
-    ultimo_id_compra++;
-
-    printf("Ultimo ID de compra: %d\n", ultimo_id_compra);
+    printf("Ultimo ID de compra: %d\n", ultimo_id);
 
     while(agregar_compra == 'S' || agregar_compra == 's')
     {
@@ -1383,7 +1379,7 @@ void menu_control_compras(FILE *fcompras)
             printf("Descuento de: %.2f\n",descuento); //SOLO PARA VER LUEGO ELIMINAR
             total += precio_insumo * cantidad * (1 - descuento);
 
-            fprintf(fcompras, "ID compra: %d\n", ultimo_id_compra);
+            fprintf(fcompras, "ID compra: %d\n", id_compra);
             fprintf(fcompras, "Numero de proveedor: %d\n", Num_proveedor);
             fprintf(fcompras, "Numero de insumo: %d\n", insumo);
             fprintf(fcompras, "Cantidad: %d\n", cantidad);
@@ -1416,9 +1412,10 @@ void menu_control_compras(FILE *fcompras)
         }while(agregar_compra != 'S' && agregar_compra != 's' && agregar_compra != 'N' && agregar_compra != 'n');
 
         if (agregar_compra == 's' || agregar_compra == 'S')
-            ultimo_id_compra++;
+            id_compra++;
     }
 }
+
 
 bool validarproveedor(int NumeroProveedor)
 {

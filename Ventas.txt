@@ -26,3 +26,11 @@ Precio: 10.00
 Num. empleado: 5
 Comision: 1500.00
 Fecha de venta: 14/12/2005
+Clave mercado: 9
+Clave articulo: 1
+Cantidad: 1
+Precio: 10.00
+Num. empleado: 10
+Comision: 2.50
+Fecha de venta: 12/12/2000
+Total: 5.000000

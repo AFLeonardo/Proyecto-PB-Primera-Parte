@@ -1,14 +1,19 @@
 ID compra: 1
 Numero de proveedor: 9
-Numero de insumo: 1
-Cantidad: 100
-Precio: 21.76
-Total: 1088.10
+Numero de insumo: 20
+Cantidad: 280
+Precio: 48.99
+Total: 6858.10
 
 ID compra: 2
 Numero de proveedor: 9
+Numero de insumo: 10
+Cantidad: 800
+Precio: 30.00
+ID compra: 2
+Numero de proveedor: 9
 Numero de insumo: 1
-Cantidad: 1000
+Cantidad: 2
 Precio: 21.76
-Total: 11969.12
+Total: 12021.76
 
