@@ -981,12 +981,12 @@ void menu_control_ventas(FILE *fventas)
     char agregar_articulo, factura, agregar_venta = 'S';
     FILE *articulof;
     struct Articulos articuloleido;
-    bool validardia = true, cantidad_cero = false;
+    bool validardia = true, cantidad_cero;
 
     while (agregar_venta != 'n' && agregar_venta != 'N')
     {
         total = 0;
-
+        cantidad_cero = false; 
         do
         {
             printf("Ingrese el anio: ");
@@ -1049,7 +1049,7 @@ void menu_control_ventas(FILE *fventas)
             } while (Cantidad_articulo < 0);
 
             if(cantidad_cero)
-                agregar_venta = 's';
+                agregar_venta = 'n';
             
         } while (!validarcantidad(Cantidad_articulo, clave_articulo, &cantidad_cero));
 
