@@ -428,11 +428,11 @@ void menu_empleados(FILE *fempleados)
 
         do
         {
-            printf("6) Año de contratacion: ");
+            printf("6) Anio de contratacion: ");
             scanf("%d", &empleados.fecha.anio);
 
             if (empleados.fecha.anio < 1990 || empleados.fecha.anio > 2024)
-                printf("Año de nacimiento invalido, debe de estar entre 1990 y 2024\n");
+                printf("Anio de nacimiento invalido, debe de estar entre 1990 y 2024\n");
         }while (empleados.fecha.anio < 1990 || empleados.fecha.anio > 2024);
 
         do
@@ -605,7 +605,7 @@ void menu_proveedores(FILE *fproveedores)
             printf("6) Anio de nacimiento: ");
             scanf("%d", &proveedores.fecha.anio);
             if (proveedores.fecha.anio < 1950 || proveedores.fecha.anio > 2006)
-                printf("Año de nacimiento invalido, debe de estar entre 1950 y 2006\n");
+                printf("Anio de nacimiento invalido, debe de estar entre 1950 y 2006\n");
 
         }while (proveedores.fecha.anio < 1950 || proveedores.fecha.anio> 2006);
 
@@ -815,7 +815,7 @@ void menu_mercados(FILE *mercadosf)
             printf("6) Anio de nacimiento: ");
             scanf("%d", &mercados.fecha.anio);
             if (mercados.fecha.anio < 1950 || mercados.fecha.anio > 2006)
-                printf("Año de nacimiento invalido, debe de estar entre 1950 y 2006\n");
+                printf("Anio de nacimiento invalido, debe de estar entre 1950 y 2006\n");
 
         }while (mercados.fecha.anio < 1950 || mercados.fecha.anio > 2006);
 
@@ -992,7 +992,7 @@ void menu_control_ventas(FILE *fventas)
             scanf("%d", &anio_venta);
 
             if (anio_venta < 1990 || anio_venta > 2024)
-                printf("Año de nacimiento invalido, debe de estar entre 1990 y 2024\n");
+                printf("Anio de nacimiento invalido, debe de estar entre 1990 y 2024\n");
         }while (anio_venta < 1990 || anio_venta > 2024);
 
         do
@@ -1320,7 +1320,7 @@ void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t
     fclose(archivo);
 }
 
-void menu_control_compras(FILE *finsumos)
+void menu_control_compras(FILE *fcompras)
 {
     int Num_proveedor, insumo, cantidad;
     float precio_insumo, total = 0, descuento;
@@ -1365,6 +1365,11 @@ void menu_control_compras(FILE *finsumos)
         printf("Descuento de: %f\n",descuento); //SOLO PARA VER LUEGO ELIMINAR
         total += precio_insumo * cantidad * (1 - descuento);
 
+        fprintf(fcompras, "Numero de proveedor: %d\n", Num_proveedor);
+        fprintf(fcompras, "Numero de insumo: %d\n", insumo);
+        fprintf(fcompras, "Cantidad: %d\n", cantidad);
+        fprintf(fcompras, "Precio: %.2f\n", precio_insumo);
+
         do
         {
             printf("Agregar otro insumo? (S/N): ");
@@ -1377,6 +1382,7 @@ void menu_control_compras(FILE *finsumos)
         } while (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n');
 
         printf("Total de la compra: %.2f\n", total);
+        fprintf(fcompras, "Total: %d\n", total);
 
         do
         {
@@ -1391,7 +1397,7 @@ void menu_control_compras(FILE *finsumos)
     }
 }
 
-/*bool validarproveedor(int NumeroProveedor)
+bool validarproveedor(int NumeroProveedor)
 {
     FILE *proveedorlocal;
     struct Proveedor proveedores;
@@ -1410,29 +1416,9 @@ void menu_control_compras(FILE *finsumos)
     }
     fclose(proveedorlocal);
     return proovedorvalido;
-}*/
-
-bool validarproveedor(int fproveedor)
-{
-    FILE *proveedorlocal;
-    struct Proveedor proveedores;
-    bool proveedorvalido = false;
-
-    if ((proveedorlocal = fopen("Proveedores.dat", "r")) == NULL)
-        printf("Error al abrir el archivo de proveedores.\n");
-    else
-    {
-        while (fread(&proveedores, sizeof(struct Proveedor), 1, proveedorlocal) == 1 && !proveedorvalido)// no queremos los fread igualaddos al las variables
-        {
-            if (proveedores.numero_proveedor == fproveedor)
-                proveedorvalido = true;
-        }
-        fclose(proveedorlocal);
-    }
-    return proveedorvalido;
 }
 
-/*bool validarnumeroinsumo(int fnumero)
+bool validarnumeroinsumo(int fnumero)
 {
     FILE *insumolocal;
     struct Insumo insumos;
@@ -1451,29 +1437,10 @@ bool validarproveedor(int fproveedor)
     }
     fclose(insumolocal);
     return numerovalido;
-}*/
-
-bool validarnumeroinsumo(int fnumero)
-{
-    FILE *insumolocal;
-    struct Insumo insumos;
-    bool numerovalido = false;
-
-    if ((insumolocal = fopen("Insumos.dat", "r")) == NULL)
-        printf("Error al abrir el archivo de insumos.\n");
-    else
-    {
-        while (fread(&insumos, sizeof(struct Insumo), 1, insumolocal) == 1 && !numerovalido)// no queremos los fread igualaddos al las variables
-        {
-            if (insumos.clave_insumo == fnumero)
-                numerovalido = true;
-        }
-        fclose(insumolocal);
-    }
-    return numerovalido;
 }
 
-/*float precioinsumo(int fnumero)
+
+float precioinsumo(int fnumero)
 {
     FILE *insumolocal;
     struct Insumo insumos;
@@ -1494,34 +1461,8 @@ bool validarnumeroinsumo(int fnumero)
     }
     fclose(insumolocal);
     return precioinsumo;
-}*/
-
-float precioinsumo(int fnumero)
-{
-    FILE *insumolocal;
-    struct Insumo insumos;
-    float precio_total = 0;
-    bool insumo_encontrado = false;
-
-    if ((insumolocal = fopen("Insumos.dat", "r")) == NULL)
-        printf("Error al abrir el archivo de Insumos.\n");
-    else
-    {
-        while (fread(&insumos, sizeof(struct Insumo), 1, insumolocal) == 1 && !insumo_encontrado)// no queremos los fread igualaddos al las variables
-        {
-            if (insumos.clave_insumo == fnumero)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    precio_total += insumos.precio_compra[i];
-                }
-                insumo_encontrado = true;
-            }
-        }
-        fclose(insumolocal);
-    }
-    return precio_total;
 }
+
 
 float descuento_proveedor(int NumProveedor)
 {
@@ -1596,7 +1537,8 @@ void menu_reportes(FILE *farticulos)//falta acabar
     char opcion;
     FILE *archivo;
     struct Articulos articulo;
-    int i, clavearticulo;
+    int i, clavearticulo,anio_venta, dia_venta, mes_venta;
+    bool validardia;
 
     do
     {
@@ -1646,7 +1588,33 @@ void menu_reportes(FILE *farticulos)//falta acabar
                     printf("ERROR.\nNo se pudo abrir el archivo.\n");
                 else
                 {
-                    
+                    do
+                    {
+                        printf("Ingrese el anio: ");
+                        scanf("%d", &anio_venta);
+                        if (anio_venta < 1990 || anio_venta > 2024)
+                            printf("Anio de venta invalido, debe de estar entre 1990 y 2024\n");
+                    }while (anio_venta < 1990 || anio_venta > 2024);
+
+                    do
+                    {
+                        printf("Ingrese el mes: ");
+                        scanf("%d", &mes_venta);
+                        if (mes_venta < 1 || mes_venta > 12)
+                            printf("Mes de nacimiento invalido, debe de estar entre 1 y 12\n");
+
+                    }while (mes_venta < 1 || mes_venta > 12);
+
+                    do
+                    {
+                        printf("Ingrese el dia: ");
+                        scanf("%d", &dia_venta);
+                        validardia = validarDiaMes(dia_venta, mes_venta, anio_venta);
+                        if (!validardia)
+                            printf("Ingrese un dia valido correspondiente al mes\n");
+
+                    }while (!validardia);
+
                 } 
                 break;
 
@@ -1664,8 +1632,6 @@ void menu_reportes(FILE *farticulos)//falta acabar
                             printf("Clave de articulo no encontrada.\n");
 
                     } while (!validararticulo(clavearticulo));
-
-
 
                 }
                 break;
