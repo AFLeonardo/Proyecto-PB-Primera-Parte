@@ -1043,7 +1043,7 @@ void menu_control_ventas(FILE *fventas)
 
             clave_valida = validarcantidad(Cantidad_articulo, clave_articulo);
 
-            // Si el inventario está vacío o la clave no es válida, salimos del ciclo de cantidad
+            // Si el inventario estÃ¡ vacÃ­o o la clave no es vÃ¡lida, salimos del ciclo de cantidad
             if (clave_valida == 0 || clave_valida == 3)
             {
                 printf("No se puede proceder con la venta.\n");
@@ -1317,22 +1317,18 @@ void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t
 
 void menu_control_compras(FILE *fcompras)
 {
-    int Num_proveedor, insumo, cantidad, id_compra, ultimo_id_compra = -1;
+    int Num_proveedor, insumo, cantidad, id_compra;
     float precio_insumo, total = 0, descuento;
     char agregar_insumo, agregar_compra = 's';
     
-    rewind(fcompras);
-    while (!feof(fcompras)) 
-    {
-        fscanf(fcompras, "ID compra: %d", id_compra);
-        if (id_compra > ultimo_id_compra) 
-            ultimo_id_compra = id_compra;
-    }
-    printf("Último ID de compra: %d\n", ultimo_id_compra);
-    // Incrementar el último ID para la siguiente compra
-    ultimo_id_compra++;
+    printf("\nCOMPRAS\n");
+    
+    id_compra = obtenerUltimoIdCompra(fcompras);
+    printf("%d",id_compra);
 
-    printf("Ultimo ID de compra: %d\n", ultimo_id_compra);
+    id_compra++;
+
+    printf("Ultimo ID de compra + 1: %d\n", id_compra);
 
     while(agregar_compra == 'S' || agregar_compra == 's')
     {
@@ -1376,7 +1372,7 @@ void menu_control_compras(FILE *fcompras)
             printf("Descuento de: %.2f\n",descuento); //SOLO PARA VER LUEGO ELIMINAR
             total += precio_insumo * cantidad * (1 - descuento);
 
-            fprintf(fcompras, "ID compra: %d\n", ultimo_id_compra);
+            fprintf(fcompras, "ID compra: %d\n", id_compra);
             fprintf(fcompras, "Numero de proveedor: %d\n", Num_proveedor);
             fprintf(fcompras, "Numero de insumo: %d\n", insumo);
             fprintf(fcompras, "Cantidad: %d\n", cantidad);
@@ -1409,8 +1405,29 @@ void menu_control_compras(FILE *fcompras)
         }while(agregar_compra != 'S' && agregar_compra != 's' && agregar_compra != 'N' && agregar_compra != 'n');
 
         if (agregar_compra == 's' || agregar_compra == 'S')
-            ultimo_id_compra++;
+            id_compra++;
     }
+}
+
+int obtenerUltimoIdCompra(FILE *archivo) {
+    int id_compra, ultimo_id_compra = -1;
+
+    // Reiniciar el puntero del archivo al inicio
+    rewind(archivo);
+
+    // Leer el archivo hasta que no haya más datos
+    while (fscanf(archivo, "ID compra: %d", &id_compra) == 1) {
+        // Actualiza el último ID si el actual es mayor
+        if (id_compra > ultimo_id_compra) {
+            ultimo_id_compra = id_compra;
+        }
+
+        // Ignorar el resto de la línea actual
+        fscanf(archivo, "%*[^\n]");  // Ignorar el resto de la línea
+        fscanf(archivo, "\n");        // Leer el salto de línea
+    }
+
+    return ultimo_id_compra;  // Retornar el último ID encontrado
 }
 
 bool validarproveedor(int NumeroProveedor)
@@ -1530,7 +1547,7 @@ void menu_control_inventario(FILE * farchivo)//falta acabar
         else
         {
             
-            // Encabezado de la tabla con separadores y márgenes
+            // Encabezado de la tabla con separadores y mÃ¡rgenes
             printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
             printf("| %-18s | %-18s | %-40s | %-18s |\n", "ID Compra", "Insumo", "Descripcion", "Cantidad");
             printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
@@ -1544,7 +1561,7 @@ void menu_control_inventario(FILE * farchivo)//falta acabar
             // Formato para la salida de datos de insumos | CAMBIAR EL NUM_PROVEEDOR POR EL ID DE COMPRA
             printf("| %-18d | %-18d | %-40s | %-18d |\n", num_proveedor,insumos.clave_insumo, insumos.descripcion, insumos.inventario);
 
-            // Línea de cierre de la tabla
+            // LÃ­nea de cierre de la tabla
             printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
         }
         
@@ -1594,7 +1611,7 @@ void menu_reportes(FILE *farticulos)//falta acabar
 
     do
     {
-        printf("a) Listado de artículos\nb) Total de venta por fecha\nc) Total de venta por artículo\nd) Listado de artículos a solicitar\ne) Saldos por pagar\nf) Calculo de comisiones\ng) Compras pendientes de recepcion\nh) Salir");
+        printf("a) Listado de artÃ­culos\nb) Total de venta por fecha\nc) Total de venta por artÃ­culo\nd) Listado de artÃ­culos a solicitar\ne) Saldos por pagar\nf) Calculo de comisiones\ng) Compras pendientes de recepcion\nh) Salir");
         printf("%20s", "\nOpcion: ");
         fflush(stdin);
         scanf("%c", &opcion);
@@ -1702,7 +1719,7 @@ void menu_reportes(FILE *farticulos)//falta acabar
 
         do
         {
-            printf("a) Listado de artículos\nb) Total de venta por fecha\nc) Total de venta por artículo\nd) Listado de artículos a solicitar\ne) Saldos por pagar\nf) Calculo de comisiones\ng) Compras pendientes de recepcion\nh) Salir");
+            printf("a) Listado de artÃ­culos\nb) Total de venta por fecha\nc) Total de venta por artÃ­culo\nd) Listado de artÃ­culos a solicitar\ne) Saldos por pagar\nf) Calculo de comisiones\ng) Compras pendientes de recepcion\nh) Salir");
             printf("%20s", "Opcion: ");
             fflush(stdin);
             scanf("%c", &opcion);

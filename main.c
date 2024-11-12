@@ -108,8 +108,7 @@ main()
                 break;
 
             case 7:
-                printf("%s\n", "COMPRAS\n");
-                if ((archivo = fopen("Compras.txt", "a")) == NULL)
+                if ((archivo = fopen("Compras.txt", "a+")) == NULL)
                     printf("ERROR \nSe esta creando el archivo intenta de nuevo\n");
                 else
                 {
