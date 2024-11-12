@@ -1357,7 +1357,7 @@ void menu_control_compras(FILE *finsumos)
         printf("4) El precio del insumo es: %.2f\n", precio_insumo);
 
         descuento = descuento_proveedor(Num_proveedor);
-        printf("Descuento de: %f",descuento); //SOLO PARA VER LUEGO ELIMINAR
+        printf("Descuento de: %f\n",descuento); //SOLO PARA VER LUEGO ELIMINAR
         total += precio_insumo * cantidad * (1 - descuento);
 
         do
@@ -1413,7 +1413,7 @@ bool validarproveedor(int fproveedor)
     struct Proveedor proveedores;
     bool proveedorvalido = false;
 
-    if ((proveedorlocal = fopen("Proveedor.dat", "r")) == NULL)
+    if ((proveedorlocal = fopen("Proveedores.dat", "r")) == NULL)
         printf("Error al abrir el archivo de proveedores.\n");
     else
     {
@@ -1544,7 +1544,7 @@ float descuento_proveedor(int fproveedor)
     float descuento = 0.0;
     bool proveedor_encontrado = false;
 
-    if ((proveedorlocal = fopen("Proveedor.dat", "r")) == NULL)
+    if ((proveedorlocal = fopen("Proveedores.dat", "r")) == NULL)
         printf("Error al abrir el archivo de proveedores.\n");
     else
     {
