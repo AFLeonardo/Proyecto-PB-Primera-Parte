@@ -1045,7 +1045,7 @@ void menu_control_ventas(FILE *fventas)
             clave_valida = validarcantidad(Cantidad_articulo, clave_articulo);
 
             // Si el inventario está vacío o la clave no es válida, salimos del ciclo de cantidad
-            if (clave_valida == 0 || clave_valida == 3)
+            if (clave_valida == 0 ||  clave_valida == 3) //si se agrega el 2 no?
             {
                 printf("No se puede proceder con la venta.\n");
                 agregar_venta = 'n';  // Salimos del ciclo principal
@@ -1057,75 +1057,67 @@ void menu_control_ventas(FILE *fventas)
         descuento_mercado = descuento(clave_mercado);
         total += precioarticulo * Cantidad_articulo * (1 - descuento_mercado);
 
-        if ((articulof = fopen("Articulos.dat", "r+")) == NULL)
-            printf("Error al abrir el archivo de articulos.\n");
-        else
+        if (clave_valida == 1)
         {
-            fseek(articulof, (clave_articulo - 1) * sizeof(struct Articulos), SEEK_SET);
-            fread(&articuloleido, sizeof(struct Articulos), 1, articulof);
-            articuloleido.inventario -= Cantidad_articulo;
-            fseek(articulof, (clave_articulo - 1) * sizeof(struct Articulos), SEEK_SET);
-            fwrite(&articuloleido, sizeof(struct Articulos), 1, articulof);
-            fclose(articulof);
+            printf("4) Precio actual acumulado con descuento: %.2f\n", total);
+
+            do
+            {
+                printf("5) Ingrese el numero de empleado: ");
+                scanf("%d", &num_empleado);
+
+                if (!validarempleado(num_empleado))
+                    printf("Numero de empleado no encontrado.\n");
+
+            } while (!validarempleado(num_empleado));
+
+            do
+            {
+                printf("Deseas agregar otro articulo? (S/N): ");
+                fflush(stdin);
+                scanf("%c", &agregar_articulo);
+
+                if (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n')
+                    printf("Respuesta no valida. Solo se permite S o N.\n");
+
+            } while (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n');
+
+            printf("Total de la venta (con descuento aplicado): %.2f\n", total);
+
+            do
+            {
+                printf("Deseas recibir una factura? (S/N): ");
+                fflush(stdin);
+                scanf("%c", &factura);
+
+                if (factura != 'S' && factura != 's' && factura != 'N' && factura != 'n')
+                    printf("Respuesta no valida. Solo se permite S o N.\n");
+
+            } while (factura != 'S' && factura != 's' && factura != 'N' && factura != 'n');
+
+            if (factura == 'S' || factura == 's')
+                imprimir_factura(clave_mercado, clave_articulo, Cantidad_articulo, precioarticulo, num_empleado, total);
+
+            fprintf(fventas, "Clave mercado: %d\n", clave_mercado);
+            fprintf(fventas, "Clave articulo: %d\n", clave_articulo);
+            fprintf(fventas, "Cantidad: %d\n", Cantidad_articulo);
+            fprintf(fventas, "Precio: %.2f\n", precioarticulo);
+            fprintf(fventas, "Num. empleado: %d\n", num_empleado);
+            fprintf(fventas, "Comision: %.2f\n", generar_comision(num_empleado, total));
+            fprintf(fventas, "Fecha de venta: %02d/%02d/%04d\n", dia_venta, mes_venta, anio_venta);
+
+            do
+            {
+                printf("Deseas iniciar otra venta? (S/N): ");
+                fflush(stdin);
+                scanf("%c", &agregar_venta);
+
+                if (agregar_venta != 'S' && agregar_venta != 's' && agregar_venta != 'N' && agregar_venta != 'n')
+                    printf("Respuesta no valida. Solo se permite S o N.\n");
+
+            } while (agregar_venta != 'S' && agregar_venta != 's' && agregar_venta != 'N' && agregar_venta != 'n');
+
         }
-
-        printf("4) Precio actual acumulado con descuento: %.2f\n", total);
-
-        do
-        {
-            printf("5) Ingrese el numero de empleado: ");
-            scanf("%d", &num_empleado);
-
-            if (!validarempleado(num_empleado))
-                printf("Numero de empleado no encontrado.\n");
-
-        } while (!validarempleado(num_empleado));
-
-        do
-        {
-            printf("Deseas agregar otro articulo? (S/N): ");
-            fflush(stdin);
-            scanf("%c", &agregar_articulo);
-
-            if (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n')
-                printf("Respuesta no valida. Solo se permite S o N.\n");
-
-        } while (agregar_articulo != 'S' && agregar_articulo != 's' && agregar_articulo != 'N' && agregar_articulo != 'n');
-
-        printf("Total de la venta (con descuento aplicado): %.2f\n", total);
-
-        do
-        {
-            printf("Deseas recibir una factura? (S/N): ");
-            fflush(stdin);
-            scanf("%c", &factura);
-
-            if (factura != 'S' && factura != 's' && factura != 'N' && factura != 'n')
-                printf("Respuesta no valida. Solo se permite S o N.\n");
-
-        } while (factura != 'S' && factura != 's' && factura != 'N' && factura != 'n');
-
-        if (factura == 'S' || factura == 's')
-            imprimir_factura(clave_mercado, clave_articulo, Cantidad_articulo, precioarticulo, num_empleado, total);
-
-        fprintf(fventas, "Clave mercado: %d\n", clave_mercado);
-        fprintf(fventas, "Clave articulo: %d\n", clave_articulo);
-        fprintf(fventas, "Cantidad: %d\n", Cantidad_articulo);
-        fprintf(fventas, "Precio: %.2f\n", precioarticulo);
-        fprintf(fventas, "Num. empleado: %d\n", num_empleado);
-        fprintf(fventas, "Comision: %.2f\n", generar_comision(num_empleado, total));
-        fprintf(fventas, "Fecha de venta: %02d/%02d/%04d\n", dia_venta, mes_venta, anio_venta);
-
-        do
-        {
-            printf("Deseas iniciar otra venta? (S/N): ");
-            fflush(stdin);
-            scanf("%c", &agregar_venta);
-
-            if (agregar_venta != 'S' && agregar_venta != 's' && agregar_venta != 'N' && agregar_venta != 'n')
-                printf("Respuesta no valida. Solo se permite S o N.\n");
-
-        } while (agregar_venta != 'S' && agregar_venta != 's' && agregar_venta != 'N' && agregar_venta != 'n');
     }
 }
 
@@ -1210,21 +1202,34 @@ int validarcantidad(int cantidad_articulos, int fclave)
             if (articulos.inventario <= 0)
             {
                 printf("El inventario se encuentra vacio, favor de rebastecerlo.\n");
+                fclose(articulolocal);
                 return 0; // ERROR SI EL INVETARIO ES 0
             }
+
             else if (articulos.inventario >= cantidad_articulos)
+            {
+                fseek(articulolocal, (articulos.clave_articulo - 1) * sizeof(struct Articulos), SEEK_SET);
+                fread(&articulos, sizeof(struct Articulos), 1, articulolocal);
+                articulos.inventario -= cantidad_articulos;
+                fseek(articulolocal, (articulos.clave_articulo - 1) * sizeof(struct Articulos), SEEK_SET);
+                fwrite(&articulos, sizeof(struct Articulos), 1, articulolocal);
+                fclose(articulolocal);
                 return 1;
+            }
+
             else
             {
                 printf("Almacen insuficiente.\n");
+                fclose(articulolocal);
                 return 2;
             }
         }
         else
             printf("Clave no encontrada.\n");
+            fclose(articulolocal);
             return 3;
     }
-    fclose(articulolocal);
+
 }
 
 float precio(int fclave)
