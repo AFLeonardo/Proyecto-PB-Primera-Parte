@@ -84,7 +84,7 @@ void menu_articulos(FILE *articulosf)
                     }
 
                     if (!temporadaValida)
-                        printf("\n*** Estacion invalida ***\nSolo se permite:\nP - Primavera\nV - Verano\nO - Otoño\nI - Invierno.\n");
+                        printf("\n*** Estacion invalida ***\nSolo se permite:\nP - Primavera\nV - Verano\nO - Otono\nI - Invierno.\n");
                 }while (!temporadaValida);
 
                 do
@@ -100,7 +100,7 @@ void menu_articulos(FILE *articulosf)
                             temporadaValida = true;
                     }
                     if (!temporadaValida)
-                        printf("\n*** Estacion invalida ***\nSolo se permite:\nP - Primavera\nV - Verano\nO - Otoño\nI - Invierno.\n");
+                        printf("\n*** Estacion invalida ***\nSolo se permite:\nP - Primavera\nV - Verano\nO - Otono\nI - Invierno.\n");
                 }while (!temporadaValida);
 
                 do
@@ -124,7 +124,7 @@ void menu_articulos(FILE *articulosf)
                 x_articulo.costo_produccion = 0;
 
                 // SE VERIFICA SI LA CLAVE ESTA EN INSUMOS.DAT
-                while (cant_insumos < 10 && agregar_insumo == 's')
+                while (cant_insumos < 10 && (agregar_insumo == 's' || agregar_insumo == 'S'))
                 {
                     clave_valida = false;
                     do
@@ -152,9 +152,9 @@ void menu_articulos(FILE *articulosf)
                         fflush(stdin);
                         scanf("%c", &agregar_insumo);
 
-                        if (agregar_insumo != 's' && agregar_insumo != 'n')
+                        if (agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n')
                             printf("Valor no valido, solo se permite (s/n) \n");
-                    } while(agregar_insumo != 's' && agregar_insumo != 'n');
+                    } while(agregar_insumo != 'S' && agregar_insumo != 's' && agregar_insumo != 'N' && agregar_insumo != 'n');
 
                     if (agregar_insumo == 's')
                         cant_insumos++;
@@ -406,14 +406,14 @@ void menu_empleados(FILE *fempleados)
 
             correo_correcto = validar_correo(empleados.correo);
 
-            if (correo_correcto == false)
+            if (!correo_correcto)
                 printf("El correo no cumple con el formato\n");
 
-        }while(correo_correcto == false);//******************************************************************
+        }while(!correo_correcto);//******************************************************************
 
         do
         {
-            printf("5) Comision: (entre 0 y 1)");
+            printf("5) Comision entre 0 y 1: ");
             scanf("%f", &empleados.comision);
 
             if(empleados.comision < 0 || empleados.comision > 1)
@@ -659,7 +659,7 @@ void menu_proveedores(FILE *fproveedores)
             printf("Municipio: ");
             fflush(stdin);
             gets(proveedores.direccion.municipio);
-            if (!validarchar(proveedores.direccion.calle))
+            if (!validarchar(proveedores.direccion.municipio))
                 printf("Ingresa un municipio valido.\n");
 
         }while (!validarchar(proveedores.direccion.municipio));
@@ -911,7 +911,7 @@ bool validar_correo(char * fcorreo)
             punto = i;
     }
 
-    if(arroba != -1 && punto != -1 && punto > arroba + 1)
+    if(arroba != -0 && punto != -0 && punto > arroba + 1)
         return true;
 
     else
@@ -1333,7 +1333,7 @@ void menu_control_compras(FILE *fcompras)
     // Incrementar el último ID para la siguiente compra
     ultimo_id_compra++;
 
-    printf("Último ID de compra: %d\n", ultimo_id_compra);
+    printf("Ultimo ID de compra: %d\n", ultimo_id_compra);
 
     while(agregar_compra == 'S' || agregar_compra == 's')
     {
