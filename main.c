@@ -84,7 +84,7 @@ main()
                 break;
 
             case 5: // ✅ LISTO
-                if((archivo = fopen("Proveedores.dat", "r+")) == NULL)
+                if((archivo = fopen("Proveedores.dat", "r")) == NULL)
                 {
                     printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
                     crearRegistrosVacios("Proveedores.dat", &proveedorVacio, sizeof(struct Proveedor), 100);

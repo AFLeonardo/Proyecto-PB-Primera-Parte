@@ -981,17 +981,15 @@ void menu_control_ventas(FILE *fventas)
     char agregar_articulo, factura, agregar_venta = 'S';
     FILE *articulof;
     struct Articulos articuloleido;
-    bool validardia = true;
+    bool validardia = true, cantidad_cero = false;
 
     while (agregar_venta != 'n' && agregar_venta != 'N')
     {
         total = 0;
 
-        //agregar mes nose si validar se refiera a que dia corresponda o q exista?, ambos
-
         do
         {
-            printf("Ingrese el anio: \n");
+            printf("Ingrese el anio: ");
             scanf("%d", &anio_venta);
 
             if (anio_venta < 1990 || anio_venta > 2024)
@@ -1000,17 +998,16 @@ void menu_control_ventas(FILE *fventas)
 
         do
         {
-            printf("Ingrese el mes: \n");
+            printf("Ingrese el mes: ");
             scanf("%d", &mes_venta);
             if (mes_venta < 1 || mes_venta > 12)
                 printf("Mes de nacimiento invalido, debe de estar entre 1 y 12\n");
 
         }while (mes_venta < 1 || mes_venta > 12);
 
-        
         do
         {
-            printf("Ingrese el dia: \n");
+            printf("Ingrese el dia: ");
             scanf("%d", &dia_venta);
             validardia = validarDiaMes(dia_venta, mes_venta, anio_venta);
             if (!validardia)
@@ -1050,8 +1047,11 @@ void menu_control_ventas(FILE *fventas)
                     printf("Por favor, ingresa una cantidad mayor a 0.\n");
                 
             } while (Cantidad_articulo < 0);
+
+            if(cantidad_cero)
+                agregar_venta = 's';
             
-        } while (!validarcantidad(Cantidad_articulo, clave_articulo));
+        } while (!validarcantidad(Cantidad_articulo, clave_articulo, &cantidad_cero));
 
         precioarticulo = precio(clave_articulo);
         descuento_mercado = descuento(clave_mercado); 
@@ -1129,7 +1129,7 @@ void menu_control_ventas(FILE *fventas)
     }
 }
 
-float generar_comision(int num_empleado, float total) // MAYBE Y NO LA TERMINO PERO AQUI SE HACE EL CALCULO DE LA COMISION DEL EMPLEADO Y SE GUARDA EN VENTAS.TXT
+float generar_comision(int num_empleado, float total)
 {
     FILE *empleadof;
     struct Empleado lectura_empleado;
@@ -1194,7 +1194,7 @@ bool validararticulo(int farticulo)
 }
 
 
-bool validarcantidad(int cantidad_articulos, int fclave)
+bool validarcantidad(int cantidad_articulos, int fclave, bool *cantidad_cero)
 {
     FILE *articulolocal;
     struct Articulos articulos;
@@ -1213,6 +1213,7 @@ bool validarcantidad(int cantidad_articulos, int fclave)
             {
                 printf("El inventario se encuentra vacio, favor de rebastecerlo.\n");
                 cantidad = false;
+                *cantidad_cero = true;
             }
             else if (articulos.inventario >= cantidad_articulos)
                 cantidad = true;
@@ -1518,7 +1519,7 @@ float precioinsumo(int fnumero)
     return precio_total;
 }
 
-/*float descuento_proveedor(int NumProveedor)
+float descuento_proveedor(int NumProveedor)
 {
     FILE *proveedorlocal;
     struct Proveedor proveedorleido;
@@ -1534,30 +1535,6 @@ float precioinsumo(int fnumero)
         descuento = proveedorleido.descuento;
     }
     fclose(proveedorlocal);
-    return descuento;
-}*/
-
-float descuento_proveedor(int fproveedor)
-{
-    FILE *proveedorlocal;
-    struct Proveedor proveedorleido;
-    float descuento = 0.0;
-    bool proveedor_encontrado = false;
-
-    if ((proveedorlocal = fopen("Proveedores.dat", "r")) == NULL)
-        printf("Error al abrir el archivo de proveedores.\n");
-    else
-    {
-        while (fread(&proveedorleido, sizeof(struct Proveedor), 1, proveedorlocal) == 1 && !proveedor_encontrado)// no queremos los fread igualaddos al las variables
-        {
-            if (proveedorleido.numero_proveedor == fproveedor)
-            {
-                descuento = proveedorleido.descuento;
-                proveedor_encontrado = true;
-            }
-        }
-        fclose(proveedorlocal);
-    }
     return descuento;
 }
 

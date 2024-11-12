@@ -23,7 +23,7 @@ bool validarDiaMes(int, int, int);
 void crearRegistrosVacios(const char *, void *, size_t , int );
 bool validarmercado(int);
 bool validararticulo(int);
-bool validarcantidad(int, int );
+bool validarcantidad(int, int, bool *);
 float precio(int);
 bool validarempleado(int );
 float descuento(int );
