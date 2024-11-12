@@ -421,6 +421,11 @@ void menu_empleados(FILE *fempleados)
 
         }while(empleados.comision < 0);
 
+        if (empleados.comision <= 10)
+            empleados.comision *= 0.01;
+        else
+            empleados.comision *= 0.10; 
+
         do
         {
             printf("6) Año de contratacion: ");
@@ -986,7 +991,7 @@ void menu_control_ventas(FILE *fventas)
 
         do
         {
-            printf("6) Ingrese el año: ");
+            printf("Ingrese el anio: \n");
             scanf("%d", &anio_venta);
 
             if (anio_venta < 1990 || anio_venta > 2024)
@@ -995,7 +1000,7 @@ void menu_control_ventas(FILE *fventas)
 
         do
         {
-            printf("Ingrese el mes: ");
+            printf("Ingrese el mes: \n");
             scanf("%d", &mes_venta);
             if (mes_venta < 1 || mes_venta > 12)
                 printf("Mes de nacimiento invalido, debe de estar entre 1 y 12\n");
@@ -1005,9 +1010,9 @@ void menu_control_ventas(FILE *fventas)
         
         do
         {
-            printf("Ingrese el dia: ");
+            printf("Ingrese el dia: \n");
             scanf("%d", &dia_venta);
-            validardia = validarDiaMes(dia_venta, mes_venta, anio_venta);//resolver esto
+            validardia = validarDiaMes(dia_venta, mes_venta, anio_venta);
             if (!validardia)
                 printf("Ingrese un dia valido correspondiente al mes\n");
 
@@ -1108,7 +1113,8 @@ void menu_control_ventas(FILE *fventas)
         fprintf(fventas, "Cantidad: %d\n", Cantidad_articulo);
         fprintf(fventas, "Precio: %.2f\n", precioarticulo);
         fprintf(fventas, "Num. empleado: %d\n", num_empleado);
-        fprintf(fventas, "Comision: %.2f\n\n", generar_comision(num_empleado, total));
+        fprintf(fventas, "Comision: %.2f\n", generar_comision(num_empleado, total));
+        fprintf(fventas, "Fecha de venta: %02d/%02d/%04d\n", dia_venta, mes_venta, anio_venta);
        
         do
         {
@@ -1135,6 +1141,7 @@ float generar_comision(int num_empleado, float total) // MAYBE Y NO LA TERMINO P
     {
         fseek(empleadof, (num_empleado - 1) * sizeof(struct Empleado), SEEK_SET);
         fread(&lectura_empleado, sizeof(struct Empleado), 1, empleadof);
+        printf("El porcentaje de comision del empleado es de %f\n", lectura_empleado.comision); // ELIMINAR SOLO PARA DEBUGGEAR
         comision = lectura_empleado.comision * total;
         fclose(empleadof);
         return comision;
