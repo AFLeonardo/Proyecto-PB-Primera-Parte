@@ -1487,6 +1487,8 @@ void menu_control_inventario(FILE * farchivo)//falta acabar
 {
     int proveedor, compra;
     char recepcion = 's', respuesta[5];
+    struct Insumo insumos;
+    FILE *archivo_insumo;
 
     while (recepcion == 'S' || recepcion == 's')
     {
@@ -1501,10 +1503,25 @@ void menu_control_inventario(FILE * farchivo)//falta acabar
 
         } while (!validarproveedor(proveedor));
 
-        printf("%-20s%-20s%-20s%-20s", "ID Compra", "Insumo", "Descripcion", "Cantidad"); // no se como imprimir lo pendiente
+        if ((archivo_insumo = fopen("Insumos.dat", "r")) == NULL)
+            printf("Error al abrir el archivo de insumos. \n");
+        
+        else
+        {
+            printf("%-20s%-20s%-20s%-20s", "ID Compra", "Insumo", "Descripcion", "Cantidad"); // no se como imprimir lo pendiente
+            fseek(archivo_insumo, 0, SEEK_SET); //Lo puse en cero pq no supe como mandarle clave del insumo
+            fread(&insumos, sizeof(struct Insumo), 1, archivo_insumo);
+            printf("%-20d%-20s", insumos.clave_insumo, insumos.descripcion,)//hay q hacer cambios aqui
+        }
+        
 
-        //******************************************************** */
+        
 
+        //******************************************************** 
+
+
+
+        //********************************************************** 
         /*do
         {
             printf("2. Numero de compra: \n");
