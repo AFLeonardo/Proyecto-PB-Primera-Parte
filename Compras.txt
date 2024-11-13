@@ -10,11 +10,6 @@ Numero de proveedor: 9
 Numero de insumo: 10
 Cantidad: 800
 Precio: 30.00
-ID compra: 2
-Numero de proveedor: 9
-Numero de insumo: 1
-Cantidad: 2
-Precio: 21.76
 Total: 12021.76
 
 ID compra: 3

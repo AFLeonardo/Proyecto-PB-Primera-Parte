@@ -16,7 +16,7 @@ main()
     struct Proveedor proveedorVacio = {0, "", "", "", 0, 0, 0, 0, "", {0,0,0,0,0,0,0,0,0,0}};
     struct Mercado mercadoVacio = {0, "", "", "", 0, 0, 0, 0, ""};
     struct Empleado empleadoVacio = {0, "", "", "", 0.0, {0, 0, 0}, {"", 0, "", "", ""}};
-    
+
 
     while (ciclo)
     {
@@ -96,7 +96,7 @@ main()
                 }
                 break;
 
-            case 6: 
+            case 6:
                 printf("%s\n", "VENTAS\n");
                 if((archivo = fopen("Ventas.txt", "a")) == NULL)
                     printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
