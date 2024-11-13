@@ -1646,7 +1646,7 @@ void menu_reportes(FILE *farticulos)//falta acabar
         switch(opcion)
         {
             case 'a':
-                if((archivo = fopen("Articulos.dat", "r")) == NULL)//o r++?
+                if((archivo = fopen("Articulos.dat", "r")) == NULL)
                     printf("ERROR.\nNo se pudo abrir el archivo.\n");
                 else
                 {
@@ -1655,7 +1655,7 @@ void menu_reportes(FILE *farticulos)//falta acabar
                         "Inventario", "Precio de venta", "Clave del Insumo");
                     printf("---------------------------------------------------------------------------------------------------------------\n");
 
-                    while (fread(&articulo, sizeof(struct Articulos), 1, archivo) == 1)
+                    while (fread(&articulo, sizeof(struct Articulos), 1, archivo) == 1)//esta mal creo
                     {
                         printf("%-20d %-20s %-10s %-10s %-10d %-15.2f [",
                             articulo.clave_articulo, articulo.descripcion, articulo.temp_siembra,
@@ -1675,7 +1675,7 @@ void menu_reportes(FILE *farticulos)//falta acabar
                 break;
 
             case 'b':
-                if((archivo = fopen("Articulos.dat", "r")) == NULL)//o r++?
+                if((archivo = fopen("Ventas.txt", "r")) == NULL)
                     printf("ERROR.\nNo se pudo abrir el archivo.\n");
                 else
                 {
@@ -1724,7 +1724,7 @@ void menu_reportes(FILE *farticulos)//falta acabar
                 break;
 
             case 'c':
-                if((archivo = fopen("Articulos.dat", "r")) == NULL)//o r++?
+                if((archivo = fopen("Ventas.txt", "r")) == NULL)
                     printf("ERROR.\nNo se pudo abrir el archivo.\n");
                 else
                 {
@@ -1732,6 +1732,11 @@ void menu_reportes(FILE *farticulos)//falta acabar
                     {
                         printf("Ingrese la clave del articulo: ");
                         scanf("%d", &clavearticulo);
+
+                    
+                      
+
+                        fclose(archivo);
 
                         if (!validararticulo(clavearticulo))
                             printf("Clave de articulo no encontrada.\n");
@@ -1742,15 +1747,31 @@ void menu_reportes(FILE *farticulos)//falta acabar
                 break;
 
             case 'd':
+                if((archivo = fopen("Insumos.dat", "r")) == NULL)
+                    printf("ERROR.\nNo se pudo abrir el archivo.\n");
+                else
+                {
+
+                }
+                break;
+            case 'e':
                 break;
             case 'f':
+                if((archivo = fopen("Empleados.dat", "r")) == NULL)
+                    printf("ERROR.\nNo se pudo abrir el archivo.\n");
+                else
+                {
+
+                }
                 break;
             case 'g':
+                if((archivo = fopen("Compras.dat", "r")) == NULL)
+                    printf("ERROR.\nNo se pudo abrir el archivo.\n");
+                else
+                {
+
+                }
                 break;
-
-
-
-
         }
 
         do
