@@ -31,3 +31,10 @@ Cantidad: 200
 Precio: 48.99
 Total: 4898.64
 
+ID compra: 5
+Numero de proveedor: 9
+Numero de insumo: 10
+Cantidad: 50
+Precio: 30.00
+Total: 750.00
+
