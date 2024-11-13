@@ -17,3 +17,17 @@ Cantidad: 2
 Precio: 21.76
 Total: 12021.76
 
+ID compra: 3
+Numero de proveedor: 9
+Numero de insumo: 20
+Cantidad: 20
+Precio: 48.99
+Total: 489.86
+
+ID compra: 4
+Numero de proveedor: 9
+Numero de insumo: 20
+Cantidad: 200
+Precio: 48.99
+Total: 4898.64
+
