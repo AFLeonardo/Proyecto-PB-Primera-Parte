@@ -15,13 +15,12 @@ int main() {
     float precio, total, acumulado = 0;
     int auxiliar_id = -1;
 
-    // Imprime el encabezado de la tabla
     printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
     printf("| %-18s | %-18s | %-40s | %-18s |\n", "ID Compra", "Insumo", "Descripcion", "Cantidad");
     printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
 
-    // Leemos el archivo de compras
-    while (!feof(farchivo)) {
+    while (!feof(farchivo))
+    {
         fscanf(farchivo, "ID compra: %d\n", &id_compras);
         fscanf(farchivo, "Numero de proveedor: %d\n", &num_proveedor);
         fscanf(farchivo, "Numero de insumo: %d\n", &clave_insumo);
@@ -29,13 +28,12 @@ int main() {
         fscanf(farchivo, "Precio: %f\n", &precio);
         fscanf(farchivo, "Total: %f\n", &total);
 
-        // Busca el insumo correspondiente
         fseek(archivo_insumo, (clave_insumo - 1) * sizeof(struct Insumo), SEEK_SET);
         struct Insumo insumos;
         fread(&insumos, sizeof(struct Insumo), 1, archivo_insumo);
 
-        // Si cambia el ID de compra, imprime el acumulado y resetear
-        if (id_compras != auxiliar_id) {
+        if (id_compras != auxiliar_id) 
+        {
             if (auxiliar_id != -1) {
                 printf("Total: %.2f\n", acumulado);
                 printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
@@ -44,7 +42,7 @@ int main() {
             auxiliar_id = id_compras;
             acumulado = 0;
 
-            // Imprime la información de la compra
+            // Imprime la informaciï¿½n de la compra
             if (clave_insumo == insumos.clave_insumo) {
                 printf("| %-18d | %-18d | %-40s | %-18d |\n", id_compras, clave_insumo, insumos.descripcion, cantidad);
             }

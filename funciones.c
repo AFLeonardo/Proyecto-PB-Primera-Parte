@@ -1554,7 +1554,6 @@ void menu_control_inventario(FILE * farchivo)
                     printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
                     printf("| %-18s | %-18s | %-40s | %-18s |\n", "ID Compra", "Insumo", "Descripcion", "Cantidad");
                     printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
-                    // Leer los datos de cada l�nea del archivo
                     fscanf(farchivo, "ID compra: %d\n", &id_compras);
                     fscanf(farchivo, "Numero de proveedor: %d\n", &num_proveedor);
                     fscanf(farchivo, "Numero de insumo: %d\n", &clave_insumo);
@@ -1619,8 +1618,6 @@ void menu_control_inventario(FILE * farchivo)
 
 
                 }
-
-
                 fclose(farchivo);
 
             do
