@@ -1327,7 +1327,7 @@ void menu_control_compras(FILE *fcompras)
 {
     int Num_proveedor, insumo, cantidad, id_compra = 0, ultimo_id_compra = -20, provedor;
     float precio_insumo, total = 0, descuento, precio;
-    char agregar_insumo, agregar_compra = 's';
+    char agregar_insumo, agregar_compra = 's', entregado = 'n';
 
     printf("\nCOMPRAS\n");
 
@@ -1339,12 +1339,14 @@ void menu_control_compras(FILE *fcompras)
             ultimo_id_compra = id_compra;
 
         // Saltar las líneas restantes de cada bloque de compra
-        fscanf(fcompras, "%*[^\n]\n");  // Salta el número de proveedor
+        fscanf(fcompras, "%*[^\n]\n"); 
         fscanf(fcompras, "%*[^\n]\n");  // Salta el número de insumo
         fscanf(fcompras, "%*[^\n]\n");  // Salta la cantidad
         fscanf(fcompras, "%*[^\n]\n");  // Salta el precio
         fscanf(fcompras, "%*[^\n]\n");  // Salta el total
+        fscanf(fcompras, "%*[^\n]\n");  // Salta el total
         fscanf(fcompras, "ID compra: %d\n", &id_compra);
+        
     }
 
     id_compra = ultimo_id_compra + 1;
@@ -1399,6 +1401,7 @@ void menu_control_compras(FILE *fcompras)
             fprintf(fcompras, "Numero de insumo: %d\n", insumo);
             fprintf(fcompras, "Cantidad: %d\n", cantidad);
             fprintf(fcompras, "Precio: %.2f\n", precio_insumo);
+            fprintf(fcompras, "Entregado %c\n", entregado);
 
             do
             {
@@ -1525,16 +1528,18 @@ float descuento_proveedor(int NumProveedor)
 
 void menu_control_inventario(FILE * farchivo)//falta acabar
 {
-    int num_proveedor, numero_compra, id_compras = 0, clave_insumo, cantidad;
-    char recepcion = 's', respuesta[5];
+    int num_proveedor, numero_compra, id_compras = 0, clave_insumo, cantidad, proveedor, auxiliar_id = 0;
+    char recepcion = 's', respuesta[5], entregado;
     struct Insumo insumos;
-    FILE *archivo_insumo, *archivo_compras;
+    FILE *archivo_insumo;
+    float precio, total;
+    bool checar = true;
 
     printf("\nCOMPRAS\n");
     while (recepcion == 'S' || recepcion == 's')
     {
-        if ((archivo_compras = fopen("Compras.txt", "r")) == NULL)
-            printf("Error al abrir el archivo de compras");
+        if ((archivo_insumo = fopen("Insumos.dat", "r")) == NULL)
+            printf("Error al abrir el archivo de insumos. \n");
         
         else
         {
@@ -1547,57 +1552,80 @@ void menu_control_inventario(FILE * farchivo)//falta acabar
                         printf("Numero de proveedor invalido.\n");
 
             } while (!validarproveedor(num_proveedor));
-
-            if ((archivo_insumo = fopen("Insumos.dat", "r")) == NULL)
-                printf("Error al abrir el archivo de insumos. \n");
-
-            else
-            {
-
-                // Encabezado de la tabla con separadores y márgenes
-                printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
-                printf("| %-18s | %-18s | %-40s | %-18s |\n", "ID Compra", "Insumo", "Descripcion", "Cantidad");
-                printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
-
-                fscanf(archivo_compras, "ID compra: %d\n", &id_compras);
-                fscanf(archivo_compras, "%*[^\n]\n");  // Salta el número de proveedor
-                fscanf(archivo_compras, "Numero de insumo: %d", &clave_insumo);  // Salta el número de insumo
-                fscanf(archivo_compras, "Cantidad: %d", &cantidad);  // Salta la cantidad
-                fscanf(archivo_compras, "%*[^\n]\n");  // Salta la precio
-                fscanf(archivo_compras, "%*[^\n]\n");  // Salta la total
-
-                while (!feof(archivo_compras))
+                
+                while (!feof(farchivo)) 
                 {
-                    printf("| %-18d | %-18d | %-40s | %-18d |\n", id_compras, clave_insumo, insumos.descripcion, cantidad);
-                    fscanf(archivo_compras, "ID compra: %d\n", &id_compras);
-                    fscanf(archivo_compras, "%*[^\n]\n");  // Salta el número de proveedor
-                    fscanf(archivo_compras, "Numero de insumo: %d", &clave_insumo);  // Salta el número de insumo
-                    fscanf(archivo_compras, "Cantidad: %d", &cantidad);  // Salta la cantidad
-                    fscanf(archivo_compras, "%*[^\n]\n");  // Salta la precio
-                    fscanf(archivo_compras, "%*[^\n]\n");  // Salta la total
+                    printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
+                    printf("| %-18s | %-18s | %-40s | %-18s |\n", "ID Compra", "Insumo", "Descripcion", "Cantidad");
+                    printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
+                    // Leer los datos de cada l�nea del archivo
+                    fscanf(farchivo, "ID compra: %d\n", &id_compras);
+                    fscanf(farchivo, "Numero de proveedor: %d\n", &num_proveedor);
+                    fscanf(farchivo, "Numero de insumo: %d\n", &clave_insumo);
+                    fscanf(farchivo, "Cantidad: %d\n", &cantidad);
+                    fscanf(farchivo, "Precio: %f\n", &precio);
+                    fscanf(farchivo, "Total: %f\n", &total);
+
+                    fseek(archivo_insumo, (clave_insumo - 1) * sizeof(struct Insumo), SEEK_SET);
+                    fread(&insumos, sizeof(struct Insumo),1 , archivo_insumo);
+
+                    if (clave_insumo == insumos.clave_insumo)
+                        printf("| %-18d | %-18d | %-40s | %-18d |\n", id_compras, clave_insumo, insumos.descripcion, cantidad);
                     
+                    printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");    
+                    printf("Total: %.2f\n", total);
                 }
                 
-                printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
-                
-            
+    
                 do
                 {
                     printf("2. Numero de compra: ");
                     scanf("%d", &numero_compra);
 
                     if (!validar_compra(numero_compra))
-                        printf("Numero de compra invalido");
+                        printf("Numero de compra invalido\n");
+                    
+                }while(!validar_compra(numero_compra));
 
-                } while (!validar_compra(numero_compra)); //falta que se valide en compras
+                do
+                {
+                    printf("Le fue recibida la compra?: ");
+                    fflush(stdin);
+                    gets(respuesta);
 
-                printf("Le fue recibida la compra?: ");
-                fflush(stdin);
-                gets(respuesta);
+                    if (strcmp(respuesta, "si") != 0 || strcmp(respuesta, "Si") != 0)
+                        printf("Respuesta invalida\n");
+                    
+                } while (strcmp(respuesta, "si") != 0 || strcmp(respuesta, "Si") != 0);
 
-                fclose(archivo_insumo);
-            }
+                if (strcmp(respuesta, "si") == 0 || strcmp(respuesta, "Si") == 0)
+                {
+                    fseek(archivo_insumo, (numero_compra - 1) * sizeof(struct Insumo), SEEK_SET);
+                    fread(&insumos, sizeof(struct Insumo), 1 , archivo_insumo);
 
+                    insumos.inventario += cantidad;
+
+                    fseek(archivo_insumo, (numero_compra - 1) * sizeof(struct Insumo), SEEK_SET);
+                    fwrite(&insumos, sizeof(struct Insumo), 1 , archivo_insumo);
+
+                    entregado = 's';
+
+                    fscanf(farchivo, "ID compra: %d\n", &id_compras);
+                    fscanf(farchivo, "Numero de proveedor: %d\n", &num_proveedor);
+                    fscanf(farchivo, "Numero de insumo: %d\n", &clave_insumo);
+                    fscanf(farchivo, "Cantidad: %d\n", &cantidad);
+                    fscanf(farchivo, "Precio: %f\n", &precio);
+                    fscanf(farchivo, "Total: %f\n", &total);
+                    fscanf(farchivo, "Entregado: %c\n", &entregado);
+                    
+                    fprintf(farchivo, "Entregado %c\n", entregado);
+                    
+                    
+                }
+                
+                
+                fclose(farchivo);
+            
             do
             {
                 printf("Agregar otra recepcion? (S/N): ");
@@ -1609,36 +1637,41 @@ void menu_control_inventario(FILE * farchivo)//falta acabar
 
             }while(recepcion != 'S' && recepcion != 's' && recepcion != 'N' && recepcion != 'n');
 
-            fclose(archivo_compras);
         }
+        fclose(archivo_insumo);
     }
 }
 
-bool validar_compra(int numero_compra)
+bool validar_compra(int numero_compra) 
 {
     FILE *archivo;
-    int id_compra;
+    int id_compra, num_proveedor, clave_insumo, cantidad;
     bool compra_valida = false;
+    float precio, total;
 
-    if((archivo = fopen("Compras.txt", "r")) == NULL)
-        printf("Error al abrir el archivo");
-
-    else
+    if ((archivo = fopen("Compras.txt", "r")) == NULL) 
     {
-        fscanf(archivo, "%d", &id_compra);
-        while (!feof(archivo))
-        {
-            if (numero_compra == id_compra)
-                compra_valida = true;
-
-            fscanf(archivo, "%d", &id_compra);
-        }
+        printf("Error al abrir el archivo\n");
+        return false; 
     }
+    while (!feof(archivo)) 
+    {
+        fscanf(archivo, "ID compra: %d\n", &id_compra);
+        fscanf(archivo, "Numero de proveedor: %d\n", &num_proveedor);
+        fscanf(archivo, "Numero de insumo: %d\n", &clave_insumo);
+        fscanf(archivo, "Cantidad: %d\n", &cantidad);
+        fscanf(archivo, "Precio: %f\n", &precio);
+        fscanf(archivo, "Total: %f\n", &total);
+
+        if (numero_compra == id_compra) 
+            compra_valida = true;
+    }
+
     fclose(archivo);
     return compra_valida;
 }
 
-void menu_reportes(FILE *farticulos)//falta acabar
+void menu_reportes(FILE *farticulos)
 {
     char opcion;
     FILE *archivo;

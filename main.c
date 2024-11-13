@@ -118,7 +118,7 @@ main()
 
             case 8:
                 printf("%s\n", "CONTROL DE INVENTARIO\n");
-                if((archivo = fopen("Proveedores.dat", "r+")) == NULL)
+                if((archivo = fopen("Compras.txt", "r")) == NULL)
                     printf("ERROR.\nNo se pudo abrir el archivo.\n"); // no se si tengo q agregar registros vacios segun yo no vdd pq no hay estructura
                 else
                 {

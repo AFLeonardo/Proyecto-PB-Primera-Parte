@@ -5,14 +5,14 @@ Cantidad: 280
 Precio: 48.99
 Total: 6858.10
 
-ID compra: 2
+ID compra: 1
 Numero de proveedor: 9
 Numero de insumo: 10
 Cantidad: 800
 Precio: 30.00
 Total: 12021.76
 
-ID compra: 3
+ID compra: 2
 Numero de proveedor: 9
 Numero de insumo: 20
 Cantidad: 20
