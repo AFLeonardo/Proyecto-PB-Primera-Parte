@@ -4,8 +4,6 @@
 #include <string.h>
 #include "funciones.c"
 
-
-// ESTO SI FUNCIONA
 main()
 {
     int opcion;
@@ -31,7 +29,7 @@ main()
 
         switch (opcion)
         {
-            case 1: // ✅ FALTA MERCADOS
+            case 1:
                 if((archivo = fopen("Articulos.dat", "r+")) == NULL)
                 {
                     printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
@@ -44,7 +42,7 @@ main()
                 }
                 break;
 
-            case 2: // ✅ LISTO
+            case 2:
                 if ((archivo = fopen("Insumos.dat", "r+")) == NULL)
                     {
                     printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
@@ -83,7 +81,7 @@ main()
                 }
                 break;
 
-            case 5: // ✅ LISTO
+            case 5: 
                 if((archivo = fopen("Proveedores.dat", "r")) == NULL)
                 {
                     printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
@@ -130,7 +128,6 @@ main()
                 break;
 
             case 9:
-                printf("%s\n", "REPORTES\n");
                 menu_reportes(archivo);
                 break;
 
