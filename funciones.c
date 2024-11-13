@@ -123,7 +123,7 @@ void menu_articulos(FILE *articulosf)
 
                 x_articulo.costo_produccion = 0;
 
-                // SE VERIFICA SI LA CLAVE ESTA EN INSUMOS.DAT
+              
                 while (cant_insumos < 10 && (agregar_insumo == 's' || agregar_insumo == 'S'))
                 {
                     clave_valida = false;
@@ -163,7 +163,7 @@ void menu_articulos(FILE *articulosf)
             	if (cant_insumos >= 10)
                		printf("\nHa llegado al limite de insumos 10.\n");
 
-                //calcular el costo de produccion
+             
                 x_articulo.costo_produccion = costo_produccion;
                 printf("El costo de produccion fue de %.2f \n", x_articulo.costo_produccion);
                 printf("\nClave articulo: %d", x_articulo.clave_articulo);
@@ -174,11 +174,11 @@ void menu_articulos(FILE *articulosf)
                 printf("\nPrecio venta: %.2f", x_articulo.precio_venta);
                 printf("\nClave insumo: %d\n", x_articulo.insumos_requeridos[n_mercados]);
 
-                // Clave de mercados ****************************************************** VALIDAR ESTO LEOOO
+               
                 while (n_mercados < 10 && (agregar_mercado == 's' || agregar_mercado == 'S'))
                 {
                     clave_valida = false;
-                    do // Validar si esta en Mercados.dat
+                    do 
                     {
                         printf("8) Ingresa la clave de mercado %d: ", n_mercados + 1);
                         scanf("%d", &x_articulo.clave_mercados[n_mercados]);
@@ -192,7 +192,7 @@ void menu_articulos(FILE *articulosf)
                         if(!clave_valida)
                             printf("Clave del mercado no encontrada.\nIntenta con otra.\n");
 
-                    } while (!clave_valida);// me falta comprobar si si jala **********************************************************
+                    } while (!clave_valida);
 
                     do
                     {
@@ -213,7 +213,7 @@ void menu_articulos(FILE *articulosf)
                 if (n_mercados >= 10)
                     printf("\nHa alcanzado el limite de mercados.\n");
 
-                // GUARDAMOS LOS DATOS EN ARCHIVOS.DAT
+              
                 fseek(articulosf, (x_articulo.clave_articulo - 1) * sizeof(struct Articulos), SEEK_SET);
                 fwrite(&x_articulo, sizeof(struct Articulos), 1, articulosf);
 
@@ -320,7 +320,7 @@ void menu_insumos(FILE *insumosf)
                     scanf("%c", &agregar_proveedor);
                     agregar_proveedor = tolower(agregar_proveedor);
 
-                    if (agregar_proveedor != 's' && agregar_proveedor != 'n') //hay q ver como hacer para que acepte mayus
+                    if (agregar_proveedor != 's' && agregar_proveedor != 'n') 
                         printf("Valor no valido, solo se permite (s/n) \n");
 
                 } while (agregar_proveedor != 's' && agregar_proveedor != 'n');
@@ -380,7 +380,7 @@ void menu_empleados(FILE *fempleados)
 
         }while (strlen(empleados.nombre_completo) < 20);
 
-        do //falta validar lo correspondiente primero lo checamos y luego ya lo pegamos***********************************
+        do 
         {
             printf("3) RFC: ");
             fflush(stdin);
@@ -397,7 +397,7 @@ void menu_empleados(FILE *fempleados)
             if (rfc_valido == false)
                 printf("RFC invalido. No cumple con la estructurada adecuada\n");
 
-        }while(rfc_valido == false);//*********************************************************************************
+        }while(rfc_valido == false);
 
         do
         {
@@ -410,7 +410,7 @@ void menu_empleados(FILE *fempleados)
             if (!correo_correcto)
                 printf("El correo no cumple con el formato\n");
 
-        }while(!correo_correcto);//******************************************************************
+        }while(!correo_correcto);
 
         do
         {
@@ -464,7 +464,6 @@ void menu_empleados(FILE *fempleados)
 
         do
         {
-            //validar cositas esas************************************************
             printf("Ingrese el numero: ");
             gets(empleados.direccion.numero);
             if (!(validarnumerodireccion(empleados.direccion.numero)))
@@ -738,7 +737,7 @@ void menu_mercados(FILE *mercadosf)
 {
     char agregar = 's';
     struct Mercado mercados;
-    bool correo_correcto = true, rfc_valido=true, validardia=true; //checar si se puede inicializar o no
+    bool correo_correcto = true, rfc_valido=true, validardia=true; 
 
     printf("%s\n", "\nMERCADOS\n");
 
@@ -847,7 +846,7 @@ void menu_mercados(FILE *mercadosf)
 
         do
         {
-            printf("Numero: ");//validar cositas esas
+            printf("Numero: ");
             gets(mercados.direccion.numero);
             if (!(validarnumerodireccion(mercados.direccion.numero)))
                 printf("Ingrese un numero valido.\n");
@@ -1045,11 +1044,10 @@ void menu_control_ventas(FILE *fventas)
 
             clave_valida = validarcantidad(Cantidad_articulo, clave_articulo);
 
-            // Si el inventario está vacío o la clave no es válida, salimos del ciclo de cantidad
-            if (clave_valida == 0 ||  clave_valida == 3) //si se agrega el 2 no?
+            if (clave_valida == 0 ||  clave_valida == 3) 
             {
                 printf("No se puede proceder con la venta.\n");
-                agregar_venta = 'n';  // Salimos del ciclo principal
+                agregar_venta = 'n';  
             }
         } while (clave_valida != 1 && agregar_venta != 'n');
 
@@ -1135,7 +1133,7 @@ float generar_comision(int num_empleado, float total)
     {
         fseek(empleadof, (num_empleado - 1) * sizeof(struct Empleado), SEEK_SET);
         fread(&lectura_empleado, sizeof(struct Empleado), 1, empleadof);
-        printf("El porcentaje de comision del empleado es de %f\n", lectura_empleado.comision); // ELIMINAR SOLO PARA DEBUGGEAR
+        printf("El porcentaje de comision del empleado es de %f\n", lectura_empleado.comision); 
         comision = lectura_empleado.comision * total;
     }
     fclose(empleadof);
@@ -1148,7 +1146,7 @@ bool validarmercado(int fmercado)
     struct Mercado mercados;
     bool mercadovalido = false;
 
-    //imprimir numero de mercado debe existir en mercados, devolver bool
+
     if((mercado = fopen("Mercados.dat", "r")) == NULL)
         printf("Error con el archivo de mercados\n");
 
@@ -1205,7 +1203,7 @@ int validarcantidad(int cantidad_articulos, int fclave)
             {
                 printf("El inventario se encuentra vacio, favor de rebastecerlo.\n");
                 fclose(articulolocal);
-                return 0; // ERROR SI EL INVETARIO ES 0
+                return 0; 
             }
 
             else if (articulos.inventario >= cantidad_articulos)
@@ -1334,22 +1332,20 @@ void menu_control_compras(FILE *fcompras)
     fscanf(fcompras, "ID compra: %d\n", &id_compra);
     while (!feof(fcompras))
     {
-        // Actualizar el último ID si es mayor que el anterior
         if (id_compra > ultimo_id_compra)
             ultimo_id_compra = id_compra;
 
-        // Saltar las líneas restantes de cada bloque de compra
-        fscanf(fcompras, "%*[^\n]\n");  // Salta el número de proveedor
-        fscanf(fcompras, "%*[^\n]\n");  // Salta el número de insumo
-        fscanf(fcompras, "%*[^\n]\n");  // Salta la cantidad
-        fscanf(fcompras, "%*[^\n]\n");  // Salta el precio
-        fscanf(fcompras, "%*[^\n]\n");  // Salta el total
+        fscanf(fcompras, "%*[^\n]\n"); 
+        fscanf(fcompras, "%*[^\n]\n"); 
+        fscanf(fcompras, "%*[^\n]\n"); 
+        fscanf(fcompras, "%*[^\n]\n"); 
+        fscanf(fcompras, "%*[^\n]\n");  
         fscanf(fcompras, "ID compra: %d\n", &id_compra);
     }
 
     id_compra = ultimo_id_compra + 1;
 
-    printf("\n\nUltimo ID de compra: %d\n", id_compra); // Se incrementa para el nuevo ID
+    printf("\n\nUltimo ID de compra: %d\n", id_compra);
 
     while(agregar_compra == 'S' || agregar_compra == 's')
     {
@@ -1391,7 +1387,7 @@ void menu_control_compras(FILE *fcompras)
             printf("\n*** \nEl precio del insumo es: %.2f\n***\n\n", precio_insumo);
 
             descuento = descuento_proveedor(Num_proveedor);
-            printf("Descuento de: %.2f\n",descuento); //SOLO PARA VER LUEGO ELIMINAR
+            printf("Descuento de: %.2f\n",descuento); 
             total += precio_insumo * cantidad * (1 - descuento);
 
             fprintf(fcompras, "ID compra: %d\n", id_compra);
@@ -1516,14 +1512,14 @@ float descuento_proveedor(int NumProveedor)
     else
     {
         fseek(proveedorlocal, (NumProveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
-        fread(&proveedorleido, sizeof(struct Proveedor), 1, proveedorlocal); // lo hice pero hay q checar q este bien vdd
+        fread(&proveedorleido, sizeof(struct Proveedor), 1, proveedorlocal);
         descuento = proveedorleido.descuento;
     }
     fclose(proveedorlocal);
     return descuento;
 }
 
-void menu_control_inventario(FILE * farchivo)//falta acabar
+void menu_control_inventario(FILE * farchivo)
 {
     int num_proveedor, numero_compra, id_compras = 0, clave_insumo, cantidad;
     char recepcion = 's', respuesta[5];
@@ -1543,7 +1539,7 @@ void menu_control_inventario(FILE * farchivo)//falta acabar
                 printf("1. Numero de proveedor: ");
                 scanf("%d", &num_proveedor);
 
-                if (!validarproveedor(num_proveedor))//mande a llamar a la misma funcion que en compras para validar proveedor
+                if (!validarproveedor(num_proveedor))
                         printf("Numero de proveedor invalido.\n");
 
             } while (!validarproveedor(num_proveedor));
@@ -1554,28 +1550,26 @@ void menu_control_inventario(FILE * farchivo)//falta acabar
             else
             {
 
-                // Encabezado de la tabla con separadores y márgenes
                 printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
                 printf("| %-18s | %-18s | %-40s | %-18s |\n", "ID Compra", "Insumo", "Descripcion", "Cantidad");
                 printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
 
                 fscanf(archivo_compras, "ID compra: %d\n", &id_compras);
-                fscanf(archivo_compras, "%*[^\n]\n");  // Salta el número de proveedor
-                fscanf(archivo_compras, "Numero de insumo: %d", &clave_insumo);  // Salta el número de insumo
-                fscanf(archivo_compras, "Cantidad: %d", &cantidad);  // Salta la cantidad
-                fscanf(archivo_compras, "%*[^\n]\n");  // Salta la precio
-                fscanf(archivo_compras, "%*[^\n]\n");  // Salta la total
+                fscanf(archivo_compras, "%*[^\n]\n");  
+                fscanf(archivo_compras, "Numero de insumo: %d", &clave_insumo);  
+                fscanf(archivo_compras, "Cantidad: %d", &cantidad);  
+                fscanf(archivo_compras, "%*[^\n]\n"); 
+                fscanf(archivo_compras, "%*[^\n]\n");  
 
                 while (!feof(archivo_compras))
                 {
                     printf("| %-18d | %-18d | %-40s | %-18d |\n", id_compras, clave_insumo, insumos.descripcion, cantidad);
                     fscanf(archivo_compras, "ID compra: %d\n", &id_compras);
-                    fscanf(archivo_compras, "%*[^\n]\n");  // Salta el número de proveedor
-                    fscanf(archivo_compras, "Numero de insumo: %d", &clave_insumo);  // Salta el número de insumo
-                    fscanf(archivo_compras, "Cantidad: %d", &cantidad);  // Salta la cantidad
-                    fscanf(archivo_compras, "%*[^\n]\n");  // Salta la precio
-                    fscanf(archivo_compras, "%*[^\n]\n");  // Salta la total
-                    
+                    fscanf(archivo_compras, "%*[^\n]\n");  
+                    fscanf(archivo_compras, "Numero de insumo: %d", &clave_insumo); 
+                    fscanf(archivo_compras, "Cantidad: %d", &cantidad); 
+                    fscanf(archivo_compras, "%*[^\n]\n");  
+                    fscanf(archivo_compras, "%*[^\n]\n");  
                 }
                 
                 printf("+--------------------+--------------------+------------------------------------------+--------------------+\n");
@@ -1589,7 +1583,7 @@ void menu_control_inventario(FILE * farchivo)//falta acabar
                     if (!validar_compra(numero_compra))
                         printf("Numero de compra invalido");
 
-                } while (!validar_compra(numero_compra)); //falta que se valide en compras
+                } while (!validar_compra(numero_compra)); 
 
                 printf("Le fue recibida la compra?: ");
                 fflush(stdin);
@@ -1638,7 +1632,7 @@ bool validar_compra(int numero_compra)
     return compra_valida;
 }
 
-void menu_reportes()//falta acabar
+void menu_reportes()
 {
     char opcion;
     FILE *archivo;
@@ -1677,7 +1671,7 @@ void menu_reportes()//falta acabar
                         "Inventario", "Precio de venta", "Clave del Insumo");
                     printf("---------------------------------------------------------------------------------------------------------------\n");
 
-                    while (fread(&articulo, sizeof(struct Articulos), 1, archivo) == 1)//esta mal creo
+                    while (fread(&articulo, sizeof(struct Articulos), 1, archivo) == 1)
                     {
                         printf("%-20d %-20s %-10s %-10s %-10d %-15.2f [",
                             articulo.clave_articulo, articulo.descripcion, articulo.temp_siembra,
@@ -1730,12 +1724,12 @@ void menu_reportes()//falta acabar
 
                     }while (!validardia);
 
-                    fscanf(archivo, "Clave mercado: %*d\nClave articulo: %*d\nCantidad: %*d\nPrecio: %*f\nNum. empleado: %*d\nComision: %*f\nFecha de venta: %02d/%02d/%04d\nTotal: %f\n", &dia_venta, &mes_venta, &anio_venta, &total);//checar
+                    fscanf(archivo, "Clave mercado: %*d\nClave articulo: %*d\nCantidad: %*d\nPrecio: %*f\nNum. empleado: %*d\nComision: %*f\nFecha de venta: %02d/%02d/%04d\nTotal: %f\n", &dia_venta, &mes_venta, &anio_venta, &total);
                     while(!feof(archivo))
                     {
                         if(dia_reporte == dia_venta && mes_reporte == mes_venta && anio_reporte == anio_venta)
                             total_reportes += total;
-                        fscanf(archivo, "Clave mercado: %*d\nClave articulo: %*d\nCantidad: %*d\nPrecio: %*f\nNum. empleado: %*d\nComision: %*f\nFecha de venta: %02d/%02d/%04d\nTotal: %f\n", &dia_venta, &mes_venta, &anio_venta, &total);//checar
+                        fscanf(archivo, "Clave mercado: %*d\nClave articulo: %*d\nCantidad: %*d\nPrecio: %*f\nNum. empleado: %*d\nComision: %*f\nFecha de venta: %02d/%02d/%04d\nTotal: %f\n", &dia_venta, &mes_venta, &anio_venta, &total);
                     }
 
                     if (total_reportes > 0) 
@@ -1757,12 +1751,12 @@ void menu_reportes()//falta acabar
                     printf("Ingrese la clave del articulo: ");
                     scanf("%d", &clavearticuloreporte);
 
-                    fscanf(archivo, "Clave mercado: %*d\nClave articulo: %d\nCantidad: %*d\nPrecio: %*f\nNum. empleado: %*d\nComision: %*f\nFecha de venta: %*02d/%*02d/%*04d\nTotal: %f\n", &clavearticulo, &total);//checar
+                    fscanf(archivo, "Clave mercado: %*d\nClave articulo: %d\nCantidad: %*d\nPrecio: %*f\nNum. empleado: %*d\nComision: %*f\nFecha de venta: %*02d/%*02d/%*04d\nTotal: %f\n", &clavearticulo, &total);
                     while(!feof(archivo))
                     {
                         if(clavearticuloreporte == clavearticulo)
                             articulostotal += total;
-                        fscanf(archivo, "Clave mercado: %*d\nClave articulo: %d\nCantidad: %*d\nPrecio: %*f\nNum. empleado: %*d\nComision: %*f\nFecha de venta: %*02d/%*02d/%*04d\nTotal: %*f\n", &clavearticulo);//checar
+                        fscanf(archivo, "Clave mercado: %*d\nClave articulo: %d\nCantidad: %*d\nPrecio: %*f\nNum. empleado: %*d\nComision: %*f\nFecha de venta: %*02d/%*02d/%*04d\nTotal: %*f\n", &clavearticulo);
                     }
 
                     if (articulostotal > 0) 
@@ -1779,6 +1773,7 @@ void menu_reportes()//falta acabar
                     printf("ERROR.\nNo se pudo abrir el archivo.\n");
                 else
                 {
+
 
                 }
                 break;
@@ -1842,7 +1837,7 @@ void menu_reportes()//falta acabar
                     printf("ERROR.\nNo se pudo abrir el archivo.\n");
                 else
                 {
-
+                    
                 }
                 break;
         }
