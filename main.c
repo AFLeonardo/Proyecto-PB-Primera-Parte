@@ -46,10 +46,10 @@ main()
 
             case 2:
                 if ((archivo = fopen("Insumos.dat", "r+")) == NULL)
-                    {
+                {
                     printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
                     crearRegistrosVacios("Insumos.dat", &insumoVacio, sizeof(struct Insumo), 100);
-                    }
+                }
                 else
                 {
                     menu_insumos(archivo);
@@ -59,10 +59,10 @@ main()
 
             case 3:
                 if ((archivo = fopen("Mercados.dat", "r+")) == NULL)
-                    {
+                {
                     printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
                     crearRegistrosVacios("Mercados.dat", &mercadoVacio, sizeof(struct Mercado), 100);
-                    }
+                }
                 else
                 {
                     menu_mercados(archivo);
@@ -115,7 +115,6 @@ main()
                     menu_control_compras(archivo);
                     fclose(archivo);
                 }
-
                 break;
 
             case 8:
@@ -130,7 +129,7 @@ main()
                 break;
 
             case 9:
-                menu_reportes(archivo);
+                menu_reportes();
                 break;
 
             case 10:
