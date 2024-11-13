@@ -1530,6 +1530,7 @@ void menu_control_inventario(FILE * farchivo)//falta acabar
     struct Insumo insumos;
     FILE *archivo_insumo;
 
+    printf("\nCOMPRAS\n");
     while (recepcion == 'S' || recepcion == 's')
     {
 
@@ -1630,7 +1631,7 @@ void menu_reportes(FILE *farticulos)//falta acabar
     int dia_reporte, mes_reporte, anio_reporte;
     bool validardia, fechaencontrada=false; 
     float total, total_reportes = 0.0;
-
+    printf("\nREPORTES\n");
     do
     {
         printf("a) Listado de artículos\nb) Total de venta por fecha\nc) Total de venta por artículo\nd) Listado de artículos a solicitar\ne) Saldos por pagar\nf) Calculo de comisiones\ng) Compras pendientes de recepcion\nh) Salir");
