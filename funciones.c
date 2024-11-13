@@ -1593,8 +1593,10 @@ void menu_reportes(FILE *farticulos)//falta acabar
     char opcion;
     FILE *archivo;
     struct Articulos articulo;
-    int i, clavearticulo,anio_venta, dia_venta, mes_venta;
-    bool validardia;
+    int i, clavearticulo, anio_venta, dia_venta, mes_venta;
+    int dia_reporte, mes_reporte, anio_reporte;
+    bool validardia, fechaencontrada=false; 
+    float total, total_reportes = 0.0;
 
     do
     {
@@ -1647,30 +1649,44 @@ void menu_reportes(FILE *farticulos)//falta acabar
                     do
                     {
                         printf("Ingrese el anio: ");
-                        scanf("%d", &anio_venta);
-                        if (anio_venta < 1990 || anio_venta > 2024)
+                        scanf("%d", &anio_reporte);
+                        if (anio_reporte < 1990 || anio_reporte > 2024)
                             printf("Anio de venta invalido, debe de estar entre 1990 y 2024\n");
-                    }while (anio_venta < 1990 || anio_venta > 2024);
+                    }while (anio_reporte < 1990 || anio_reporte > 2024);
 
                     do
                     {
                         printf("Ingrese el mes: ");
-                        scanf("%d", &mes_venta);
-                        if (mes_venta < 1 || mes_venta > 12)
+                        scanf("%d", &mes_reporte);
+                        if (mes_reporte < 1 || mes_reporte > 12)
                             printf("Mes de nacimiento invalido, debe de estar entre 1 y 12\n");
 
-                    }while (mes_venta < 1 || mes_venta > 12);
+                    }while (mes_reporte < 1 || mes_reporte > 12);
 
                     do
                     {
                         printf("Ingrese el dia: ");
-                        scanf("%d", &dia_venta);
-                        validardia = validarDiaMes(dia_venta, mes_venta, anio_venta);
+                        scanf("%d", &dia_reporte);
+                        validardia = validarDiaMes(dia_reporte, mes_reporte, anio_reporte);
                         if (!validardia)
                             printf("Ingrese un dia valido correspondiente al mes\n");
 
                     }while (!validardia);
 
+                    fscanf(archivo, "Clave mercado: %*d\nClave articulo: %*d\nCantidad: %*d\nPrecio: %*f\nNum. empleado: %*d\nComision: %*f\nFecha de venta: %02d/%02d/%04d\nTotal: %f\n", &dia_venta, &mes_venta, &anio_venta, &total);//checar
+                    while(!feof(archivo))
+                    {
+                        if(dia_reporte == dia_venta && mes_reporte == mes_venta && anio_reporte == anio_venta)
+                            total_reportes += total;
+                        fscanf(archivo, "Clave mercado: %*d\nClave articulo: %*d\nCantidad: %*d\nPrecio: %*f\nNum. empleado: %*d\nComision: %*f\nFecha de venta: %02d/%02d/%04d\nTotal: %f\n", &dia_venta, &mes_venta, &anio_venta, &total);//checar
+                    }
+
+                    if (total_reportes > 0) 
+                        printf("El total de ventas para el %02d/%02d/%04d es: %.2f\n", dia_reporte, mes_reporte, anio_reporte, total_reportes);
+                    else 
+                        printf("No hay ventas registradas para la fecha %02d/%02d/%04d", dia_reporte, mes_reporte, anio_reporte);
+                        
+                    fclose(archivo);
                 }
                 break;
 
