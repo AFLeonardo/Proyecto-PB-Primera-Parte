@@ -1634,7 +1634,7 @@ void menu_reportes(FILE *farticulos)//falta acabar
     printf("\nREPORTES\n");
     do
     {
-        printf("a) Listado de artículos\nb) Total de venta por fecha\nc) Total de venta por artículo\nd) Listado de artículos a solicitar\ne) Saldos por pagar\nf) Calculo de comisiones\ng) Compras pendientes de recepcion\nh) Salir");
+        printf("a) Listado de articulos\nb) Total de venta por fecha\nc) Total de venta por articulo\nd) Listado de articulos a solicitar\ne) Saldos por pagar\nf) Calculo de comisiones\ng) Compras pendientes de recepcion\nh) Salir");
         printf("%20s", "\nOpcion: ");
         fflush(stdin);
         scanf("%c", &opcion);
