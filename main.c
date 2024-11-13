@@ -1,3 +1,5 @@
+//Alfonso Leonardo Rodriguez Ruiz, Alexis Ibarra Rodriguez, Laura Isabella Villarreal Pérez Maldonado
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -44,10 +46,10 @@ main()
 
             case 2:
                 if ((archivo = fopen("Insumos.dat", "r+")) == NULL)
-                    {
+                {
                     printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
                     crearRegistrosVacios("Insumos.dat", &insumoVacio, sizeof(struct Insumo), 100);
-                    }
+                }
                 else
                 {
                     menu_insumos(archivo);
@@ -57,10 +59,10 @@ main()
 
             case 3:
                 if ((archivo = fopen("Mercados.dat", "r+")) == NULL)
-                    {
+                {
                     printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
                     crearRegistrosVacios("Mercados.dat", &mercadoVacio, sizeof(struct Mercado), 100);
-                    }
+                }
                 else
                 {
                     menu_mercados(archivo);
@@ -82,7 +84,7 @@ main()
                 break;
 
             case 5: 
-                if((archivo = fopen("Proveedores.dat", "r")) == NULL)
+                if((archivo = fopen("Proveedores.dat", "r+")) == NULL)
                 {
                     printf("ERROR.\nSe esta creando el archivo intenta de nuevo.\n");
                     crearRegistrosVacios("Proveedores.dat", &proveedorVacio, sizeof(struct Proveedor), 100);
@@ -113,7 +115,6 @@ main()
                     menu_control_compras(archivo);
                     fclose(archivo);
                 }
-
                 break;
 
             case 8:
@@ -128,7 +129,7 @@ main()
                 break;
 
             case 9:
-                menu_reportes(archivo);
+                menu_reportes();
                 break;
 
             case 10:

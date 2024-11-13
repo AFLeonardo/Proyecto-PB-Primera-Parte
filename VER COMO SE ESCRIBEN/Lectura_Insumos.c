@@ -58,14 +58,14 @@ void mostrar_insumos(FILE *insumosf, FILE *proveedorlocal) {
         printf("Descripcion: %s\n", insumos.descripcion);
         printf("Punto de Reorden: %d\n", insumos.punto_reorden);
         printf("Inventario: %d\n", insumos.inventario);
-        printf("Proveedores:\n");
+        printf("Proveedores: \n");
 
         // Leer la información de los proveedores
         for (i = 0; i < 10; i++) {
             
                 fseek(proveedorlocal, (insumos.clave_proveedor[i] - 1) * sizeof(struct Proveedor), SEEK_SET);
                 fread(&proveedores, sizeof(struct Proveedor), 1, proveedorlocal);
-                printf("  Proveedor Clave: %d, Precio: %.2f\n", proveedores.numero_proveedor, insumos.precio_compra[i]);
+                printf(" [%d] Proveedor Clave: %d, Precio: %.2f\n", i,insumos.clave_proveedor[i], insumos.precio_compra[i]);
             }
         
         printf("\n");
