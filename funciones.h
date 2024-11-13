@@ -36,6 +36,7 @@ float precioinsumo(int);
 float descuento_proveedor(int );
 float generar_comision(int, float);
 int obtenerUltimoIdCompra(FILE *);
+bool validar_compra(int);
 //********************************** */
 
 
