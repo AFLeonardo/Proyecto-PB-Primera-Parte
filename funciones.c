@@ -240,7 +240,7 @@ void menu_insumos(FILE *insumosf)
     int cant_proveedores = 0;
     bool clave_valida;
 
-    printf("%s", "\nINSUMOS\n");
+    printf("\nINSUMOS\n");
 
     if((proveedorlocal = fopen("Proveedores.dat", "r")) == NULL)
         printf("\nError.\nNo existen proveedores.\nAgrega en el menu correspondiente.\n");
@@ -1849,7 +1849,8 @@ void menu_reportes()//falta acabar
 
         do
         {
-            printf("a) Listado de artículos\nb) Total de venta por fecha\nc) Total de venta por artículo\nd) Listado de artículos a solicitar\ne) Saldos por pagar\nf) Calculo de comisiones\ng) Compras pendientes de recepcion\nh) Salir");
+            printf("\nREPORTES\n");
+            printf("a) Listado de articulos\nb) Total de venta por fecha\nc) Total de venta por articulo\nd) Listado de articulos a solicitar\ne) Saldos por pagar\nf) Calculo de comisiones\ng) Compras pendientes de recepcion\nh) Salir");
             printf("%20s", "Opcion: ");
             fflush(stdin);
             scanf("%c", &opcion);
