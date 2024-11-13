@@ -1676,9 +1676,6 @@ void menu_reportes()
     float total, total_reportes = 0.0, articulostotal = 0.0;
     struct Empleado *empleados;
 
-
-
-
     printf("\nREPORTES\n");
     do
     {
