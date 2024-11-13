@@ -979,6 +979,7 @@ void menu_control_ventas(FILE *fventas)
     struct Articulos articuloleido;
     bool validardia = true;
 
+    printf("\nVENTAS\n");
     while (agregar_venta != 'n' && agregar_venta != 'N')
     {
         total = 0;
@@ -1324,25 +1325,39 @@ void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t
 
 void menu_control_compras(FILE *fcompras)
 {
-    int Num_proveedor, insumo, cantidad, id_compra = 0, ultimo_id = -20;
-    float precio_insumo, total = 0, descuento;
+    int Num_proveedor, insumo, cantidad, id_compra = 0, ultimo_id_compra = -20, provedor;
+    float precio_insumo, total = 0, descuento, precio;
     char agregar_insumo, agregar_compra = 's';
 
-    while(fscanf(fcompras, "ID compra: %d", &id_compra))
+    printf("\nCOMPRAS\n");
+
+    fscanf(fcompras, "ID compra: %d\n", &id_compra);
+    while (!feof(fcompras)) 
     {
-        if (id_compra >= ultimo_id)
-            ultimo_id = id_compra + 1;
-        fscanf(fcompras, "ID compra: %d", &id_compra);
+        // Actualizar el último ID si es mayor que el anterior
+        if (id_compra > ultimo_id_compra)
+            ultimo_id_compra = id_compra;
+        
+        // Saltar las líneas restantes de cada bloque de compra
+        fscanf(fcompras, "%*[^\n]\n");  // Salta el número de proveedor
+        fscanf(fcompras, "%*[^\n]\n");  // Salta el número de insumo
+        fscanf(fcompras, "%*[^\n]\n");  // Salta la cantidad
+        fscanf(fcompras, "%*[^\n]\n");  // Salta el precio
+        fscanf(fcompras, "%*[^\n]\n");  // Salta el total
+        fscanf(fcompras, "ID compra: %d\n", &id_compra);
     }
 
-    printf("Ultimo ID de compra: %d\n", ultimo_id);
+    id_compra = ultimo_id_compra + 1;
+    
+    printf("\n\nUltimo ID de compra: %d\n", id_compra); // Se incrementa para el nuevo ID
 
     while(agregar_compra == 'S' || agregar_compra == 's')
     {
+        total = 0;
         agregar_insumo = 's';
         do
         {
-            printf("1) Numero de proveedor: \n");
+            printf("1) Numero de proveedor: ");
             scanf("%d", &Num_proveedor);
 
             if (!validarproveedor(Num_proveedor))
@@ -1354,7 +1369,7 @@ void menu_control_compras(FILE *fcompras)
         {
             do
             {
-                printf("2) Numero de insumo: \n");
+                printf("2) Numero de insumo: ");
                 scanf("%d", &insumo);
 
                 if (!validarnumeroinsumo(insumo))
@@ -1364,7 +1379,7 @@ void menu_control_compras(FILE *fcompras)
 
             do
             {
-                printf("3) Cantidad: \n");
+                printf("3) Cantidad: ");
                 scanf("%d", &cantidad);
 
                 if (cantidad < 0)
@@ -1373,7 +1388,7 @@ void menu_control_compras(FILE *fcompras)
             } while (cantidad < 0);
 
             precio_insumo = precioinsumo(insumo);
-            printf("\n*** \nEl precio del insumo es: %.2f\n***\n", precio_insumo);
+            printf("\n*** \nEl precio del insumo es: %.2f\n***\n\n", precio_insumo);
 
             descuento = descuento_proveedor(Num_proveedor);
             printf("Descuento de: %.2f\n",descuento); //SOLO PARA VER LUEGO ELIMINAR
