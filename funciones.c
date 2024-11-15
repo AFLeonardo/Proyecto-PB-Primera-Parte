@@ -318,7 +318,7 @@ void menu_insumos(FILE *insumosf)
                     printf("Quieres agregar otro proveedor al insumo?(s/n): \n");
                     fflush(stdin);
                     scanf("%c", &agregar_proveedor);
-                    agregar_proveedor = convertir_a_minusculas(agregar_proveedor);
+                    agregar_proveedor = tolower(agregar_proveedor);
 
                     if (agregar_proveedor != 's' && agregar_proveedor != 'n')
                         printf("Valor no valido, solo se permite (s/n) \n");
@@ -385,13 +385,19 @@ void menu_empleados(FILE *fempleados)
             printf("3) RFC: ");
             fflush(stdin);
             gets(empleados.RFC);
-  
-            rfc_valido = validar_rfc(empleados.RFC);
 
-            if (!rfc_valido)
+            if (strlen(empleados.RFC) != 13)
+            {
+                printf("Los caracteres deben de ser 13.\n");
+                rfc_valido = false;
+            }
+            else
+                rfc_valido = validar_rfc(empleados.RFC);
+
+            if (rfc_valido == false)
                 printf("RFC invalido. No cumple con la estructurada adecuada\n");
 
-        }while(!rfc_valido);
+        }while(rfc_valido == false);
 
         do
         {
@@ -516,7 +522,7 @@ void menu_empleados(FILE *fempleados)
 void menu_proveedores(FILE *fproveedores)
 {
     struct Proveedor proveedores;
-    char agregar;
+    char agregar = 's';
     bool rfc_valido = true,
          correo_correcto = true,
          validardia = true;
@@ -552,6 +558,12 @@ void menu_proveedores(FILE *fproveedores)
             fflush(stdin);
             gets(proveedores.RFC);
 
+            if (strlen(proveedores.RFC) != 13)
+            {
+                printf("Los caracteres deben ser 13.\n");
+                rfc_valido = false;
+            }
+            else
                 rfc_valido = validar_rfc(proveedores.RFC);
 
             if (!rfc_valido)
@@ -662,6 +674,8 @@ void menu_proveedores(FILE *fproveedores)
 
         }while (!validarchar(proveedores.direccion.estado));
 
+        for (i = 0; i < 10; i++)
+            proveedores.articulos_produce[i] = 0;
 
         fseek(fproveedores, (proveedores.numero_proveedor - 1) * sizeof(struct Proveedor), SEEK_SET);
         fwrite(&proveedores, sizeof(struct Proveedor), 1, fproveedores);
@@ -691,14 +705,17 @@ bool validar_rfc(char *frfc)
 {
     int i;
 
+
     if (strlen(frfc) != 13)
         return false;
 
+
     for (i = 0; i < 4; i++)
     {
-        if ((frfc[i] <= 'A' && frfc[i] >= 'Z') || (frfc[i] <= 'a' && frfc[i] >= 'z'))
+        if (!((frfc[i] >= 'A' && frfc[i] <= 'Z') || (frfc[i] >= 'a' && frfc[i] <= 'z')))
             return false;
     }
+
 
     for (i = 4; i < 10; i++)
     {
@@ -706,9 +723,10 @@ bool validar_rfc(char *frfc)
             return false;
     }
 
+
     for (i = 10; i < 13; i++)
     {
-        if ((frfc[i] < 'A' && frfc[i] > 'Z') || (frfc[i] < 'a' && frfc[i] > 'z') || (frfc[i] < '0' && frfc[i] > '9'))
+        if (!((frfc[i] >= 'A' && frfc[i] <= 'Z') || (frfc[i] >= 'a' && frfc[i] <= 'z') || (frfc[i] >= '0' && frfc[i] <= '9')))
             return false;
     }
 
@@ -893,7 +911,7 @@ bool validar_correo(char * fcorreo)
             punto = i;
     }
 
-    if(arroba != 0 && punto != 0 && punto > arroba + 1)
+    if(arroba != -0 && punto != -0 && punto > arroba + 1)
         return true;
 
     else
@@ -955,7 +973,7 @@ void menu_control_ventas(FILE *fventas)
 {
     int clave_mercado, clave_articulo, Cantidad_articulo, num_empleado, anio_venta, mes_venta, dia_venta, clave_valida;
     float precioarticulo, total, descuento_mercado;
-    char agregar_articulo, factura, agregar_venta;
+    char agregar_articulo, factura, agregar_venta = 'S';
     FILE *articulof;
     struct Articulos articuloleido;
     bool validardia = true;
@@ -1286,7 +1304,7 @@ void imprimir_factura(int mercado, int articulo, int cantidad, float precio_unit
     printf("-----------------------\n");
 }
 
-void crearRegistrosVacios(const char *nombreArchivo, void * registroVacio, size_t tamanoRegistro, int cantidad)
+void crearRegistrosVacios(const char *nombreArchivo, void *registroVacio, size_t tamanoRegistro, int cantidad)
 {
     FILE *archivo = fopen(nombreArchivo, "w");
     if (!archivo)
@@ -1324,6 +1342,7 @@ void menu_control_compras(FILE *fcompras)
         fscanf(fcompras, "%*[^\n]\n");
         fscanf(fcompras, "%*[^\n]\n");
         fscanf(fcompras, "ID compra: %d\n", &id_compra);
+
     }
 
     id_compra = ultimo_id_compra + 1;
@@ -1552,6 +1571,7 @@ void menu_control_inventario(FILE * farchivo)
                     printf("Total: %.2f\n", total);
 
                 }
+
 
                 do
                 {

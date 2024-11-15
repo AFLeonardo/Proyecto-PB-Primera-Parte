@@ -33,11 +33,3 @@ Cantidad: 50
 Precio: 30.00
 Total: 750.00
 
-ID compra: 6
-Numero de proveedor: 1
-Numero de insumo: 2
-Cantidad: 50
-Precio: 27.36
-Entregado n
-Total: 684.05
-

@@ -1,8 +1,8 @@
-Clave mercado: 1
+Clave mercado: 9
 Clave articulo: 1
-Cantidad: 50
-Precio: 45.40
-Num. empleado: 1
-Comision: 476.70
-Fecha de venta: 14/12/2005
-Total: 1589.00
+Cantidad: 1
+Precio: 10.00
+Num. empleado: 10
+Comision: 2.50
+Fecha de venta: 12/12/2000
+Total: 5.000000

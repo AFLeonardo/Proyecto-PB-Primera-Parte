@@ -14,7 +14,7 @@ struct Articulos {
 };
 
 void mostrar_datos_articulos(const char *nombre_archivo) {
-    FILE *archivo = fopen(nombre_archivo, "r"); // Abrir el archivo en modo binario
+    FILE *archivo = fopen(nombre_archivo, "rb"); // Abrir el archivo en modo binario
     if (archivo == NULL) {
         perror("Error al abrir el archivo");
         exit(1);
@@ -24,8 +24,8 @@ void mostrar_datos_articulos(const char *nombre_archivo) {
 
     // Leer y mostrar cada registro
     while (fread(&articulo, sizeof(struct Articulos), 1, archivo) == 1) {
-        printf("Clave de Artículo: %d\n", articulo.clave_articulo);
-        printf("Descripción: %s\n", articulo.descripcion);
+        printf("Clave de Articulo: %d\n", articulo.clave_articulo);
+        printf("Descripcion: %s\n", articulo.descripcion);
         printf("Temporada de Siembra: %s\n", articulo.temp_siembra);
         printf("Temporada de Cosecha: %s\n", articulo.temp_cosecha);
 
@@ -45,7 +45,7 @@ void mostrar_datos_articulos(const char *nombre_archivo) {
         }
         printf("\n");
 
-        printf("Costo de Producción: %.2f\n", articulo.costo_produccion);
+        printf("Costo de Produccion: %.2f\n", articulo.costo_produccion);
         printf("Inventario: %d\n", articulo.inventario);
         printf("Precio de Venta: %.2f\n\n", articulo.precio_venta);
     }
