@@ -2,16 +2,31 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct Proveedor {
+struct Fechas
+{
+    int anio;
+    int mes;
+    int dia;
+};
+
+struct Direcciones
+{
+    char calle[50];
+    char numero[30];
+    char colonia[50];
+    char municipio[50];
+    char estado[50];
+};
+
+struct Proveedor
+{
     int numero_proveedor;
     char nombre_completo[100];
     char RFC[14];
     char correo[100];
     float descuento;
-    int anio_nacimiento;
-    int mes_nacimiento;
-    int dia_nacimiento;
-    char direccion[200];  // Calle, número, colonia, municipio y estado
+    struct Fechas fecha;
+    struct Direcciones direccion;
     int articulos_produce[10]; // Claves de los artículos que produce
 };
 
@@ -28,21 +43,27 @@ void mostrar_proveedores(FILE *proveedorlocal) {
     // Leer cada proveedor y mostrar su información
     printf("\n--- Lista de Proveedores ---\n");
     while (fread(&proveedor, sizeof(struct Proveedor), 1, proveedorlocal) == 1) {
-        printf("Número de Proveedor: %d\n", proveedor.numero_proveedor);
+        printf("Numero de Proveedor: %d\n", proveedor.numero_proveedor);
         printf("Nombre Completo: %s\n", proveedor.nombre_completo);
         printf("RFC: %s\n", proveedor.RFC);
         printf("Correo: %s\n", proveedor.correo);
-        printf("Descuento: %.2f%%\n", proveedor.descuento);
-        printf("Fecha de Nacimiento: %02d/%02d/%d\n", proveedor.dia_nacimiento, proveedor.mes_nacimiento, proveedor.anio_nacimiento);
-        printf("Dirección: %s\n", proveedor.direccion);
-        printf("Artículos que Produce: ");
+        printf("Descuento: %f\n", proveedor.descuento);
+        printf("Fecha de Nacimiento: %02d/%02d/%d\n", proveedor.fecha.dia, proveedor.fecha.mes, proveedor.fecha.anio);
+        printf("Direccion:");
+        printf("Calle: %s\n", proveedor.direccion.calle);
+        printf("Numero: %s\n", proveedor.direccion.numero);
+        printf("Colonia: %s\n", proveedor.direccion.colonia);
+        printf("Municipio: %s\n", proveedor.direccion.municipio);
+        printf("Estado: %s\n", proveedor.direccion.estado);
+
+
+        printf("Articulos que Produce: ");
         
         // Mostrar las claves de los artículos que produce
         for (int i = 0; i < 10; i++) {
-            if (proveedor.articulos_produce[i] != 0) { // Suponiendo que 0 indica que no produce un artículo
-                printf("%d ", proveedor.articulos_produce[i]);
+                printf("%d", proveedor.articulos_produce[i]);
             }
-        }
+        
         printf("\n\n");
     }
 }
@@ -51,7 +72,7 @@ int main() {
     FILE *proveedorlocal;
 
     // Abrir el archivo de proveedores
-    proveedorlocal = fopen("..\\Proveedores.dat", "rb");
+    proveedorlocal = fopen("..\\Proveedores.dat", "r");
 
     // Mostrar la información de los proveedores
     mostrar_proveedores(proveedorlocal);

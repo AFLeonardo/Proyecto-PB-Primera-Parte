@@ -47,7 +47,7 @@ struct Proveedor
     float descuento;
     struct Fechas fecha;
     struct Direcciones direccion;
-    int articulos_produce[10]; // Claves de los artículos que produce
+    int articulos_produce[10];
 };
 struct Empleado
 {

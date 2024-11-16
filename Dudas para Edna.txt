@@ -1,2 +1,0 @@
-SE PUEDE INICIALIZAR Y DECLARAR UN ARREGLO CON ESTACIONES
-Se puede usar x_articulo como nombre de variable de tipo struct x_articulo

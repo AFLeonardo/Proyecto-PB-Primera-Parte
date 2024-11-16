@@ -38,14 +38,15 @@ void mostrar_mercados(FILE *mercado_local) {
 
     // Leer cada mercado y mostrar su información
     printf("\n--- Lista de Mercados ---\n");
-    while (fread(&mercado, sizeof(struct Mercado), 1, mercado_local) == 1) {
+    while (fread(&mercado, sizeof(struct Mercado), 1, mercado_local) == 1) 
+	{
         printf("Clave del Mercado: %d\n", mercado.clave_mercado);
         printf("Nombre Completo: %s\n", mercado.nombre_completo);
         printf("RFC: %s\n", mercado.RFC);
         printf("Correo: %s\n", mercado.correo);
-        printf("Descuento: %.2f%%\n", mercado.descuento);
+        printf("Descuento: %f\n", mercado.descuento);
         printf("Fecha: %02d/%02d/%d\n", mercado.fecha.dia, mercado.fecha.mes, mercado.fecha.anio);
-        printf("Dirección: %s %s, %s, %s, %s\n", 
+        printf("Direccion: %s %d, %s, %s, %s\n", 
                mercado.direccion.calle, 
                mercado.direccion.numero, 
                mercado.direccion.colonia, 
@@ -59,7 +60,7 @@ int main() {
     FILE *mercado_local;
 
     // Abrir el archivo de mercados
-    mercado_local = fopen("..\\Mercados.dat", "rb");
+    mercado_local = fopen("..\\Mercados.dat", "r");
 
     // Mostrar la información de los mercados
     mostrar_mercados(mercado_local);
